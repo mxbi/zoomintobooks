@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,6 +37,9 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_PERMISSION_CODE = 1234;
 
+    private ScaleGestureDetector mScaleGestureDetector;
+    private float mScaleFactor = 1.0f;
+
     private EditText editText;
     private Button sendButton;
     private ImageView imageView;
@@ -52,11 +57,30 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         requestCameraPermission();
 
         imageView = (ImageView) findViewById(R.id.postImage);
+        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+
         galleryBtn = (Button) findViewById(R.id.pickImageButton);
         cameraBtn = (Button) findViewById(R.id.cameraBtn);
 
         galleryBtn.setOnClickListener(this);
         cameraBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return mScaleGestureDetector.onTouchEvent(event);
+    }
+
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+
+        // when a scale gesture is detected, use it to resize the image
+        @Override
+        public boolean onScale(ScaleGestureDetector scaleGestureDetector){
+            mScaleFactor *= scaleGestureDetector.getScaleFactor();
+            imageView.setScaleX(mScaleFactor);
+            imageView.setScaleY(mScaleFactor);
+            return true;
+        }
     }
 
     @Override
