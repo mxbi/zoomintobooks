@@ -49,6 +49,7 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_new_post);
 
         requestStoragePermission();
+        requestCameraPermission();
 
         imageView = (ImageView) findViewById(R.id.postImage);
         galleryBtn = (Button) findViewById(R.id.pickImageButton);
@@ -98,6 +99,13 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
+    private void requestCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
     }
 
     @Override
