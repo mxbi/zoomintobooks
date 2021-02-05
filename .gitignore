@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+db_conn.php
