@@ -1,5 +1,5 @@
 <?php
-function make_header($title, $description, $keywords) {
+function make_header($title, $description, $keywords, $nav_pages) {
     ob_start();
 ?>
 <!DOCTYPE html>
@@ -16,7 +16,18 @@ function make_header($title, $description, $keywords) {
  </head>
  <body>
   <header>
-
+   <h1>
+    <a href="/"><img src="/assets/images/icons/header.png" alt="" />Zoom Into Books</a>
+   </h1>
+   <nav id="header-nav">
+    <ul>
+<?php
+    foreach ($nav_pages as $title => $url) {
+        echo "     <li><a href=\"$url\">$title</a></li>\n";
+    }
+?>
+    </ul>
+   </nav>
   </header>
 <?php
 }
