@@ -12,6 +12,7 @@ function make_header($title, $description, $keywords, $nav_pages) {
   <meta name="keywords" content="<?php echo $keywords; ?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/styles/main.css" />
+  <link rel="stylesheet" href="/assets/styles/fonts.css" />
   <link rel="favicon" href="/assets/images/icons/favicon.png" />
  </head>
  <body>

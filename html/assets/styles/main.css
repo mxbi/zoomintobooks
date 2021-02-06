@@ -12,7 +12,7 @@ i {
 }
 
 body {
-    font-family: Georgia, serif;
+    font-family: open-sans, sans;
     margin: 0;
     padding: 0;
     background-color: #EEE;
@@ -23,14 +23,14 @@ body {
  */
 
 header {
-    padding: 10px;
+    padding: 10px 10px 5px 10px;
     background-color: #213D54;
     background-image: linear-gradient(to right, #4E7696, #213D54);
     box-shadow: 0 0 5px #333;
 }
 
 header * {
-    font-family: Helvetica, Arial, sans;
+    font-family: proza-libre, sans;
     color: #FFF;
     text-decoration: none;
 }
