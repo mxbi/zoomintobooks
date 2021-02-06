@@ -1,0 +1,80 @@
+/*
+ * Light blue: #4E7696
+ * Dark blue: #213D54
+ */
+
+/*
+ * General
+ */
+
+i {
+    font-style: italic;
+}
+
+body {
+    font-family: Georgia, serif;
+    margin: 0;
+    padding: 0;
+    background-color: #EEE;
+}
+
+/*
+ * Header
+ */
+
+header {
+    padding: 10px;
+    background-color: #213D54;
+    background-image: linear-gradient(to right, #4E7696, #213D54);
+    box-shadow: 0 0 5px #333;
+}
+
+header * {
+    font-family: Helvetica, Arial, sans;
+    color: #FFF;
+    text-decoration: none;
+}
+
+h1 {
+    display: inline-block;
+    margin: 0;
+}
+
+#header-nav {
+    margin-top: 10px;
+    float: right;
+}
+
+#header-nav a {
+    padding: 5px;
+    border-radius: 3px;
+}
+
+#header-nav a:hover {
+    background-color: #FFF;
+    color: #213D54;
+    box-shadow: inset 0 0 3px #666;
+}
+
+/*
+ * Body
+ */
+
+main {
+    margin: 50px 100px;
+}
+
+.button {
+    color: white;
+    background-color: #213D54;
+    text-decoration: none;
+    padding: 10px;
+    font-family: fira-sans, sans;
+    font-size: 1.3em;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #4E7696;
+    box-shadow: 0 0 3px #666;
+}

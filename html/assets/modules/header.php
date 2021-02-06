@@ -20,13 +20,11 @@ function make_header($title, $description, $keywords, $nav_pages) {
     <a href="/"><img src="/assets/images/icons/header.png" alt="" />Zoom Into Books</a>
    </h1>
    <nav id="header-nav">
-    <ul>
 <?php
     foreach ($nav_pages as $title => $url) {
-        echo "     <li><a href=\"$url\">$title</a></li>\n";
+        echo "    <a href=\"$url\">$title</a>\n";
     }
 ?>
-    </ul>
    </nav>
   </header>
 <?php
