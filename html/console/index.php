@@ -5,7 +5,7 @@ make_header("Management console", "The Zoom Into Books management console", "");
 
   <h2>Management console</h2>
   <main>
-<?php if (is_logged_in()) { ?>
+<?php if (logged_in()) { ?>
 
    <a href="books/">View your books</a>
    <a href="resources/">View your resources</a>

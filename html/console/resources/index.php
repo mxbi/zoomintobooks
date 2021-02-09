@@ -5,7 +5,7 @@ make_header("Your resources", "The Zoom Into Books management console", "");
 
   <h2>Your resources</h2>
   <main>
-<?php if (is_logged_in()) { ?>
+<?php if (logged_in()) { ?>
 
 <?php } else {
     echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";

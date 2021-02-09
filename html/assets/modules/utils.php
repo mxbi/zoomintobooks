@@ -1,5 +1,5 @@
 <?php
-function is_logged_in() {
+function logged_in() {
     return isset($_SESSION["username"]);
 }
 ?>
