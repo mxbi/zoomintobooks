@@ -24,8 +24,14 @@ function make_header($title, $description, $keywords) {
   <meta name="description" content="<?php echo $description; ?>" />
   <meta name="keywords" content="<?php echo $keywords; ?>" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/styles/main.css" />
-  <link rel="stylesheet" href="/assets/styles/fonts.css" />
+<?php
+    foreach (scandir($_SERVER["DOCUMENT_ROOT"] . "/assets/styles/") as $path) {
+        $stylesheet = basename($path);
+        if ($stylesheet != "." && $stylesheet != "..") {
+            echo "   <link rel=\"stylesheet\" href=\"/assets/styles/$stylesheet\" />\n";
+        }
+    }
+?>
   <link rel="favicon" href="/assets/images/icons/favicon.png" />
  </head>
  <body>
