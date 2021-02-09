@@ -61,7 +61,7 @@ h1 {
  */
 
 main {
-    margin: 50px 100px;
+    margin: auto 100px;
     background-color: #FFF;
     padding: 20px;
     box-shadow: 0 0 5px #666;
@@ -69,4 +69,38 @@ main {
 
 h2 {
     text-align: center;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    color: white;
+    background-color: #213D54;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 5px;
+    border: 0;
+    margin: 20px;
+    height: 160px;
+    width: 160px;
+    padding: 20px;
+    text-align: center;
+    display: block;
+}
+
+.card:hover {
+    background-color: #4E7696;
+    box-shadow: 0 0 3px #666;
+}
+
+.card img {
+    margin-bottom: 10px;
+}
+
+.card .card-label {
+    display: inline-block;
 }
