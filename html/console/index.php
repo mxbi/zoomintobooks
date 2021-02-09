@@ -1,11 +1,14 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 make_header("Management console", "The Zoom Into Books management console", "");
+$_SESSION["redirect"] = "/console/";
 ?>
 
   <h2>Management console</h2>
   <main>
-<?php if (logged_in()) { ?>
+<?php
+display_status();
+if (logged_in()) { ?>
 
    <div class="card-container">
     <a class="card" href="books/"><img src="/assets/images/icons/book-stack-128.png" alt=""/><span class="card-label">Manage your books</span></a>

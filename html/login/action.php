@@ -8,5 +8,11 @@ if (logged_in()) {
 } else {
     add_error("Login request method must be POST");
 }
-header("Location: /login/");
+
+$redirect = "/login/";
+if (empty($_SESSION["errors"]) && isset($_SESSION["redirect"])) {
+    $redirect = $_SESSION["redirect"];
+    unset($_SESSION["redirect"]);
+}
+header("Location: $redirect");
 ?>
