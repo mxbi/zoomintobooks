@@ -108,5 +108,13 @@ h2 {
 .errors {
     padding: 10px;
     background-color: #97574E;
+    margin: 10px;
+    color: #FFF;
+}
+
+.success {
+    padding: 10px;
+    background-color: #52974E;
+    margin: 10px;
     color: #FFF;
 }
