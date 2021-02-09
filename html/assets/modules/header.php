@@ -1,6 +1,19 @@
 <?php
-function make_header($title, $description, $keywords, $nav_pages) {
+function make_header($title, $description, $keywords) {
     ob_start();
+    session_start();
+
+    $nav_pages = array();
+    if (isset($_SESSION["username"])) {
+        $nav_pages["Console"] = "/console/";
+        $nav_pages["Help"] = "/help/";
+        $nav_pages["Logout"] = "/logout/";
+    } else {
+        $nav_pages["Help"] = "/help/";
+        $nav_pages["Login"] = "/login/";
+    }
+
+
 ?>
 <!DOCTYPE html>
 

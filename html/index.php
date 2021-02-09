@@ -1,6 +1,6 @@
 <?php 
 require "assets/modules/includes.php";
-make_header("Zoom Into Books", "", "", array("About" => "/about/", "Login" => "/login/"));
+make_header("Zoom Into Books", "", "");
 ?>
 
   <main>
