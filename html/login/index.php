@@ -3,13 +3,12 @@ require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 make_header("Login", "", "");
 ?>
 
-  <main>
-   <h2>Login</h2>
-
+  <h2>Login</h2>
+  <main id="login-form">
 <?php
 if (!is_logged_in()) {
 ?>
-   <form action="action.php" method="POST" id="login-form">
+   <form action="action.php" method="POST">
     <input class="login-field" type="text" name="username" id="username-entry" placeholder="Username" required="required" />
     <input class="login-field" type="password" name="password" id="password-entry" placeholder="Password" required="required" />
     <input type="submit" value="Login" />

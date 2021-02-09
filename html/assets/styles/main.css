@@ -62,6 +62,9 @@ h1 {
 
 main {
     margin: 50px 100px;
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0 0 5px #666;
 }
 
 h2 {
