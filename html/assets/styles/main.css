@@ -104,3 +104,9 @@ h2 {
 .card .card-label {
     display: inline-block;
 }
+
+.errors {
+    padding: 10px;
+    background-color: #97574E;
+    color: #FFF;
+}

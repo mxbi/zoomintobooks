@@ -7,6 +7,7 @@ make_header("Login", "", "");
   <main id="login-form">
 <?php
 if (!logged_in()) {
+    display_errors();
 ?>
    <form action="action.php" method="POST">
     <input class="login-field" type="text" name="username" id="username-entry" placeholder="Username" required="required" />
@@ -15,7 +16,7 @@ if (!logged_in()) {
    </form>
 <?php
 } else {
-    echo "   <p>You are already logged in as " . $_SESSION["username"] . ". You must <a href=\"/logout/\">log out before you can log in again.</p>\n";
+    echo "   <p>You are currently logged in as " . $_SESSION["username"] . ".</p>\n    <p>You must <a href=\"/logout/\">log out</a> before you can log in again.</p>\n";
 }
 ?>
   </main>

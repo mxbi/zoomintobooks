@@ -10,4 +10,6 @@ foreach (glob("$root/*.php") as $path) {
         include $path;
     }
 }
+
+init();
 ?>

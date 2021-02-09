@@ -1,7 +1,6 @@
 <?php
 function make_header($title, $description, $keywords) {
     ob_start();
-    session_start();
 
     $nav_pages = array();
     if (logged_in()) {
