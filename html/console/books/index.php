@@ -8,7 +8,7 @@ $_SESSION["redirect"] = "/console/books/";
   <main>
 <?php
 display_status();
-if (logged_in()) { ?>
+if ($is_logged_in) { ?>
 
 <?php } else {
     echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";

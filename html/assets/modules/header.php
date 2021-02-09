@@ -1,9 +1,11 @@
 <?php
 function make_header($title, $description, $keywords) {
+    global $is_logged_in;
+
     ob_start();
 
     $nav_pages = array();
-    if (logged_in()) {
+    if ($is_logged_in) {
         $nav_pages["Console"] = "/console/";
         $nav_pages["Help"] = "/help/";
         $nav_pages["Logout"] = "/logout/";

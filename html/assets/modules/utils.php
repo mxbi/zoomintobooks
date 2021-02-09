@@ -1,13 +1,17 @@
 <?php
+$is_logged_in = false;
+$is_admin = false;
+
 function init() {
+    global $is_logged_in;
+    global $is_admin;
+
     session_start();
     if (!isset($_SESSION["errors"])) {
         $_SESSION["errors"] = array();
     }
-}
-
-function logged_in() {
-    return isset($_SESSION["username"]);
+    $is_logged_in = isset($_SESSION["username"]);
+    $is_admin = ($_SESSION["account_type"] === "admin");
 }
 
 function add_error($msg) {

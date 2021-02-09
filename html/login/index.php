@@ -6,8 +6,8 @@ make_header("Login", "", "");
   <h2>Login</h2>
   <main id="login-form">
 <?php
-if (!logged_in()) {
-    display_status();
+display_status();
+if (!$is_logged_in) {
 ?>
    <form action="action.php" method="POST">
     <input class="login-field" type="text" name="username" id="username-entry" placeholder="Username" required="required" />
