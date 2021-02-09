@@ -64,17 +64,6 @@ main {
     margin: 50px 100px;
 }
 
-.button {
-    color: white;
-    background-color: #213D54;
-    text-decoration: none;
-    padding: 10px;
-    font-family: fira-sans, sans;
-    font-size: 1.3em;
-    border-radius: 5px;
-}
-
-.button:hover {
-    background-color: #4E7696;
-    box-shadow: 0 0 3px #666;
+h2 {
+    text-align: center;
 }

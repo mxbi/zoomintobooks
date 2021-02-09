@@ -1,0 +1,50 @@
+input {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+form {
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0 0 5px #666;
+}
+
+form#login-form {
+    margin: auto;
+    max-width: 300px;
+}
+
+form#login-form > * {
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input[type="button"], input[type="submit"], button, .button {
+    color: white;
+    background-color: #213D54;
+    text-decoration: none;
+    padding: 10px;
+    font-family: fira-sans, sans;
+    border-radius: 5px;
+    border: 0;
+    cursor: pointer;
+}
+
+input[type="button"]:hover, input[type="submit"]:hover, button:hover, .button:hover {
+    background-color: #4E7696;
+    box-shadow: 0 0 3px #666;
+}
+
+input[type="text"], input[type="password"] {
+    padding: 10px;
+    border: 1px solid #213D54;
+    border-radius: 5px;
+}
+
+input[type="text"]:hover, input[type="password"]:hover, input[type="text"]:focus, input[type="password"]:focus {
+    border: 1px solid #4E7696;
+    box-shadow: 0 0 3px #666;
+    outline: 0;
+}
