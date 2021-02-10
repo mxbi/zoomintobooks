@@ -99,7 +99,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   // database.
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
 
-  private final OCRAnalyzer ocrAnalyzer = new OCRAnalyzer("file:///android_asset/ocr_database.json");
+  private OCRAnalyzer ocrAnalyzer;
+
+  public AugmentedImageActivity() throws IOException {
+  }
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +126,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
         .into(fitToScanView);
 
     installRequested = false;
+
+    try {
+      ocrAnalyzer = new OCRAnalyzer(getApplicationContext().getAssets().openFd("computernetworks.json").getFileDescriptor(), this);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -282,7 +291,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Camera camera = frame.getCamera();
 
       // Do OCR analysis
-      ocrAnalyzer.analyze(frame.acquireCameraImage());
+      ocrAnalyzer.analyze(frame);
 
 
       // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.

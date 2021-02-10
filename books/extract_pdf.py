@@ -8,6 +8,8 @@ from pdfminer.pdfparser import PDFParser
 from io import StringIO
 import sys
 import mlcrate as mlc
+import string
+import json
 
 parse_pages = sys.argv[2].split(',')
 
@@ -28,11 +30,12 @@ with open(sys.argv[1], 'rb') as in_file:
       interpreter = PDFPageInterpreter(rsrcmgr, device)
       interpreter.process_page(page)
 
-      output = output_string.getvalue()
+      output = ''.join(s for s in output_string.getvalue() if s in string.printable)
       pages[i] = output
 
       print(output)
 
-mlc.save(pages, sys.argv[3])
+# mlc.save(pages, sys.argv[3])
+json.dump(pages, open(sys.argv[3], 'w'))
 
 # print(output_string.getvalue())
