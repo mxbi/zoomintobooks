@@ -96,6 +96,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   // database.
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
 
+  private final OCRAnalyzer ocrAnalyzer = new OCRAnalyzer();
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -276,6 +278,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Frame frame = session.update();
       Camera camera = frame.getCamera();
 
+      // Do OCR analysis
+      ocrAnalyzer.analyze(frame.acquireCameraImage());
 
 
       // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
