@@ -22,6 +22,7 @@ import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -50,6 +51,8 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
@@ -96,7 +99,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   // database.
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
 
-  private final OCRAnalyzer ocrAnalyzer = new OCRAnalyzer();
+  private final OCRAnalyzer ocrAnalyzer = new OCRAnalyzer("file:///android_asset/ocr_database.json");
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
