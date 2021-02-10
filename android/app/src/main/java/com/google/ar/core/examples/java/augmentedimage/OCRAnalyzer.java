@@ -39,7 +39,7 @@ public class OCRAnalyzer {
     // Only do one image at a time
     private boolean blocked = false;
     private HashMap<String, Integer> textDatabase;
-    
+
     public OCRAnalyzer(String textDatabase) {
         try {
             JsonReader reader = new JsonReader(new FileReader(textDatabase));
