@@ -67,7 +67,7 @@ public class AugmentedImageRenderer {
 //  }
 
   public void createOnGlThread(Context context) throws IOException {
-    imageRenderer.createOnGlThread(context, "models/block.obj", "sartre.jpg");
+    imageRenderer.createOnGlThread(context, "models/block.obj", "dream_of_saint_helena_veronese.jpg");
     imageRenderer.setMaterialProperties(0.0f, 3.5f, 1.0f, 6.0f);
   }
 
