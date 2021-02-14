@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ZoomIntoBooks">
+        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".ContactActivity" />
+        <activity android:name=".BookActivity" />
+        <activity android:name=".InfoActivity" />
+        <activity android:name=".SelectBookActivity" />
+        <activity android:name=".BarcodeScanActivity" />
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
