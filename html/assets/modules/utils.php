@@ -94,24 +94,22 @@ function get_type($file, $max_size, $legal_types) {
     $path = $file["tmp_name"];
     $file_info = exec("file -i $path", $output, $status);
     if ($status) {
-        $errors[] = "Could not safely determine file type (" . UPLOAD_ERROR_MSGS[$file["error"]] . ")";
+        add_error("Could not safely determine file type (" . UPLOAD_ERROR_MSGS[$file["error"]] . ")");
     } else {
-        $type = explode("/", explode(";", explode(":", $file_info)[1])[0])[1]; //Extract file subtype from MIME type ou
-tput from "file" command
+        $type = explode("/", explode(";", explode(":", $file_info)[1])[0])[1]; //Extract file subtype from MIME type output from "file" command
         if (!in_array($type, $legal_types)) {
-            $errors[] = "File type $type is not allowed";
+            add_error("File type $type is not allowed");
         }
         if ($_FILES["resource"]["size"] > $max_size) {
-            $errors[] = "File is too large";
+            add_error("File is too large");
         }
         if (!isset($_FILES["resource"]["error"]) || is_array($_FILES["resource"]["error"])) {
-            $errors[] = "Invalid parameters";
+            add_error("Invalid parameters");
         }
-        if (empty($errors)) {
+        if (!errors_occurred()) {
             return $type;
         }
     }
-    display_errors($errors);
     return false;
 }
 

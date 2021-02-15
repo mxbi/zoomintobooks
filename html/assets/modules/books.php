@@ -90,11 +90,30 @@ function add_book($values, $file) {
     }
 
     if (!errors_occurred()) {
-        //TODO: something with file
+        $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
+        if ($type) {
+            if (generate_cover($file, $type)) {
+                generate_ocr_blob($file, $type);
+            }
+        }
     }
 
     if (errors_occurred()) {
-        mysqli_rollback($dbc);
+        add_book_rollback();
     }
+}
+
+function generate_cover($file, $type) {
+    return true;
+}
+
+function generate_ocr_blob($file, $type) {
+    return true;
+}
+
+function add_book_rollback() {
+    global $dbc;
+    // TODO: remove files
+    mysqli_rollback($dbc);
 }
 ?>
