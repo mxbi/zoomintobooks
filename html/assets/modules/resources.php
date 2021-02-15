@@ -7,4 +7,20 @@ function fetch_resources($isbn) {
     $r = mysqli_query($dbc, $q);
     return mysqli_fetch_all($r, MYSQLI_ASSOC);
 }
+
+function show_resources($resources, $isbn)  {
+    foreach ($resources as $resource) {
+        $rid = $resource["rid"];
+        $thumb = $resource["thumb"]; // TODO
+        $url = $resource["url"];
+        $type = $resource["type"];
+        $downloadable = $resource["downloadable"];
+        echo "   <a class=\"resource-list-item\" href=\"/console/resources/resource?rid=$rid\">\n";
+        echo "    <img src=\"/console/resources/thumb?rid=$rid.png\" alt=\"Resource thumbnail\" />\n";
+        echo "    <p>URL: <a href=\"$url\">$url</a></p>\n";
+        echo "    <p>Type: $type</p>\n";
+        echo "    <p>Downloadable: $downloadable</p>\n";
+        echo "   </a>\n";
+    }
+}
 ?>

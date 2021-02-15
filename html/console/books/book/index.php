@@ -18,9 +18,17 @@ if ($book === NULL) {
 } else if (!can_edit_book($isbn)) {
     echo "    <p>You do not have the required permissions to view this page.</p>\n";
 } else {
+    echo "    <h3>Edit book properties</h3>\n";
+    show_book_edit_form("edit");
+    echo "    <h3>Resources for this book</h3>\n";
 ?>
-    <p>To do</p>
+   <a class="resource-list-item" id="resource-list-add-resource-item" href="/console/resources/new?isbn=$isbn">
+    <img src="/assets/images/icons/plus-5-128.png" alt="" />
+    <span>Add new resource</span>
+   </a>
 <?php
+    $resources = fetch_resources($isbn);
+    show_resources($resources);
 }
 echo "   </main>\n";
 make_footer();

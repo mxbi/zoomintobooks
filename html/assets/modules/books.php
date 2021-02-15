@@ -62,6 +62,36 @@ function count_resources($isbn) {
     }
 }
 
+function show_book_edit_form($mode) {
+?>
+   <form action="action.php" method="POST" enctype="multipart/form-data">
+    <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
+    <input type="hidden" name="mode" value="$mode" />
+    <div class="input-container">
+     <label for="isbn">ISBN</label>
+     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" />
+    </div>
+    <div class="input-container">
+     <label for="title">Title</label>
+     <input type="text" name="title" id="title-input" placeholder="Title" required="required" />
+    </div>
+    <div class="input-container">
+     <label for="author">Author</label>
+     <input type="text" name="author" id="author-input" placeholder="Author" required="required" />
+    </div>
+    <div class="input-container">
+     <label for="edition">Edition</label>
+     <input type="number" name="edition" id="edition-input" value="1" min="1" step="1" />
+    </div>
+    <div class="input-container">
+     <label for="book">Book upload</label>
+     <input type="file" name="book" id="book-input" required="required" />
+    </div>
+    <input type="submit" value="Submit" />
+   </form>
+<?php
+}
+
 function add_book($values, $file) {
     global $dbc;
 
@@ -81,25 +111,35 @@ function add_book($values, $file) {
 
     // Perform updates to database and file system
 
-    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_WRITE);
-    $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
-    $r = mysqli_query($dbc, $q);
+    if ($mode === "new") {
 
-    if (!$r || mysqli_affected_rows($dbc) != 1) {
-        add_error("Failed to insert into book table (" . mysqli_error($dbc) . ")");
-    }
+        // TODO: uniqueness check
 
-    if (!errors_occurred()) {
-        $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
-        if ($type) {
-            if (generate_cover($file, $type)) {
-                generate_ocr_blob($file, $type);
+        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_WRITE);
+        $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
+        $r = mysqli_query($dbc, $q);
+
+        if (!$r || mysqli_affected_rows($dbc) != 1) {
+            add_error("Failed to insert into book table (" . mysqli_error($dbc) . ")");
+        }
+
+        if (!errors_occurred()) {
+            $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
+            if ($type) {
+                if (generate_cover($file, $type)) {
+                    generate_ocr_blob($file, $type);
+                }
             }
         }
-    }
 
-    if (errors_occurred()) {
-        add_book_rollback();
+        if (errors_occurred()) {
+            add_book_rollback();
+        } else {
+            $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
+        }
+    } else {
+        // TODO: authorisation check
+        // Update book
     }
 }
 
