@@ -11,10 +11,10 @@ display_status();
 if ($is_logged_in) { ?>
    <a class="book-list-item" id="book-list-add-book-item" href="new/">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
-    <p>Add new book</p>
+    <span>Add new book</span>
    </a>
 <?php
-    $books = fetch_books(); // Load all books
+    $books = fetch_books(); // Load all books editable by the user
     foreach ($books as $book) {
         $isbn = $book["isbn"];
         $title = $book["title"];

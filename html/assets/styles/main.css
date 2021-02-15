@@ -81,15 +81,14 @@ h2 {
     color: white;
     background-color: #213D54;
     text-decoration: none;
-    padding: 10px;
     border-radius: 5px;
     border: 0;
     margin: 20px;
+    padding: 20px;
+    display: block;
     height: 160px;
     width: 160px;
-    padding: 20px;
     text-align: center;
-    display: block;
 }
 
 .card:hover {
@@ -119,4 +118,37 @@ h2 {
     margin: 10px;
     color: #FFF;
     box-shadow: 0 0 3px #52974E;
+}
+
+.book-list-item {
+    display: block;
+    text-decoration: none;
+    border-radius: 5px;
+    border: 1px solid #213D54;
+    margin: 20px;
+    padding: 20px;
+    display: block;
+}
+
+.book-list-item:hover {
+    border: 1px solid #4E7696;
+    box-shadow: 0 0 3px #666;
+}
+
+#book-list-add-book-item {
+    background-color: #213D54;
+    border: 0;
+    color: #FFF;
+    font-size: 1.2em;
+}
+
+#book-list-add-book-item:hover {
+    background-color: #4E7696;
+    border: 0;
+}
+
+#book-list-add-book-item img {
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 15px;
 }
