@@ -110,6 +110,7 @@ h2 {
     background-color: #97574E;
     margin: 10px;
     color: #FFF;
+    box-shadow: 0 0 3px #97574E;
 }
 
 .success {
@@ -117,4 +118,5 @@ h2 {
     background-color: #52974E;
     margin: 10px;
     color: #FFF;
+    box-shadow: 0 0 3px #52974E;
 }
