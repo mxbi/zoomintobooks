@@ -66,7 +66,7 @@ function show_book_form($mode) {
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
-    <input type="hidden" name="mode" value="$mode" />
+    <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="isbn">ISBN</label>
      <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" />
@@ -99,6 +99,7 @@ function add_book($values, $file) {
     $title = sanitise($values["title"]);
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
+    $mode = sanitise($values["mode"]);
 
     if (empty($file)) add_error("No file uploaded");
     if (!is_valid_isbn($isbn)) add_error("ISBN is invalid");
@@ -112,10 +113,9 @@ function add_book($values, $file) {
     // Perform updates to database and file system
 
     if ($mode === "new") {
-
         // TODO: uniqueness check
 
-        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_WRITE);
+        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE, "book");
         $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
         $r = mysqli_query($dbc, $q);
 
@@ -127,17 +127,30 @@ function add_book($values, $file) {
             $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
             if ($type) {
                 if (generate_cover($file, $type)) {
-                    generate_ocr_blob($file, $type);
+                    if (generate_ocr_blob($file, $type)) {
+
+                    } else {
+                        add_error("Failed to generate OCR blob");
+                    }
+                } else {
+                    add_error("Failed to generate cover thumbnail");
                 }
             }
         }
 
         if (errors_occurred()) {
-            add_book_rollback();
+            // TODO: remove files
+            if (!mysqli_rollback($dbc)) {
+                add_error("Rollback failed");
+            }
         } else {
-            mysqli_commit($dbc);
-            set_success("Added $title");
-            $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
+            if (mysqli_commit($dbc)) {
+                set_success("Added $title");
+                $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
+            } else {
+                add_error("Commit failed");
+                // TODO: rollback all
+            }
         }
     } else {
         // TODO: authorisation check
@@ -151,11 +164,5 @@ function generate_cover($file, $type) {
 
 function generate_ocr_blob($file, $type) {
     return true;
-}
-
-function add_book_rollback() {
-    global $dbc;
-    // TODO: remove files
-    mysqli_rollback($dbc);
 }
 ?>

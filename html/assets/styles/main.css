@@ -1,9 +1,4 @@
 /*
- * Light blue: #4E7696
- * Dark blue: #213D54
- */
-
-/*
  * General
  */
 
@@ -24,8 +19,8 @@ body {
 
 header {
     padding: 10px 10px 5px 10px;
-    background-color: #213D54;
-    background-image: linear-gradient(to right, #4E7696, #213D54);
+    background-color: #523A1A;
+    background-image: linear-gradient(to right, #C7AF8F, #523A1A);
     box-shadow: 0 0 5px #333;
 }
 
@@ -52,7 +47,7 @@ h1 {
 
 #header-nav a:hover {
     background-color: #FFF;
-    color: #213D54;
+    color: #523A1A;
     box-shadow: inset 0 0 3px #666;
 }
 
@@ -79,7 +74,7 @@ h2 {
 
 .card {
     color: white;
-    background-color: #213D54;
+    background-color: #523A1A;
     text-decoration: none;
     border-radius: 5px;
     border: 0;
@@ -92,7 +87,7 @@ h2 {
 }
 
 .card:hover {
-    background-color: #4E7696;
+    background-color: #C7AF8F;
     box-shadow: 0 0 3px #666;
 }
 
@@ -124,26 +119,26 @@ h2 {
     display: block;
     text-decoration: none;
     border-radius: 5px;
-    border: 1px solid #213D54;
+    border: 1px solid #523A1A;
     margin: 20px;
     padding: 20px;
     display: block;
 }
 
 .card-list-item:hover {
-    border: 1px solid #4E7696;
+    border: 1px solid #C7AF8F;
     box-shadow: 0 0 3px #666;
 }
 
 .card-list-add-item {
-    background-color: #213D54;
+    background-color: #523A1A;
     border: 0;
     color: #FFF;
     font-size: 1.2em;
 }
 
 .card-list-add-item:hover {
-    background-color: #4E7696;
+    background-color: #C7AF8F;
     border: 0;
 }
 
