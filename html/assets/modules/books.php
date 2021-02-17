@@ -47,7 +47,7 @@ function can_edit_book($isbn) {
 function count_resources($isbn) {
     global $dbc;
     $isbn = sanitise($isbn);
-    $q = "SELECT COUNT(rid) AS c FROM has_resource WHERE isbn = '$isbn'";
+    $q = "SELECT COUNT(rid) AS c FROM resource_instance WHERE isbn = '$isbn'";
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error("Failed to count resources for book $isbn (" . mysqli_error($dbc) . ")");
@@ -62,7 +62,7 @@ function count_resources($isbn) {
     }
 }
 
-function show_book_edit_form($mode) {
+function show_book_form($mode) {
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
@@ -87,7 +87,7 @@ function show_book_edit_form($mode) {
      <label for="book">Book upload</label>
      <input type="file" name="book" id="book-input" required="required" />
     </div>
-    <input type="submit" value="Submit" />
+    <input type="submit" value="Add book" />
    </form>
 <?php
 }
@@ -105,7 +105,7 @@ function add_book($values, $file) {
     if (is_blank($title)) add_error("Title is blank");
     if (is_blank($author)) add_error("Author is blank");
     if (!is_pos_int($edition)) add_error("Edition is invalid");
-    $pub_id = get_publisher();
+    $pub_id = get_publisher($_SESSION["username"])["pub_id"];
 
     if (errors_occurred()) return;
 
@@ -135,6 +135,8 @@ function add_book($values, $file) {
         if (errors_occurred()) {
             add_book_rollback();
         } else {
+            mysqli_commit($dbc);
+            set_success("Added $title");
             $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
         }
     } else {

@@ -17,6 +17,7 @@ if ($is_logged_in) { ?>
 <?php
     if ($is_admin) {
         echo "    <a class=\"card\" href=\"users/\"><img src=\"/assets/images/icons/group-128.png\" alt=\"\" /><span class=\"card-label\">Manage users</span></a>";
+        echo "    <a class=\"card\" href=\"publishers/\"><img src=\"/assets/images/icons/briefcase-6-128.png\" alt=\"\" /><span class=\"card-label\">Manage publishers</span></a>";
     }
 ?>
    </div>

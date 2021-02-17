@@ -9,7 +9,7 @@ $_SESSION["redirect"] = "/console/books/";
 <?php
 display_status();
 if ($is_logged_in) { ?>
-   <a class="book-list-item" id="book-list-add-book-item" href="new/">
+   <a class="card-list-item card-list-add-item" href="new/">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
     <span>Add new book</span>
    </a>
@@ -20,7 +20,7 @@ if ($is_logged_in) { ?>
         $title = $book["title"];
         $author = $book["author"];
         $resource_count = count_resources($isbn);
-        echo "   <a class=\"book-list-item\" href=\"book?isbn=$isbn\">\n";
+        echo "   <a class=\"card-list-item\" href=\"book?isbn=$isbn\">\n";
         echo "    <img src=\"covers/$isbn.png\" alt=\"Front cover of $title\" />\n";
         echo "    <p>$title</p>\n";
         echo "    <p>$author</p>\n";

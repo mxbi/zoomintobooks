@@ -120,7 +120,7 @@ h2 {
     box-shadow: 0 0 3px #52974E;
 }
 
-.book-list-item {
+.card-list-item {
     display: block;
     text-decoration: none;
     border-radius: 5px;
@@ -130,24 +130,24 @@ h2 {
     display: block;
 }
 
-.book-list-item:hover {
+.card-list-item:hover {
     border: 1px solid #4E7696;
     box-shadow: 0 0 3px #666;
 }
 
-#book-list-add-book-item {
+.card-list-add-item {
     background-color: #213D54;
     border: 0;
     color: #FFF;
     font-size: 1.2em;
 }
 
-#book-list-add-book-item:hover {
+.card-list-add-item:hover {
     background-color: #4E7696;
     border: 0;
 }
 
-#book-list-add-book-item img {
+.card-list-add-item img {
     height: 50px;
     vertical-align: middle;
     margin-right: 15px;

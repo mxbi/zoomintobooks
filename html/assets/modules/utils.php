@@ -33,30 +33,6 @@ function sanitise($s) {
     return mysqli_real_escape_string($dbc, htmlentities($s));
 }
 
-function authorise($username, $password) {
-    if ($username === "test") {
-        return "standard";
-    } else if ($username === "admin") {
-        return "admin";
-    } else {
-        return "";
-    }
-}
-
-function get_publisher() {
-    global $dbc;
-    $username = sanitise($_SESSION["username"]);
-    $q = "SELECT pub_id FROM user WHERE username = '$username'";
-    $r = mysqli_query($q);
-    if (!$r || mysqli_num_rows($dbc) != 1) {
-        add_error("Failed to get publisher for $username (" . mysqli_error($dbc) . ")");
-        return -1;
-    }
-    $pub_id = mysqli_fetch_array($r, MYSQLI_ASSOC)["pub_id"];
-    mysqli_free_result($r);
-    return $pub_id;
-}
-
 function errors_occurred() {
     return !empty($_SESSION["errors"]);
 }

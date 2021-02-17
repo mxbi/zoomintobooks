@@ -6,12 +6,10 @@ if ($is_logged_in) {
 } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];
     $password = $_POST["password"];
-    $result = authorise($username, $password);
-    if ($result === "") {
+    $success = authenticate($username, $password);
+    if (!$success) {
         add_error("Authentication failed");
     } else {
-        $_SESSION["username"] = $username;
-        $_SESSION["account_type"] = $result;
         set_success("Logged in as " . $username);
     }
 } else {
