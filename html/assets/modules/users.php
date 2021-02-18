@@ -96,6 +96,19 @@ function fetch_users() {
     return $users;
 }
 
+function fetch_user($username) {
+    global $dbc;
+    $username = sanitise($username);
+    $q = "SELECT * FROM user WHERE username = '$username'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error("Failed to get users $username (" . mysqli_error($dbc) . ")");
+    }
+    $user = mysqli_fetch_array($r, MYSQLI_ASSOC);
+    mysqli_free_result($r);
+    return $user;
+}
+
 function fetch_publishers() {
     // TODO: publisher_managed_by
     global $dbc;
@@ -119,13 +132,16 @@ function add_user($values) {
     $username = sanitise($values["username"]);
     $password = $values["password"];
     $password2 = $values["password2"];
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+    $publisher = sanitise($values["publisher"]);
+    $pub_id = get_pub_id($publisher);
+    $_SESSION["sticky"]["username"] = $username;
+    $_SESSION["sticky"]["publisher"] = $publisher;
+
     if ($password !== $password2) {
         add_error("Passwords do not match");
         return false;
     }
-    $hash = password_hash($password, PASSWORD_DEFAULT);
-    $publisher = sanitise($values["publisher"]);
-    $pub_id = get_pub_id($publisher);
     if ($pub_id < 0) {
         return false;
     }
@@ -201,14 +217,21 @@ function add_publisher($values) {
     return $success;
 }
 
-function show_user_form($mode) {
+function show_user_form($mode, $username) {
     // TODO: selectable menu of available publishers
+    $values = $_SESSION["sticky"];
+    if ($mode == "edit") {
+        $values = fetch_user($username);
+        if (empty($values)) {
+            add_error("Failed to load values for $username");
+        }
+    }
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="mode" value="$mode" />
     <div class="input-container">
      <label for="username">Username</label>
-     <input type="text" name="username" id="username-input" placeholder="Username" required="required" />
+     <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo $values["username"]; ?>" />
     </div>
     <div class="input-container">
      <label for="password">Password</label>
@@ -220,11 +243,12 @@ function show_user_form($mode) {
     </div>
     <div class="input-container">
      <label for="publisher">Publisher</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" />
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo $values["publisher"]; ?>" />
     </div>
-    <input type="submit" value="Create user" />
+    <input type="submit" value="<?php echo $mode == "new" ? "Create user" : "Edit user"; ?>" />
    </form>
 <?php
+    unset($_SESSION["sticky"]);
 }
 
 function show_publisher_form($mode) {

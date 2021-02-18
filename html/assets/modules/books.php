@@ -6,7 +6,6 @@ function fetch_book($isbn) {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error("Failed to fetch book $isbn (" . mysqli_error($dbc) . ")");
-        return 0;
     }
     $book = mysqli_fetch_array($r, MYSQLI_ASSOC);
     mysqli_free_result($r);
@@ -22,7 +21,6 @@ function fetch_books() {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error("Failed to fetch books (" . mysqli_error($dbc) . ")");
-        return 0;
     }
     $books = mysqli_fetch_all($r, MYSQLI_ASSOC);
     mysqli_free_result($r);
@@ -37,7 +35,6 @@ function can_edit_book($isbn) {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error("Failed to determine if book $isbn is editable by $username (" . mysqli_error($dbc) . ")");
-        return false;
     }
     $editable = (mysqli_num_rows($r) === 1) ? true : false;
     mysqli_free_result($r);
@@ -51,7 +48,6 @@ function count_resources($isbn) {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error("Failed to count resources for book $isbn (" . mysqli_error($dbc) . ")");
-        return 0;
     }
     $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
     mysqli_free_result($r);
@@ -62,34 +58,42 @@ function count_resources($isbn) {
     }
 }
 
-function show_book_form($mode) {
+function show_book_form($mode, $isbn) {
+    $values = $_SESSION["sticky"];
+    if ($mode == "edit") {
+        $values = fetch_book($isbn);
+        if (empty($values)) {
+            add_error("Failed to load values for $isbn");
+        }
+    }
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
     <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="isbn">ISBN</label>
-     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" />
+     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" value="<?php echo $values["isbn"]; ?>" />
     </div>
     <div class="input-container">
      <label for="title">Title</label>
-     <input type="text" name="title" id="title-input" placeholder="Title" required="required" />
+     <input type="text" name="title" id="title-input" placeholder="Title" required="required" value="<?php echo $values["title"]; ?>" />
     </div>
     <div class="input-container">
      <label for="author">Author</label>
-     <input type="text" name="author" id="author-input" placeholder="Author" required="required" />
+     <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo $values["author"]; ?>" />
     </div>
     <div class="input-container">
      <label for="edition">Edition</label>
-     <input type="number" name="edition" id="edition-input" value="1" min="1" step="1" />
+     <input type="number" name="edition" id="edition-input" value="<?php echo isset($values["edition"]) ? $values["edition"] : 1; ?>" min="1" step="1" />
     </div>
     <div class="input-container">
      <label for="book">Book upload</label>
      <input type="file" name="book" id="book-input" required="required" />
     </div>
-    <input type="submit" value="Add book" />
+    <input type="submit" value="<?php echo ($mode == "new") ? "Add book" : "Edit book" ; ?>" />
    </form>
 <?php
+    unset($_SESSION["sticky"]);
 }
 
 function add_book($values, $file) {
@@ -101,6 +105,10 @@ function add_book($values, $file) {
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
     $mode = sanitise($values["mode"]);
+    $_SESSION["sticky"]["isbn"] = $isbn;
+    $_SESSION["sticky"]["title"] = $title;
+    $_SESSION["sticky"]["author"] = $author;
+    $_SESSION["sticky"]["edition"] = $edition;
 
     if (empty($file)) add_error("No file uploaded");
     if (!is_valid_isbn($isbn)) add_error("ISBN is invalid");
@@ -114,8 +122,6 @@ function add_book($values, $file) {
     // Perform updates to database and file system
 
     if ($mode === "new") {
-        // TODO: uniqueness check
-
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
         $r = mysqli_query($dbc, $q);
@@ -148,17 +154,14 @@ function add_book($values, $file) {
         }
 
         if (errors_occurred()) {
-            // TODO: remove files
-            if (!mysqli_rollback($dbc)) {
-                add_error("Rollback failed");
-            }
+            rollback_book();
         } else {
             if (mysqli_commit($dbc)) {
                 set_success("Added $title");
                 $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
             } else {
                 add_error("Commit failed");
-                // TODO: rollback all
+                rollback_book();
             }
         }
     } else {
@@ -173,5 +176,13 @@ function generate_cover($file, $type) {
 
 function generate_ocr_blob($file, $type) {
     return true;
+}
+
+function rollback_book() {
+    // TODO: clean up files
+    global $dbc;
+    if (!mysqli_rollback($dbc)) {
+        add_error("Rollback failed");
+    }
 }
 ?>

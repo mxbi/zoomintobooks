@@ -10,7 +10,7 @@ make_header("Add user", "", "");
 display_status();
 if ($is_logged_in) {
     if ($is_admin) {
-        show_user_form("new");
+        show_user_form("new", "");
     } else {
         echo "   <p>You do not have the required permissions to view this page.</p>\n";
     }

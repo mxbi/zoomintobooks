@@ -9,7 +9,7 @@ make_header("Add book", "", "");
 <?php
 display_status();
 if ($is_logged_in) {
-    show_book_form("new");
+    show_book_form("new", 0);
 } else {
     echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";
 }
