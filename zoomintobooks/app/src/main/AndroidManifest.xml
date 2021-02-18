@@ -21,6 +21,10 @@
         <activity
             android:name=".NewPostActivity"
             android:parentActivityName=".MainActivity"/>
+        <activity android:name=".ImageMatchActivity"
+            android:parentActivityName=".MainActivity"/>
+        <activity android:name="Settings"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

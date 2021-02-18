@@ -1,0 +1,4 @@
+#Thu Feb 18 17:32:04 GMT 2021
+base.0=C\:\\Users\\Zenovarse\\Documents\\GitHub\\zoomintobooks\\zoomintobooks\\java\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+path.0=classes.dex
+renamed.0=classes.dex

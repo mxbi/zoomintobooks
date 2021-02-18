@@ -1,0 +1,11 @@
+com/uniform/zoomintobooks/SecondFragment.java
+ com.uniform.zoomintobooks.SecondFragment
+ com.uniform.zoomintobooks.SecondFragment$1
+com/uniform/zoomintobooks/MainActivity.java
+ com.uniform.zoomintobooks.MainActivity
+ com.uniform.zoomintobooks.MainActivity$1
+com/uniform/zoomintobooks/BuildConfig.java
+ com.uniform.zoomintobooks.BuildConfig
+com/uniform/zoomintobooks/FirstFragment.java
+ com.uniform.zoomintobooks.FirstFragment
+ com.uniform.zoomintobooks.FirstFragment$1

@@ -1,2 +1,4 @@
 include ':app'
 rootProject.name = "zoomintobooks"
+include ':java'
+include ':openCVLibrary249'

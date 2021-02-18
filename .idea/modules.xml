@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Zoom_Into_Books.iml" filepath="$PROJECT_DIR$/.idea/modules/Zoom_Into_Books.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Zoom_Into_Books.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Zoom_Into_Books.app.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,259 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+MERGED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:17:1-49:12
+MERGED from [com.github.bumptech.glide:glide:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\b9069f761a1e513052c5295195a1aec1\jetified-glide-4.6.1\AndroidManifest.xml:2:1-13:12
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\522d5cc41e0add1313b98aa46881f2c9\material-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\0d69aea288bd9c77afa4f8afd7c35fe5\appcompat-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-location:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\58ca8119766417b8f09b4ac2ce082bcf\jetified-play-services-location-17.1.0\AndroidManifest.xml:2:1-9:12
+MERGED from [com.github.bumptech.glide:gifdecoder:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\37a31460ae8de59bc03b73773a3f4203\jetified-gifdecoder-4.6.1\AndroidManifest.xml:2:1-11:12
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\405a67604df822d17680e694d669e23c\jetified-viewpager2-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:17:1-29:12
+MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\2aa98a60c51f62d4fe4581c7a565e8f9\jetified-play-services-places-placereport-17.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [com.google.android.gms:play-services-tasks:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\3f5fde9c8367636e56bb64729bf02c91\jetified-play-services-tasks-17.1.0\AndroidManifest.xml:2:1-9:12
+MERGED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:17:1-28:12
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\f571276bff67684a540f564f5677638a\fragment-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\12bcbaca3353ca5c1538ef4a6ba281fb\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1e19b627048259720a9293cff54eca4b\drawerlayout-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\fcdaabe3acafed622c2a36d692b38303\coordinatorlayout-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.transition:transition:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\e0e654e7f0e4b26ce0ba0fbab7b3ee8b\transition-1.2.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6e4c8d1772fc6d6ee2099c68eedf1c03\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5c010204b349cb67993103f3db4846c3\vectordrawable-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5772398f154fbb421660eae656082fcd\viewpager-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\caea093eaa3f4ab10bb21ae1108e4fce\loader-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\4cd09af75b4e9c80a52041a8e1774876\jetified-activity-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\d41b143c555fb6013f800f08ed885f01\recyclerview-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\457b24bb365487f19b919b9304bfe494\customview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:17:1-26:12
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\844e6d8d110901814b6cf2c0e58db777\cursoradapter-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\9f787e057b2287836884ce91071f4cb1\cardview-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\25d8934de3004385e90543e0b354fff1\versionedparcelable-1.1.0\AndroidManifest.xml:17:1-27:12
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\31fe7ec3156d932311e1d63e5afe3838\lifecycle-runtime-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a00281b5d84046061d87ced0c5ed5d6f\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\7526d421bacfef31921c7043f85ffde8\jetified-savedstate-1.0.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1653319b2d58e30ed9313b0c2df5947e\interpolator-1.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\13f6a8a8ac08da7eb6eca2e6990d51f4\lifecycle-livedata-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\be7a7dfb68705840901dbd39fdfd186a\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\43a209a1574b998fc4c3256029348641\core-runtime-2.0.0\AndroidManifest.xml:17:1-22:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+	package
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:19:5-62
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:18:5-51
+	android:versionCode
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:1-49:12
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:17:11-69
+uses-permission#android.permission.CAMERA
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:21:3-62
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:21:20-60
+uses-feature#android.hardware.camera.ar
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:24:3-84
+	android:required
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:24:59-82
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:24:17-58
+application
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:26:3-48:17
+MERGED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:33:5-47:19
+MERGED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:33:5-47:19
+MERGED from [com.github.bumptech.glide:glide:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\b9069f761a1e513052c5295195a1aec1\jetified-glide-4.6.1\AndroidManifest.xml:11:5-20
+MERGED from [com.github.bumptech.glide:glide:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\b9069f761a1e513052c5295195a1aec1\jetified-glide-4.6.1\AndroidManifest.xml:11:5-20
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\522d5cc41e0add1313b98aa46881f2c9\material-1.1.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\522d5cc41e0add1313b98aa46881f2c9\material-1.1.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-location:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\58ca8119766417b8f09b4ac2ce082bcf\jetified-play-services-location-17.1.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-location:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\58ca8119766417b8f09b4ac2ce082bcf\jetified-play-services-location-17.1.0\AndroidManifest.xml:7:5-20
+MERGED from [com.github.bumptech.glide:gifdecoder:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\37a31460ae8de59bc03b73773a3f4203\jetified-gifdecoder-4.6.1\AndroidManifest.xml:9:5-20
+MERGED from [com.github.bumptech.glide:gifdecoder:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\37a31460ae8de59bc03b73773a3f4203\jetified-gifdecoder-4.6.1\AndroidManifest.xml:9:5-20
+MERGED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:22:5-27:19
+MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\2aa98a60c51f62d4fe4581c7a565e8f9\jetified-play-services-places-placereport-17.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\2aa98a60c51f62d4fe4581c7a565e8f9\jetified-play-services-places-placereport-17.0.0\AndroidManifest.xml:22:5-20
+MERGED from [com.google.android.gms:play-services-tasks:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\3f5fde9c8367636e56bb64729bf02c91\jetified-play-services-tasks-17.1.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-tasks:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\3f5fde9c8367636e56bb64729bf02c91\jetified-play-services-tasks-17.1.0\AndroidManifest.xml:7:5-20
+MERGED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:22:5-26:19
+MERGED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:22:5-26:19
+MERGED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:24:5-89
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\25d8934de3004385e90543e0b354fff1\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\25d8934de3004385e90543e0b354fff1\versionedparcelable-1.1.0\AndroidManifest.xml:24:5-25:19
+	android:appComponentFactory
+		ADDED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:24:18-86
+	android:label
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:29:7-39
+	android:hardwareAccelerated
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:32:7-42
+	tools:ignore
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:33:7-46
+	android:icon
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:28:7-43
+	android:allowBackup
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:27:7-34
+	android:theme
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:30:7-38
+	android:usesCleartextTraffic
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:31:7-43
+activity#com.google.ar.core.examples.java.augmentedimage.AugmentedImageActivity
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:35:5-45:16
+	android:screenOrientation
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:40:9-43
+	android:exported
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:38:9-32
+	android:configChanges
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:37:9-55
+	android:theme
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:39:9-59
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:36:9-94
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:41:7-44:23
+action#android.intent.action.MAIN
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:42:9-60
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:42:17-58
+category#android.intent.category.LAUNCHER
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:43:9-68
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:43:19-66
+meta-data#com.google.ar.core
+ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:47:5-77
+	android:value
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:47:50-74
+	android:name
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml:47:16-49
+uses-sdk
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+MERGED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:25:5-27:41
+MERGED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:25:5-27:41
+MERGED from [com.github.bumptech.glide:glide:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\b9069f761a1e513052c5295195a1aec1\jetified-glide-4.6.1\AndroidManifest.xml:7:5-9:41
+MERGED from [com.github.bumptech.glide:glide:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\b9069f761a1e513052c5295195a1aec1\jetified-glide-4.6.1\AndroidManifest.xml:7:5-9:41
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\522d5cc41e0add1313b98aa46881f2c9\material-1.1.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.material:material:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\522d5cc41e0add1313b98aa46881f2c9\material-1.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\0d69aea288bd9c77afa4f8afd7c35fe5\appcompat-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\0d69aea288bd9c77afa4f8afd7c35fe5\appcompat-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.gms:play-services-location:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\58ca8119766417b8f09b4ac2ce082bcf\jetified-play-services-location-17.1.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-location:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\58ca8119766417b8f09b4ac2ce082bcf\jetified-play-services-location-17.1.0\AndroidManifest.xml:5:5-44
+MERGED from [com.github.bumptech.glide:gifdecoder:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\37a31460ae8de59bc03b73773a3f4203\jetified-gifdecoder-4.6.1\AndroidManifest.xml:5:5-7:41
+MERGED from [com.github.bumptech.glide:gifdecoder:4.6.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\37a31460ae8de59bc03b73773a3f4203\jetified-gifdecoder-4.6.1\AndroidManifest.xml:5:5-7:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\405a67604df822d17680e694d669e23c\jetified-viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\405a67604df822d17680e694d669e23c\jetified-viewpager2-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\2aa98a60c51f62d4fe4581c7a565e8f9\jetified-play-services-places-placereport-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-places-placereport:17.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\2aa98a60c51f62d4fe4581c7a565e8f9\jetified-play-services-places-placereport-17.0.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\3f5fde9c8367636e56bb64729bf02c91\jetified-play-services-tasks-17.1.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-tasks:17.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\3f5fde9c8367636e56bb64729bf02c91\jetified-play-services-tasks-17.1.0\AndroidManifest.xml:5:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:20:5-44
+MERGED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\f571276bff67684a540f564f5677638a\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.fragment:fragment:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\f571276bff67684a540f564f5677638a\fragment-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\12bcbaca3353ca5c1538ef4a6ba281fb\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.appcompat:appcompat-resources:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\12bcbaca3353ca5c1538ef4a6ba281fb\jetified-appcompat-resources-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1e19b627048259720a9293cff54eca4b\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.drawerlayout:drawerlayout:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1e19b627048259720a9293cff54eca4b\drawerlayout-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\fcdaabe3acafed622c2a36d692b38303\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\fcdaabe3acafed622c2a36d692b38303\coordinatorlayout-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\e0e654e7f0e4b26ce0ba0fbab7b3ee8b\transition-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.transition:transition:1.2.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\e0e654e7f0e4b26ce0ba0fbab7b3ee8b\transition-1.2.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6e4c8d1772fc6d6ee2099c68eedf1c03\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6e4c8d1772fc6d6ee2099c68eedf1c03\vectordrawable-animated-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5c010204b349cb67993103f3db4846c3\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.vectordrawable:vectordrawable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5c010204b349cb67993103f3db4846c3\vectordrawable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5772398f154fbb421660eae656082fcd\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.viewpager:viewpager:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\5772398f154fbb421660eae656082fcd\viewpager-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\caea093eaa3f4ab10bb21ae1108e4fce\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.loader:loader:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\caea093eaa3f4ab10bb21ae1108e4fce\loader-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\4cd09af75b4e9c80a52041a8e1774876\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.activity:activity:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\4cd09af75b4e9c80a52041a8e1774876\jetified-activity-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\d41b143c555fb6013f800f08ed885f01\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.recyclerview:recyclerview:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\d41b143c555fb6013f800f08ed885f01\recyclerview-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\457b24bb365487f19b919b9304bfe494\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.customview:customview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\457b24bb365487f19b919b9304bfe494\customview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.core:core:1.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a4df7b41943e8748e2d383f42d3fb9e5\core-1.3.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\844e6d8d110901814b6cf2c0e58db777\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cursoradapter:cursoradapter:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\844e6d8d110901814b6cf2c0e58db777\cursoradapter-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\9f787e057b2287836884ce91071f4cb1\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.cardview:cardview:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\9f787e057b2287836884ce91071f4cb1\cardview-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\25d8934de3004385e90543e0b354fff1\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\25d8934de3004385e90543e0b354fff1\versionedparcelable-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\31fe7ec3156d932311e1d63e5afe3838\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-runtime:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\31fe7ec3156d932311e1d63e5afe3838\lifecycle-runtime-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a00281b5d84046061d87ced0c5ed5d6f\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-viewmodel:2.1.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a00281b5d84046061d87ced0c5ed5d6f\lifecycle-viewmodel-2.1.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\7526d421bacfef31921c7043f85ffde8\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.savedstate:savedstate:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\7526d421bacfef31921c7043f85ffde8\jetified-savedstate-1.0.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1653319b2d58e30ed9313b0c2df5947e\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.interpolator:interpolator:1.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\1653319b2d58e30ed9313b0c2df5947e\interpolator-1.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\13f6a8a8ac08da7eb6eca2e6990d51f4\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\13f6a8a8ac08da7eb6eca2e6990d51f4\lifecycle-livedata-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\be7a7dfb68705840901dbd39fdfd186a\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\be7a7dfb68705840901dbd39fdfd186a\lifecycle-livedata-core-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\43a209a1574b998fc4c3256029348641\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+MERGED from [androidx.arch.core:core-runtime:2.0.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\43a209a1574b998fc4c3256029348641\core-runtime-2.0.0\AndroidManifest.xml:20:5-44
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		ADDED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+		INJECTED from C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\augimg\augmented_image_java\app\src\main\AndroidManifest.xml
+queries
+ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:29:5-31:15
+package#com.google.ar.core
+ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:30:9-54
+	android:name
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:30:18-51
+meta-data#com.google.ar.core.min_apk_version
+ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:36:9-38:41
+	android:value
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:38:13-38
+	android:name
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:37:13-62
+activity#com.google.ar.core.InstallActivity
+ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:40:9-46:80
+	android:excludeFromRecents
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:43:13-46
+	android:launchMode
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:45:13-43
+	android:exported
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:44:13-37
+	android:configChanges
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:42:13-74
+	android:theme
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:46:13-77
+	android:name
+		ADDED from [com.google.ar:core:1.22.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\6b2eff82af4ce35dab4257dc55bbce1f\jetified-core-1.22.0\AndroidManifest.xml:41:13-62
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:23:9-26:75
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:25:13-37
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:26:13-72
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\723bc9a09b153d610b6eff449b14970f\jetified-play-services-base-17.3.0\AndroidManifest.xml:24:13-79
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:23:9-25:69
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:25:13-66
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:17.3.0] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\a3901cd95dcde473190b42184a8edd1a\jetified-play-services-basement-17.3.0\AndroidManifest.xml:24:13-58

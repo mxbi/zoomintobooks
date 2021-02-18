@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        final Intent fp = new Intent(getApplicationContext(), NewPostActivity.class);
+        final Intent fp = new Intent(getApplicationContext(), ImageMatchActivity.class);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
