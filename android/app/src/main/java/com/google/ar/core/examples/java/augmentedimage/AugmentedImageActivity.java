@@ -51,6 +51,9 @@ import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
+import com.google.mlkit.vision.common.InputImage;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,6 +103,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private final Map<Integer, Pair<AugmentedImage, Anchor>> augmentedImageMap = new HashMap<>();
 
   private OCRAnalyzer ocrAnalyzer;
+
+  // Hook into OpenGL to grab the image from ARCore
+  private final TextureReader textureReader = new TextureReader();
+  private int gpuDownloadFrameBufferIndex = -1;
 
   public AugmentedImageActivity() throws IOException {
   }
@@ -258,6 +265,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       // Create the texture and pass it to ARCore session to be filled during update().
       backgroundRenderer.createOnGlThread(/*context=*/ this);
       augmentedImageRenderer.createOnGlThread(/*context=*/ this);
+
+      textureReader.create(this, TextureReaderImage.IMAGE_FORMAT_RGBA, 1920, 1080, false);
+//      log.d("[DE")
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
     }
@@ -267,6 +277,26 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   public void onSurfaceChanged(GL10 gl, int width, int height) {
     displayRotationHelper.onSurfaceChanged(width, height);
     GLES20.glViewport(0, 0, width, height);
+  }
+
+  public static Bitmap bitmapFromRgba(int width, int height, byte[] bytes) {
+    int[] pixels = new int[bytes.length / 4];
+    int j = 0;
+
+    for (int i = 0; i < pixels.length; i++) {
+      int R = bytes[j++] & 0xff;
+      int G = bytes[j++] & 0xff;
+      int B = bytes[j++] & 0xff;
+      int A = bytes[j++] & 0xff;
+
+      int pixel = (A << 24) | (R << 16) | (G << 8) | B;
+      pixels[i] = pixel;
+    }
+
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+    return bitmap;
   }
 
   @Override
@@ -291,8 +321,35 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Camera camera = frame.getCamera();
 
       // Do OCR analysis
-      ocrAnalyzer.analyze(frame);
+//      ocrAnalyzer.analyze(frame);
 
+      try {
+        if (!ocrAnalyzer.isBlocked()) {
+          gpuDownloadFrameBufferIndex =
+                  textureReader.submitFrame(backgroundRenderer.getTextureId(), 1920, 1080);
+
+          if (gpuDownloadFrameBufferIndex >= 0) {
+            Log.d("[DEBUG]", "Submitted frame to OCRAnalyzer...");
+            TextureReaderImage image = textureReader.acquireFrame(gpuDownloadFrameBufferIndex);
+
+            // Convert RGBA -> ARGB -> NV21
+            byte[] byteArray = new byte[1920 * 1080 * 4];
+            image.buffer.position(0);
+            image.buffer.get(byteArray, 0, image.buffer.capacity());
+            Bitmap bitmap = bitmapFromRgba(1920, 1080, byteArray);
+
+            // 90 degree rotation for portrait.
+            ocrAnalyzer.analyze(InputImage.fromBitmap(bitmap, 90));
+
+
+            textureReader.releaseFrame(gpuDownloadFrameBufferIndex);
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      ocrAnalyzer.analyze(textureReader);
 
       // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
       trackingStateHelper.updateKeepScreenOnFlag(camera.getTrackingState());
