@@ -124,6 +124,8 @@ function authorised($action, $params=array(), $errors=true) {
             $authorised = $is_admin || can_edit_resource($params["rid"]);
             break;
 
+        case "view user":
+        case "view publisher":
         case "add user":
         case "add publisher":
         case "edit user":
@@ -134,13 +136,36 @@ function authorised($action, $params=array(), $errors=true) {
             break;
 
         default:
-            if ($errors) add_error("Attempted to perform unknown action ($action)");
+            if ($errors) add_error("Attempted to perform unknown action (action: $action)");
             return false;
     }
 
     if (!$authorised && $errors) {
-        add_error("You do not have the required permissions ($action)");
+        add_error("You do not have the required permissions (action: $action)");
     }
     return $authorised;
+}
+
+function db_select($q, $one=false) {
+    global $dbc;
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_ONLY);
+    $result = array();
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+    } else {
+        if (!$one) { // Fetch all
+            $result = mysqli_fetch_all($r, MYSQLI_ASSOC);
+        } else {
+            $rows = mysqli_num_rows($r);
+            if ($rows <= 1) {
+                $result = mysqli_fetch_array($r, MYSQLI_ASSOC);
+            } else {
+                add_error("Expected at most 1 result, got $rows");
+            }
+        }
+    }
+    mysqli_free_result($r);
+    return $result;
 }
 ?>

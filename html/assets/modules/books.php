@@ -1,64 +1,29 @@
 <?php
 function fetch_book($isbn) {
     if (!authorised("view book", array("isbn" => $isbn))) return array();
-    global $dbc;
     $isbn = sanitise($isbn);
-    $q  = "SELECT b.* FROM book AS b WHERE isbn='$isbn'";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error("Failed to fetch book $isbn (" . mysqli_error($dbc) . ")");
-    }
-    $book = mysqli_fetch_array($r, MYSQLI_ASSOC);
-    mysqli_free_result($r);
-    return $book;
+    return db_select("SELECT b.* FROM book AS b WHERE isbn='$isbn'", true);
 }
 
 function fetch_books() {
     if (!authorised("list books")) return array();
-    global $dbc;
     $username = sanitise($_SESSION["username"]);
     $q  = "SELECT b.* FROM book AS b ";
     $q .= "JOIN editable_by AS eb ON b.isbn = eb.isbn ";
     $q .= "AND eb.username = '$username' ";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error("Failed to fetch books (" . mysqli_error($dbc) . ")");
-    }
-    $books = mysqli_fetch_all($r, MYSQLI_ASSOC);
-    mysqli_free_result($r);
-    return $books;
+    return db_select($q);
 }
 
 function can_edit_book($isbn) {
-    global $dbc;
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($isbn);
-    $q = "SELECT 1 FROM editable_by WHERE isbn = '$isbn' AND username = '$username'";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error("Failed to determine if book $isbn is editable by $username (" . mysqli_error($dbc) . ")");
-    }
-    $editable = (mysqli_num_rows($r) === 1) ? true : false;
-    mysqli_free_result($r);
-    return $editable;
+    return count(db_select("SELECT 1 FROM editable_by WHERE isbn = '$isbn' AND username = '$username'", true)) === 1;
 }
 
 function count_resources($isbn) {
-    if (!authorised("list resources", array("isbn" => $isbn))) return array();
-    global $dbc;
+    if (!authorised("view book", array("isbn" => $isbn))) return 0;
     $isbn = sanitise($isbn);
-    $q = "SELECT COUNT(rid) AS c FROM resource_instance WHERE isbn = '$isbn'";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error("Failed to count resources for book $isbn (" . mysqli_error($dbc) . ")");
-    }
-    $row = mysqli_fetch_array($r, MYSQLI_ASSOC);
-    mysqli_free_result($r);
-    if ($row === NULL) {
-        return 0;
-    } else {
-        return $row["c"];
-    }
+    return db_select("SELECT COUNT(rid) AS count FROM resource_instance WHERE isbn = '$isbn'", true)["count"];
 }
 
 function show_book_form($mode, $isbn=NULL) {
@@ -131,7 +96,7 @@ function add_book($values, $file) {
     if (is_blank($title)) add_error("Title is blank");
     if (is_blank($author)) add_error("Author is blank");
     if (!is_pos_int($edition)) add_error("Edition is invalid");
-    $pub_id = get_publisher($_SESSION["username"])["pub_id"];
+    $pub_id = fetch_publisher($_SESSION["username"])["pub_id"];
 
     if (errors_occurred()) return;
 

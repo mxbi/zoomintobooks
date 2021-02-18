@@ -21,7 +21,7 @@ if ($authorised) {
     $users = fetch_users(); // Load all users by this user
     foreach ($users as $user) {
         $username = $user["username"];
-        $publisher = get_publisher($username)["name"];
+        $publisher = fetch_publisher($username)["name"];
         echo "   <a class=\"card-list-item\" href=\"user?username=$username\">\n";
         echo "    <p>$username</p>\n";
         echo "    <p>$publisher</p>\n";

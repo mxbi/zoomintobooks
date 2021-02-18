@@ -1,64 +1,25 @@
 <?php
 function authenticate($username, $password) {
-    global $dbc;
     $username = sanitise($username);
-    $q = "SELECT password FROM user WHERE username = '$username'";
-    $r = mysqli_query($dbc, $q);
-    $success = false;
-    $rows = mysqli_num_rows($r);
-    if (!$r) {
-        add_error("Failed to access table during authentication (" . mysqli_error($dbc) . ")");
-    } else if ($rows === 0) {
-        $q2 = "SELECT password FROM administrator WHERE username = '$username'";
-        $r2 = mysqli_query($dbc, $q2);
-        $rows2 = mysqli_num_rows($r2);
-        if (!$r2) {
-            add_error("Failed to access table during authentication (" . mysqli_error($dbc) . ")");
-        } else if ($rows2 === 1) {
-            $hash = mysqli_fetch_array($r2, MYSQLI_ASSOC)["password"];
-            if (password_verify($password, $hash)) {
-                $success = true;
-                $_SESSION["username"] = $username;
-                $_SESSION["account_type"] = "admin";
-            }
-        } else if ($rows2 === 0) {
-            // Do nowt
-        } else if ($rows2 > 1) {
-            add_error("Duplicate rows found in table during authentication");
-        }
-        mysqli_free_result($r2);
-    } else if ($rows === 1){
-        $hash = mysqli_fetch_array($r, MYSQLI_ASSOC)["password"];
-        if (password_verify($password, $hash)) {
-            $success = true;
-            $_SESSION["username"] = $username;
-            $_SESSION["account_type"] = "standard";
-        }
+    $hash = db_select("SELECT password FROM user WHERE username = '$username'", true)["password"];
+    $hash2 = db_select("SELECT password FROM administrator WHERE username = '$username'", true)["password"];
+    if (password_verify($password, $hash)) {
+        $_SESSION["username"] = $username;
+        $_SESSION["account_type"] = "standard";
+        return true;
+    } else if (password_verify($password, $hash2)) {
+        $_SESSION["username"] = $username;
+        $_SESSION["account_type"] = "admin";
+        return true;
     } else {
-        add_error("Duplicate rows found in table during authentication");
+        return false;
     }
-    mysqli_free_result($r);
-    return $success;
 }
 
-function get_publisher($username) {
-    if (!authorised("view user", array("username" => $username))) return;
-    global $dbc;
+function fetch_publisher($username) {
+    if (!authorised("view user", array("username" => $username))) return array();
     $username = sanitise($username);
-    $q = "SELECT p.*, p.name FROM publisher AS p JOIN user AS u ON p.pub_id = u.pub_id AND u.username = '$username'";
-    $r = mysqli_query($dbc, $q);
-    $rows = mysqli_num_rows($r);
-    $publisher = array();
-    if (!$r) {
-        add_error("Failed to get publisher for $username (" . mysqli_error($dbc) . ")");
-    } else if ($rows == 0) {
-        add_error("No publisher associated with $username");
-    } else if ($rows > 1) {
-        add_error("Multiple publishers associated with $username");
-    } else {
-        $publisher = mysqli_fetch_array($r, MYSQLI_ASSOC);
-    }
-    mysqli_free_result($r);
+    $publisher = db_select("SELECT p.*, p.name FROM publisher AS p JOIN user AS u ON p.pub_id = u.pub_id AND u.username = '$username'", true);
     return $publisher;
 }
 
@@ -83,50 +44,21 @@ function get_pub_id($name) {
 }
 
 function fetch_users() {
-    if (!authorised("list users")) return;
-    global $dbc;
+    if (!authorised("list users")) return array();
     $username = sanitise($_SESSION["username"]);
-    $q = "SELECT u.* FROM user AS u JOIN managed_by AS m ON m.username = u.username AND m.admin_username = '$username'";
-    $r = mysqli_query($dbc, $q);
-    $users = array();
-    if (!$r) {
-        add_error("Failed to get users managed by $username (" . mysqli_error($dbc) . ")");
-    } else {
-        $users = mysqli_fetch_all($r, MYSQLI_ASSOC);
-    }
-    mysqli_free_result($r);
-    return $users;
+    return db_select("SELECT u.* FROM user AS u JOIN managed_by AS m ON m.username = u.username AND m.admin_username = '$username'");
 }
 
 function fetch_user($username) {
-    if (!authorised("view user", array("username" => $username))) return;
-    global $dbc;
+    if (!authorised("view user", array("username" => $username))) return array();
     $username = sanitise($username);
-    $q = "SELECT * FROM user WHERE username = '$username'";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error("Failed to get users $username (" . mysqli_error($dbc) . ")");
-    }
-    $user = mysqli_fetch_array($r, MYSQLI_ASSOC);
-    mysqli_free_result($r);
-    return $user;
+    return db_select("SELECT * FROM user WHERE username = '$username'", true);
 }
 
 function fetch_publishers() {
-    if (!authorised("list publishers")) return;
-    // TODO: publisher_managed_by
-    global $dbc;
+    if (!authorised("list publishers")) return array();
     $username = sanitise($_SESSION["username"]);
-    $q = "SELECT * FROM publisher";
-    $r = mysqli_query($dbc, $q);
-    $publishers = array();
-    if (!$r) {
-        add_error("Failed to get publishers (" . mysqli_error($dbc) . ")");
-    } else {
-        $publishers = mysqli_fetch_all($r, MYSQLI_ASSOC);
-    }
-    mysqli_free_result($r);
-    return $publishers;
+    return db_select("SELECT * FROM publisher");
 }
 
 
