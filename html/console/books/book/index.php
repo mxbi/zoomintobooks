@@ -19,10 +19,10 @@ if ($book === NULL) {
     echo "    <p>You do not have the required permissions to view this page.</p>\n";
 } else {
     echo "    <h3>Edit book properties</h3>\n";
-    show_book_edit_form("edit");
+    show_book_form("edit");
     echo "    <h3>Resources for this book</h3>\n";
 ?>
-   <a class="resource-list-item" id="resource-list-add-resource-item" href="/console/resources/new?isbn=$isbn">
+   <a class="card-list-item card-list-add-item" href="/console/resources/new?isbn=$isbn">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
     <span>Add new resource</span>
    </a>
