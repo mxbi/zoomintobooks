@@ -10,5 +10,5 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_book($_POST, $_FILES["book"]);
 }
 
-header("Location: /console/books/new/");
+header("Location: " . $_SESSION["redirect"]);
 ?>

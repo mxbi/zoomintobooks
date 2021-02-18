@@ -76,10 +76,10 @@ function get_type($file, $max_size, $legal_types) {
         if (!in_array($type, $legal_types)) {
             add_error("File type $type is not allowed");
         }
-        if ($_FILES["resource"]["size"] > $max_size) {
+        if ($_FILES["book"]["size"] > $max_size) {
             add_error("File is too large");
         }
-        if (!isset($_FILES["resource"]["error"]) || is_array($_FILES["resource"]["error"])) {
+        if (!isset($_FILES["book"]["error"]) || is_array($_FILES["book"]["error"])) {
             add_error("Invalid parameters");
         }
         if (!errors_occurred()) {

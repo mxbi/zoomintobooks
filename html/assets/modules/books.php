@@ -95,6 +95,7 @@ function show_book_form($mode) {
 function add_book($values, $file) {
     global $dbc;
 
+    $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($values["isbn"]);
     $title = sanitise($values["title"]);
     $author = sanitise($values["author"]);
@@ -115,13 +116,21 @@ function add_book($values, $file) {
     if ($mode === "new") {
         // TODO: uniqueness check
 
-        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE, "book");
+        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
         $r = mysqli_query($dbc, $q);
 
         if (!$r || mysqli_affected_rows($dbc) != 1) {
             add_error("Failed to insert into book table (" . mysqli_error($dbc) . ")");
+        } else {
+            $q2 = "INSERT INTO editable_by(isbn, username) VALUES ('$isbn', '$username')";
+            $r2 = mysqli_query($dbc, $q2);
+            if (!$r2 || mysqli_affected_rows($dbc) != 1) {
+                add_error("Failed to insert into editable_by table (" . mysqli_error($dbc) . ")");
+            }
+            mysqli_free_result($r2);
         }
+        mysqli_free_result($r);
 
         if (!errors_occurred()) {
             $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
