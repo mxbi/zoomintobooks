@@ -121,7 +121,7 @@ function show_user_form($mode, $username = NULL) {
         return;
     }
     // TODO: selectable menu of available publishers
-    $values = $_SESSION["sticky"];
+    $values = array();
     if ($mode == "edit") {
         $values = fetch_user($username);
         if (empty($values)) {
@@ -133,7 +133,7 @@ function show_user_form($mode, $username = NULL) {
     <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="username">Username</label>
-     <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo $values["username"]; ?>" />
+     <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo get_form_value("username", $values); ?>" />
     </div>
     <div class="input-container">
      <label for="password">Password</label>
@@ -145,7 +145,7 @@ function show_user_form($mode, $username = NULL) {
     </div>
     <div class="input-container">
      <label for="publisher">Publisher</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo $values["publisher"]; ?>" />
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo get_form_value("publisher", $values); ?>" />
     </div>
     <input type="submit" value="<?php echo $mode == "new" ? "Create user" : "Edit user"; ?>" />
    </form>
@@ -160,6 +160,7 @@ function show_publisher_form($mode, $publisher = NULL) {
         add_error("Illegal mode: $mode");
         return;
     }
+    // TODO: make sticky
 ?>
    <form action="action.php" method="POST">
     <input type="hidden" name="mode" value="<?php echo $mode; ?>" />

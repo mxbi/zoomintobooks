@@ -33,7 +33,7 @@ function show_book_form($mode, $isbn=NULL) {
         add_error("Illegal book form mode");
         return;
     }
-    $values = $_SESSION["sticky"];
+    $values = array();
     if ($mode == "edit") {
         $values = fetch_book($isbn);
         if (empty($values)) {
@@ -46,19 +46,19 @@ function show_book_form($mode, $isbn=NULL) {
     <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="isbn">ISBN</label>
-     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" value="<?php echo $values["isbn"]; ?>" />
+     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" value="<?php echo get_form_value("isbn", $values); ?>" />
     </div>
     <div class="input-container">
      <label for="title">Title</label>
-     <input type="text" name="title" id="title-input" placeholder="Title" required="required" value="<?php echo $values["title"]; ?>" />
+     <input type="text" name="title" id="title-input" placeholder="Title" required="required" value="<?php echo get_form_value("title", $values); ?>" />
     </div>
     <div class="input-container">
      <label for="author">Author</label>
-     <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo $values["author"]; ?>" />
+     <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo get_form_value("author", $values); ?>" />
     </div>
     <div class="input-container">
      <label for="edition">Edition</label>
-     <input type="number" name="edition" id="edition-input" value="<?php echo isset($values["edition"]) ? $values["edition"] : 1; ?>" min="1" step="1" />
+     <input type="number" name="edition" id="edition-input" value="<?php echo get_form_value("edition", $values, $default=1); ?>" min="1" step="1" />
     </div>
     <div class="input-container">
      <label for="book">Book upload</label>

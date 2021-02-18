@@ -31,6 +31,16 @@ function sanitise($s) {
     return mysqli_real_escape_string($dbc, htmlentities($s));
 }
 
+function get_form_value($key, $values, $default=NULL) {
+    if (isset($values[$key])) {
+        return $values[$key];
+    } else if (isset($_SESSION["sticky"][$key])) {
+        return $_SESSION["sticky"][$key];
+    } else {
+        return $default;
+    }
+}
+
 function errors_occurred() {
     return !empty($_SESSION["errors"]);
 }
