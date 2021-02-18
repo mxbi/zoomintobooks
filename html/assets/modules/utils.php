@@ -125,10 +125,13 @@ function authorised($action, $params=array(), $errors=true) {
             break;
 
         case "view user":
+        case "edit user":
+            $authorised = $is_admin || $params["username"] === $_SESSION["username"];
+            break;
+
         case "view publisher":
         case "add user":
         case "add publisher":
-        case "edit user":
         case "edit publisher":
         case "list users":
         case "list publishers":
@@ -164,8 +167,8 @@ function db_select($q, $one=false) {
                 add_error("Expected at most 1 result, got $rows");
             }
         }
+        mysqli_free_result($r);
     }
-    mysqli_free_result($r);
     return $result;
 }
 ?>

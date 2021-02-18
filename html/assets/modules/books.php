@@ -77,11 +77,11 @@ function add_book($values, $file) {
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
     $mode = sanitise($values["mode"]);
-    if (($mode === "edit") && !authorised("edit book", array("isbn" => $isbn))) return;
-    if (($mode === "new")  && !authorised("add book")) return;
+    if (($mode === "edit") && !authorised("edit book", array("isbn" => $isbn))) return false;
+    if (($mode === "new")  && !authorised("add book")) return false;
     if ($mode !== "edit" && $mode !== "new") {
         add_error("Illegal book form mode");
-        return;
+        return false;
     }
 
     global $dbc;
@@ -96,15 +96,37 @@ function add_book($values, $file) {
     if (is_blank($title)) add_error("Title is blank");
     if (is_blank($author)) add_error("Author is blank");
     if (!is_pos_int($edition)) add_error("Edition is invalid");
-    $pub_id = fetch_publisher($_SESSION["username"])["pub_id"];
+    $publisher = fetch_publisher($_SESSION["username"])["publisher"];
 
-    if (errors_occurred()) return;
+    if (errors_occurred()) return false;
 
     // Perform updates to database and file system
 
+    $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
+    $cover = generate_cover($file, $type);
+    if (!$cover) {
+        add_error("Failed to generate cover");
+        return false;
+    }
+    $ar_blob = generate_ar_blob($file, $type);
+    if (!$ar_blob) {
+        add_error("Failed to generate AR blob");
+        return false;
+    }
+    $ocr_blob = generate_ocr_blob($file, $type);
+    if (!$ocr_blob) {
+        add_error("Failed to generate OCR blob");
+        return false;
+    }
+    $pattern_blob = generate_pattern_blob($file, $type);
+    if (!$pattern_blob) {
+        add_error("Failed to generate pattern blob");
+        return false;
+    }
+
     if ($mode === "new") {
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "INSERT INTO book VALUES ('$isbn', '$title', '$author', $edition, $pub_id)";
+        $q = "INSERT INTO book(isbn, title, author, edition, publisher) VALUES ('$isbn', '$title', '$author', $edition, '$publisher')";
         $r = mysqli_query($dbc, $q);
 
         if (!$r || mysqli_affected_rows($dbc) != 1) {
@@ -118,21 +140,6 @@ function add_book($values, $file) {
             mysqli_free_result($r2);
         }
         mysqli_free_result($r);
-
-        if (!errors_occurred()) {
-            $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
-            if ($type) {
-                if (generate_cover($file, $type)) {
-                    if (generate_ocr_blob($file, $type)) {
-
-                    } else {
-                        add_error("Failed to generate OCR blob");
-                    }
-                } else {
-                    add_error("Failed to generate cover thumbnail");
-                }
-            }
-        }
 
         if (errors_occurred()) {
             rollback_book();
@@ -155,7 +162,15 @@ function generate_cover($file, $type) {
     return true;
 }
 
+function generate_ar_blob($file, $type) {
+    return true;
+}
+
 function generate_ocr_blob($file, $type) {
+    return true;
+}
+
+function generate_pattern_blob($file, $type) {
     return true;
 }
 

@@ -22,9 +22,8 @@ if ($authorised) {
     $publishers = fetch_publishers(); // Load all users by this user
     foreach ($publishers as $publisher) {
         // TODO: show preview of users and books associated with publisher
-        $pub_id = $publisher["pub_id"];
-        $name = $publisher["name"];
-        echo "   <a class=\"card-list-item\" href=\"publisher?pub_id=$pub_id\">\n";
+        $name = $publisher["publisher"];
+        echo "   <a class=\"card-list-item\" href=\"publisher?publisher=$name\">\n";
         echo "    <p>$name</p>\n";
         echo "   </a>\n";
     }

@@ -21,10 +21,14 @@ if ($authorised) {
     $users = fetch_users(); // Load all users by this user
     foreach ($users as $user) {
         $username = $user["username"];
-        $publisher = fetch_publisher($username)["name"];
+        $type = $user["type"];
+        $publisher = fetch_publisher($username);
         echo "   <a class=\"card-list-item\" href=\"user?username=$username\">\n";
         echo "    <p>$username</p>\n";
-        echo "    <p>$publisher</p>\n";
+        echo "    <p>$type</p>\n";
+        if ($publisher) {
+            echo "    <p>" . $publisher["publisher"] . "</p>\n";
+        }
         echo "   </a>\n";
     }
 } ?>
