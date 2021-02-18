@@ -329,27 +329,29 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
                   textureReader.submitFrame(backgroundRenderer.getTextureId(), 1920, 1080);
 
           if (gpuDownloadFrameBufferIndex >= 0) {
-            Log.d("[DEBUG]", "Submitted frame to OCRAnalyzer...");
+            Log.d("[DEBUG]", "Submitting frame to OCRAnalyzer...");
             TextureReaderImage image = textureReader.acquireFrame(gpuDownloadFrameBufferIndex);
 
-            // Convert RGBA -> ARGB -> NV21
+            // Steal frame from OpenGL
             byte[] byteArray = new byte[1920 * 1080 * 4];
             image.buffer.position(0);
             image.buffer.get(byteArray, 0, image.buffer.capacity());
             Bitmap bitmap = bitmapFromRgba(1920, 1080, byteArray);
 
+            textureReader.releaseFrame(gpuDownloadFrameBufferIndex);
+
+//            bitmap = Bitmap.createScaledBitmap(bitmap, 1280, 720, false);
+//            Log.d("[DEBUG]", "Submitted...");
+
             // 90 degree rotation for portrait.
             ocrAnalyzer.analyze(InputImage.fromBitmap(bitmap, 90));
 
-
-            textureReader.releaseFrame(gpuDownloadFrameBufferIndex);
           }
         }
       } catch (Exception e) {
         e.printStackTrace();
       }
 
-      ocrAnalyzer.analyze(textureReader);
 
       // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
       trackingStateHelper.updateKeepScreenOnFlag(camera.getTrackingState());

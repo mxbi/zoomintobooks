@@ -46,6 +46,8 @@ import androidx.annotation.RequiresApi;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
+import static me.xdrop.fuzzywuzzy.FuzzySearch.ratio;
+
 public class OCRAnalyzer {
     private TextRecognizer recognizer = TextRecognition.getClient();
     // Only do one image at a time
@@ -53,6 +55,7 @@ public class OCRAnalyzer {
     private LinkedHashMap<Integer, String> textDatabase;
     private Context context;
     private Toast lastToast;
+    private final String MATCHING_MODE = "full";
 
     public boolean isBlocked() {
         return blocked;
@@ -81,23 +84,23 @@ public class OCRAnalyzer {
     }
 
     public void matchText(Text text) {
-        HashMap<Integer, Integer> scores = new HashMap<>();
-        for (Entry<Integer, String> entry : textDatabase.entrySet()) {
-//             TODO: Improve search
-            Integer score = FuzzySearch.ratio(text.getText(), entry.getValue());
-            scores.put(entry.getKey(), score);
+        String t = text.getText();
+        if (t.length() > 100 && MATCHING_MODE.equals("partial")) {
+            t = t.substring(t.length() / 2 - 50, t.length() / 2 + 50);
         }
 
-//        ExtractedResult top = FuzzySearch.extractOne(text.getText(), textDatabase.values());
-//        Integer bestMatch = (new ArrayList<Integer>(textDatabase.keySet())).get(top.getIndex());
-//        Integer bestScore = top.getScore();
+        HashMap<Integer, Integer> scores = new HashMap<>();
+        for (Entry<Integer, String> entry : textDatabase.entrySet()) {
+            Integer score = MATCHING_MODE.equals("partial") ? FuzzySearch.partialRatio(t, entry.getValue()) : FuzzySearch.ratio(t, entry.getValue());
+            scores.put(entry.getKey(), score);
+        }
 
         Integer bestMatch = Collections.max(scores.entrySet(), Map.Entry.comparingByValue()).getKey();
         Integer bestScore = scores.get(bestMatch);
 
         Log.i("[OCRAnalyzer]", "Best match: page " + bestMatch.toString() + " score " + bestScore.toString());
         Log.d("[OCRAnalyzer]", scores.toString());
-        if (bestScore > 60) {
+        if (bestScore > 75) {
             if (lastToast != null) {
                 lastToast.cancel();
             }
@@ -107,12 +110,7 @@ public class OCRAnalyzer {
         }
     }
 
-    public void analyze(TextureReader textureReader) {
-
-    }
-
     public void analyze(Frame frame) {
-        //        Log.i("", Integer.toString(image.getHeight()));
         Image image;
 
         // We only process one image at a time, even if ARCore takes many more
@@ -131,7 +129,6 @@ public class OCRAnalyzer {
         }
 
         // Note: hard-coded vertical orientation. Might not work on other devices??
-        //        InputImage.from
         InputImage inputImage = InputImage.fromMediaImage(image, 90);
         image.close();
 
@@ -146,9 +143,8 @@ public class OCRAnalyzer {
                     @Override
                     public void onSuccess(Text text) {
                         Log.i("[OCRAnalyzer]", "Detected Text " + text.getText().length());
-//                        image.close();
 
-                        if (text.getText().length() > 250) {
+                        if (text.getText().length() > 100) {
                             long t = System.currentTimeMillis();
                             matchText(text);
                             Log.v("[OCRAnalyzer]", "Search took " + Long.toString(System.currentTimeMillis() - t));
