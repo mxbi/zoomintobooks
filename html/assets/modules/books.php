@@ -103,11 +103,8 @@ function add_book($values, $file) {
     // Perform updates to database and file system
 
     $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
-    $cover = generate_cover($file, $type);
-    if (!$cover) {
-        add_error("Failed to generate cover");
-        return false;
-    }
+    $cover = generate_cover($file, $type, $isbn);
+    if (!$cover) return false;
     $ar_blob = generate_ar_blob($file, $type);
     if (!$ar_blob) {
         add_error("Failed to generate AR blob");
@@ -158,8 +155,20 @@ function add_book($values, $file) {
     }
 }
 
-function generate_cover($file, $type) {
-    return true;
+function generate_cover($file, $type, $isbn) {
+    $input = escapeshellarg($file['tmp_name']);
+    $output = escapeshellarg("/var/www/zib/html/console/books/covers/$isbn");
+    $size = 128;
+    $out = null;
+    $retval = null;
+    $cmd = "pdftoppm $input $output -png -f 1 -singlefile -scale-to $size";
+    $success = exec($cmd, $out, $retval);
+    if ($success === false) {
+        add_error("Failed to generate cover ($cmd failed with $retval: " . implode("\n", $out) . ")");
+    } else {
+        $success = true;
+    }
+    return $success;
 }
 
 function generate_ar_blob($file, $type) {

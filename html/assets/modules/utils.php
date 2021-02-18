@@ -69,7 +69,7 @@ function display_status() {
 }
 
 function get_type($file, $max_size, $legal_types) {
-    $path = $file["tmp_name"];
+    $path = escapeshellarg($file["tmp_name"]);
     $file_info = exec("file -i $path", $output, $status);
     if ($status) {
         add_error("Could not safely determine file type (" . UPLOAD_ERROR_MSGS[$file["error"]] . ")");

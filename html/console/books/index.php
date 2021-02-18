@@ -24,7 +24,7 @@ if ($authorised) {
         $author = $book["author"];
         $resource_count = count_resources($isbn);
         echo "   <a class=\"card-list-item\" href=\"book?isbn=$isbn\">\n";
-        echo "    <img src=\"covers/$isbn.png\" alt=\"Front cover of $title\" />\n";
+        echo "    <img src=\"covers/$isbn.png\" alt=\"Front cover of $title\" height=\"128\" />\n";
         echo "    <p>$title</p>\n";
         echo "    <p>$author</p>\n";
         echo "    <p>$resource_count resources</p>\n";
