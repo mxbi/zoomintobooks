@@ -7,11 +7,10 @@ make_header("Add book", "", "");
   <h2>Add book</h2>
   <main>
 <?php
+$authorised = authorised("add book");
 display_status();
-if ($is_logged_in) {
+if ($authorised) {
     show_book_form("new", 0);
-} else {
-    echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";
 }
 ?>
   </main>

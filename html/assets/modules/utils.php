@@ -10,8 +10,6 @@ function init() {
     if (!isset($_SESSION["errors"])) {
         $_SESSION["errors"] = array();
     }
-    $is_logged_in = isset($_SESSION["username"]);
-    $is_admin = ($_SESSION["account_type"] === "admin");
 }
 
 function is_blank($s) {
@@ -39,6 +37,10 @@ function errors_occurred() {
 
 function add_error($msg) {
     $_SESSION["errors"][] = $msg;
+}
+
+function clear_errors() {
+    unset($_SESSION["errors"]);
 }
 
 function set_success($msg) {
@@ -89,4 +91,56 @@ function get_type($file, $max_size, $legal_types) {
     return false;
 }
 
+function authorised($action, $params=array(), $errors=true) {
+    if (!isset($_SESSION["username"])) {
+        if ($errors) add_error("You must <a href=\"/login/\">log in</a> first");
+        return false;
+    }
+    $is_admin = $_SESSION["account_type"] == "admin";
+
+    $authorised = false;
+    switch ($action) {
+        case "view console":
+        case "add book":
+        case "add resource":
+        case "list books":
+            $authorised = true;
+            break;
+
+        case "list resources":
+            if (isset($params["isbn"])) { // List resources for a book
+                $authorised = $is_admin || can_edit_book($params["isbn"]);
+            } else { // List owned resources
+                $authorised = true;
+            }
+            break;
+
+        case "edit book":
+        case "view book":
+            $authorised = $is_admin || can_edit_book($params["isbn"]);
+            break;
+
+        case "edit resource":
+            $authorised = $is_admin || can_edit_resource($params["rid"]);
+            break;
+
+        case "add user":
+        case "add publisher":
+        case "edit user":
+        case "edit publisher":
+        case "list users":
+        case "list publishers":
+            $authorised = $is_admin;
+            break;
+
+        default:
+            if ($errors) add_error("Attempted to perform unknown action ($action)");
+            return false;
+    }
+
+    if (!$authorised && $errors) {
+        add_error("You do not have the required permissions ($action)");
+    }
+    return $authorised;
+}
 ?>

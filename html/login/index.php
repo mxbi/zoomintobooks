@@ -7,7 +7,7 @@ make_header("Login", "", "");
   <main id="login-form">
 <?php
 display_status();
-if (!$is_logged_in) {
+if (!isset($_SESSION["username"])) {
 ?>
    <form action="action.php" method="POST">
     <div class="input-container">

@@ -1,5 +1,6 @@
 <?php
 function fetch_book($isbn) {
+    if (!authorised("view book", array("isbn" => $isbn))) return array();
     global $dbc;
     $isbn = sanitise($isbn);
     $q  = "SELECT b.* FROM book AS b WHERE isbn='$isbn'";
@@ -13,6 +14,7 @@ function fetch_book($isbn) {
 }
 
 function fetch_books() {
+    if (!authorised("list books")) return array();
     global $dbc;
     $username = sanitise($_SESSION["username"]);
     $q  = "SELECT b.* FROM book AS b ";
@@ -42,6 +44,7 @@ function can_edit_book($isbn) {
 }
 
 function count_resources($isbn) {
+    if (!authorised("list resources", array("isbn" => $isbn))) return array();
     global $dbc;
     $isbn = sanitise($isbn);
     $q = "SELECT COUNT(rid) AS c FROM resource_instance WHERE isbn = '$isbn'";
@@ -58,7 +61,13 @@ function count_resources($isbn) {
     }
 }
 
-function show_book_form($mode, $isbn) {
+function show_book_form($mode, $isbn=NULL) {
+    if (($mode === "edit") && !authorised("edit book", array("isbn" => $isbn))) return;
+    if (($mode === "new")  && !authorised("add book")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal book form mode");
+        return;
+    }
     $values = $_SESSION["sticky"];
     if ($mode == "edit") {
         $values = fetch_book($isbn);
@@ -97,14 +106,21 @@ function show_book_form($mode, $isbn) {
 }
 
 function add_book($values, $file) {
-    global $dbc;
-
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($values["isbn"]);
     $title = sanitise($values["title"]);
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
     $mode = sanitise($values["mode"]);
+    if (($mode === "edit") && !authorised("edit book", array("isbn" => $isbn))) return;
+    if (($mode === "new")  && !authorised("add book")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal book form mode");
+        return;
+    }
+
+    global $dbc;
+
     $_SESSION["sticky"]["isbn"] = $isbn;
     $_SESSION["sticky"]["title"] = $title;
     $_SESSION["sticky"]["author"] = $author;

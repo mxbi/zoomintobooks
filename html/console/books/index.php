@@ -7,13 +7,16 @@ $_SESSION["redirect"] = "/console/books/";
   <h2>Your books</h2>
   <main>
 <?php
+$authorised = authorised("list books");
 display_status();
-if ($is_logged_in) { ?>
+if ($authorised) {
+    if (authorised("add book", array(), $errors=false)) { ?>
    <a class="card-list-item card-list-add-item" href="new/">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
     <span>Add new book</span>
    </a>
 <?php
+    }
     $books = fetch_books(); // Load all books editable by the user
     foreach ($books as $book) {
         $isbn = $book["isbn"];
@@ -27,9 +30,6 @@ if ($is_logged_in) { ?>
         echo "    <p>$resource_count resources</p>\n";
         echo "   </a>\n";
     }
-
-} else {
-    echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";
 } ?>
   </main>
 

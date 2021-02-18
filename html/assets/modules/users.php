@@ -42,6 +42,7 @@ function authenticate($username, $password) {
 }
 
 function get_publisher($username) {
+    if (!authorised("view user", array("username" => $username))) return;
     global $dbc;
     $username = sanitise($username);
     $q = "SELECT p.*, p.name FROM publisher AS p JOIN user AS u ON p.pub_id = u.pub_id AND u.username = '$username'";
@@ -82,6 +83,7 @@ function get_pub_id($name) {
 }
 
 function fetch_users() {
+    if (!authorised("list users")) return;
     global $dbc;
     $username = sanitise($_SESSION["username"]);
     $q = "SELECT u.* FROM user AS u JOIN managed_by AS m ON m.username = u.username AND m.admin_username = '$username'";
@@ -97,6 +99,7 @@ function fetch_users() {
 }
 
 function fetch_user($username) {
+    if (!authorised("view user", array("username" => $username))) return;
     global $dbc;
     $username = sanitise($username);
     $q = "SELECT * FROM user WHERE username = '$username'";
@@ -110,6 +113,7 @@ function fetch_user($username) {
 }
 
 function fetch_publishers() {
+    if (!authorised("list publishers")) return;
     // TODO: publisher_managed_by
     global $dbc;
     $username = sanitise($_SESSION["username"]);
@@ -127,7 +131,6 @@ function fetch_publishers() {
 
 
 function add_user($values) {
-    global $dbc;
     $admin = sanitise($_SESSION["username"]);
     $username = sanitise($values["username"]);
     $password = $values["password"];
@@ -135,6 +138,15 @@ function add_user($values) {
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $publisher = sanitise($values["publisher"]);
     $pub_id = get_pub_id($publisher);
+    $mode = sanitise($values["mode"]);
+    if ($mode === "edit" && !authorised("edit user", array("username" => $username))) return;
+    if ($mode === "new"  && !authorised("add user")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal mode: $mode");
+        return;
+    }
+
+    global $dbc;
     $_SESSION["sticky"]["username"] = $username;
     $_SESSION["sticky"]["publisher"] = $publisher;
 
@@ -184,9 +196,16 @@ function add_user($values) {
 }
 
 function add_publisher($values) {
-    // TODO: publisher_managed_by table
     global $dbc;
     $name = sanitise($values["name"]);
+    $mode = sanitise($values["mode"]);
+    if ($mode === "edit" && !authorised("edit publisher", array("pub_id" => get_pub_id($name)))) return;
+    if ($mode === "new"  && !authorised("add publisher")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal mode: $mode");
+        return;
+    }
+    // TODO: publisher_managed_by table
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
     $q = "(SELECT 1 FROM publisher WHERE name = '$name')";
@@ -218,6 +237,12 @@ function add_publisher($values) {
 }
 
 function show_user_form($mode, $username) {
+    if ($mode === "edit" && !authorised("edit user", array("username" => $username))) return;
+    if ($mode === "new"  && !authorised("add user")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal mode: $mode");
+        return;
+    }
     // TODO: selectable menu of available publishers
     $values = $_SESSION["sticky"];
     if ($mode == "edit") {
@@ -251,8 +276,13 @@ function show_user_form($mode, $username) {
     unset($_SESSION["sticky"]);
 }
 
-function show_publisher_form($mode) {
-    // TODO: selectable menu of available publishers
+function show_publisher_form($mode, $pub_id = NULL) {
+    if ($mode === "edit" && !authorised("edit publisher", array("pub_id" => $pub_id))) return;
+    if ($mode === "new"  && !authorised("add publisher")) return;
+    if ($mode !== "edit" && $mode !== "new") {
+        add_error("Illegal mode: $mode");
+        return;
+    }
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="mode" value="$mode" />

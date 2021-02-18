@@ -5,7 +5,7 @@ function make_header($title, $description, $keywords) {
     ob_start();
 
     $nav_pages = array();
-    if ($is_logged_in) {
+    if (isset($_SESSION["username"])) {
         $nav_pages["Console"] = "/console/";
         $nav_pages["Help"] = "/help/";
         $nav_pages["Logout"] = "/logout/";

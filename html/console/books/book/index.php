@@ -11,22 +11,20 @@ make_header($title, "", "");
 echo "   <h2>$title</h2>\n";
 echo "   <main>\n";
 
-if ($book === NULL) {
-    echo "    <p>The requested book does not exist.</p>\n";
-} else if (!$is_logged_in) {
-    echo "    <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";
-} else if (!can_edit_book($isbn)) {
-    echo "    <p>You do not have the required permissions to view this page.</p>\n";
-} else {
+$authorised = authorised("edit book", array("isbn" => $isbn));
+display_status();
+if ($authorised) {
     echo "    <h3>Edit book properties</h3>\n";
     show_book_form("edit", $isbn);
     echo "    <h3>Resources for this book</h3>\n";
+    if (authorised("add resource", array("isbn" => $isbn), $errors=false)) {
 ?>
-   <a class="card-list-item card-list-add-item" href="/console/resources/new?isbn=$isbn">
+   <a class="card-list-item card-list-add-item" href="resource/new?isbn=$isbn">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
-    <span>Add new resource</span>
+    <span>Add resource to book</span>
    </a>
 <?php
+    }
     $resources = fetch_resources($isbn);
     show_resources($resources);
 }

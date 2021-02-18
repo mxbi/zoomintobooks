@@ -7,11 +7,10 @@ $_SESSION["redirect"] = "/console/resources/";
   <h2>Your resources</h2>
   <main>
 <?php
+$authorised = authorised("list resources");
 display_status();
-if ($is_logged_in) { ?>
+if ($authorised) {
 
-<?php } else {
-    echo "   <p>You must <a href=\"/login/\">log in</a> to view this page.</p>\n";
 } ?>
 
   </main>

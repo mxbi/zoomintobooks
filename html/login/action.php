@@ -1,7 +1,7 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 
-if ($is_logged_in) {
+if (isset($_SESSION["username"])) {
     add_error("You are already logged in");
 } else if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST["username"];

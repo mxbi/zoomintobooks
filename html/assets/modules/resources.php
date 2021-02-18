@@ -1,5 +1,6 @@
 <?php
 function fetch_resources($isbn) {
+    if (!authorised("list resources", array("isbn" => $isbn))) return;
     global $dbc;
     $isbn = sanitise($isbn);
     $q  = "SELECT r.* FROM resource AS r ";
@@ -9,6 +10,7 @@ function fetch_resources($isbn) {
 }
 
 function show_resources($resources, $isbn)  {
+    if (!authorised("list resources", array("isbn" => $isbn))) return;
     foreach ($resources as $resource) {
         $rid = $resource["rid"];
         $thumb = $resource["thumb"]; // TODO
@@ -22,5 +24,10 @@ function show_resources($resources, $isbn)  {
         echo "    <p>Downloadable: $downloadable</p>\n";
         echo "   </a>\n";
     }
+}
+
+function can_edit_resource($rid) {
+    // TODO;
+    return true;
 }
 ?>

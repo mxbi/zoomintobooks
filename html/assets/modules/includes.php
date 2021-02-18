@@ -1,7 +1,7 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 define("MAX_BOOK_FILE_SIZE", 50000000);
 define("MAX_RESOURCE_FILE_SIZE", 50000000);
