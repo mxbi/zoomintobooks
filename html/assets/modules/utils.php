@@ -119,7 +119,7 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "list resources":
             if (isset($params["isbn"])) { // List resources for a book
-                $authorised = $is_admin || can_edit_book($params["isbn"]);
+                $authorised = book_exists($params["isbn"]) && ($is_admin || can_edit_book($params["isbn"]));
             } else { // List owned resources
                 $authorised = true;
             }
@@ -127,11 +127,11 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "edit book":
         case "view book":
-            $authorised = $is_admin || can_edit_book($params["isbn"]);
+            $authorised = book_exists($params["isbn"]) && ($is_admin || can_edit_book($params["isbn"]));
             break;
 
         case "edit resource":
-            $authorised = $is_admin || can_edit_resource($params["rid"]);
+            $authorised = resource_exists($params["isbn"]) && ($is_admin || can_edit_resource($params["rid"]));
             break;
 
         case "view user":
@@ -180,5 +180,17 @@ function db_select($q, $one=false) {
         mysqli_free_result($r);
     }
     return $result;
+}
+
+function book_cover_path_no_ext($isbn) {
+    return "/var/www/zib/books/covers/$isbn";
+}
+
+function book_cover_path($isbn) {
+    return book_cover_path_no_ext($isbn) . ".png";
+}
+
+function book_upload_path($isbn, $type) {
+    return "/var/www/zib/books/uploads/$isbn.$type";
 }
 ?>

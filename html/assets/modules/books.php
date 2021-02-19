@@ -1,12 +1,12 @@
 <?php
 function fetch_book($isbn) {
-    if (!authorised("view book", array("isbn" => $isbn))) return array();
+    if (!authorised("view book", array("isbn" => $isbn))) return;
     $isbn = sanitise($isbn);
     return db_select("SELECT b.* FROM book AS b WHERE isbn='$isbn'", true);
 }
 
 function fetch_books() {
-    if (!authorised("list books")) return array();
+    if (!authorised("list books")) return;
     $username = sanitise($_SESSION["username"]);
     $q  = "SELECT b.* FROM book AS b ";
     $q .= "JOIN editable_by AS eb ON b.isbn = eb.isbn ";
@@ -14,16 +14,32 @@ function fetch_books() {
     return db_select($q);
 }
 
+function book_exists($isbn) {
+    $isbn = sanitise($isbn);
+    $c = db_select("SELECT 1 FROM book WHERE isbn = '$isbn'", true);
+    $c = $c ? $c : array();
+    return count($c) === 1;
+}
+
 function can_edit_book($isbn) {
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($isbn);
-    return count(db_select("SELECT 1 FROM editable_by WHERE isbn = '$isbn' AND username = '$username'", true)) === 1;
+    $c = db_select("SELECT 1 FROM editable_by WHERE isbn = '$isbn' AND username = '$username'", true);
+    $c = $c ? $c : array();
+    return count($c) === 1;
 }
 
 function count_resources($isbn) {
     if (!authorised("view book", array("isbn" => $isbn))) return 0;
     $isbn = sanitise($isbn);
     return db_select("SELECT COUNT(rid) AS count FROM resource_instance WHERE isbn = '$isbn'", true)["count"];
+}
+
+function get_book_type($isbn) {
+    if (!authorised("view book", array("isbn" => $isbn))) return;
+    $isbn = sanitise($isbn);
+    $row = db_select("SELECT type FROM book WHERE isbn = '$isbn'", true);
+    return $row ? $row["type"] : NULL;
 }
 
 function show_book_form($mode, $isbn=NULL) {
@@ -104,49 +120,39 @@ function add_book($values, $file) {
 
     $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
     $cover = generate_cover($file, $type, $isbn);
-    if (!$cover) return false;
-    $ar_blob = generate_ar_blob($file, $type);
-    if (!$ar_blob) {
-        add_error("Failed to generate AR blob");
-        return false;
-    }
-    $ocr_blob = generate_ocr_blob($file, $type);
-    if (!$ocr_blob) {
-        add_error("Failed to generate OCR blob");
-        return false;
-    }
-    $pattern_blob = generate_pattern_blob($file, $type);
-    if (!$pattern_blob) {
-        add_error("Failed to generate pattern blob");
+    $upload = upload_book($file, $type, $isbn);
+    if (!$cover || !$upload) {
+        rollback_book($isbn, $type);
         return false;
     }
 
     if ($mode === "new") {
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "INSERT INTO book(isbn, title, author, edition, publisher) VALUES ('$isbn', '$title', '$author', $edition, '$publisher')";
+        $q = "INSERT INTO book(isbn, title, author, edition, publisher, type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
         $r = mysqli_query($dbc, $q);
 
-        if (!$r || mysqli_affected_rows($dbc) != 1) {
+        if (!$r) {
             add_error("Failed to insert into book table (" . mysqli_error($dbc) . ")");
         } else {
             $q2 = "INSERT INTO editable_by(isbn, username) VALUES ('$isbn', '$username')";
             $r2 = mysqli_query($dbc, $q2);
-            if (!$r2 || mysqli_affected_rows($dbc) != 1) {
+            if (!$r2) {
                 add_error("Failed to insert into editable_by table (" . mysqli_error($dbc) . ")");
+            } else {
+                mysqli_free_result($r2);
             }
-            mysqli_free_result($r2);
+            mysqli_free_result($r);
         }
-        mysqli_free_result($r);
 
         if (errors_occurred()) {
-            rollback_book();
+            rollback_book($isbn, $type);
         } else {
             if (mysqli_commit($dbc)) {
                 set_success("Added $title");
                 $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
             } else {
                 add_error("Commit failed");
-                rollback_book();
+                rollback_book($isbn, $type);
             }
         }
     } else {
@@ -157,11 +163,11 @@ function add_book($values, $file) {
 
 function generate_cover($file, $type, $isbn) {
     $input = escapeshellarg($file['tmp_name']);
-    $output = escapeshellarg("/var/www/zib/html/console/books/covers/$isbn");
+    $output = escapeshellarg(book_cover_path_no_ext($isbn));
     $size = 128;
     $out = null;
     $retval = null;
-    $cmd = "pdftoppm $input $output -png -f 1 -singlefile -scale-to $size";
+    $cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to $size";
     $success = exec($cmd, $out, $retval);
     if ($success === false) {
         add_error("Failed to generate cover ($cmd failed with $retval: " . implode("\n", $out) . ")");
@@ -171,23 +177,14 @@ function generate_cover($file, $type, $isbn) {
     return $success;
 }
 
-function generate_ar_blob($file, $type) {
-    return true;
+function upload_book($file, $type, $isbn) {
+    return move_uploaded_file($file["tmp_name"], book_upload_path($isbn, $type));
 }
 
-function generate_ocr_blob($file, $type) {
-    return true;
-}
-
-function generate_pattern_blob($file, $type) {
-    return true;
-}
-
-function rollback_book() {
-    // TODO: clean up files
+function rollback_book($isbn, $type) {
     global $dbc;
-    if (!mysqli_rollback($dbc)) {
-        add_error("Rollback failed");
-    }
+    if (!mysqli_rollback($dbc)) add_error("Database rollback failed");
+    if (!unlink(book_cover_path($isbn))) add_error("Book cover rollback failed");
+    if (!unlink(book_upload_path($isbn, $type))) add_error("Book upload rollback failed");
 }
 ?>

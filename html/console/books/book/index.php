@@ -16,15 +16,13 @@ display_status();
 if ($authorised) {
     echo "    <h3>Edit book properties</h3>\n";
     show_book_form("edit", $isbn);
-    echo "    <h3>Resources for this book</h3>\n";
-    if (authorised("add resource", array("isbn" => $isbn), $errors=false)) {
+    echo "    <h3>Resources linked to this book</h3>\n";
 ?>
    <a class="card-list-item card-list-add-item" href="resource/new?isbn=$isbn">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
-    <span>Add resource to book</span>
+    <span>Link resource to book</span>
    </a>
 <?php
-    }
     $resources = fetch_resources($isbn);
     show_resources($resources);
 }
