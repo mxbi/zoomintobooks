@@ -33,6 +33,7 @@
                 android:id="@+id/Info"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="sans-serif"
                 android:text="@string/about_us"
                 android:textAlignment="center"
                 android:textAllCaps="false"

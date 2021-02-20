@@ -45,6 +45,10 @@ public class WelcomeActivity extends AppCompatActivity {
             startActivity(startIntent);
         });
 
+        setMenuButtons();
+    }
+
+    private void setMenuButtons() {
         FloatingActionButton InfoButton = findViewById(R.id.InfoButton);
         InfoButton.setOnClickListener(view -> {
             Intent startIntent = new Intent(getApplicationContext(), InfoActivity.class);
@@ -75,12 +79,12 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void onMoreButtonClicked() {
-        setVisibility(MoreButtonOpen);
-        setAnimations(MoreButtonOpen);
+        setVisibilityOfMenu(MoreButtonOpen);
+        setAnimationsOfMenu(MoreButtonOpen);
         MoreButtonOpen=!MoreButtonOpen;
     }
 
-    private void setAnimations(Boolean moreButtonOpen) {
+    private void setAnimationsOfMenu(Boolean moreButtonOpen) {
         Animation rotateOpen = AnimationUtils.loadAnimation(this, R.anim.rotate_open_anim);
         Animation rotateClose = AnimationUtils.loadAnimation(this, R.anim.rotate_close_anim);
         Animation fromBottom = AnimationUtils.loadAnimation(this, R.anim.from_bottom_anim);
@@ -105,7 +109,7 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
-    private void setVisibility(Boolean moreButtonOpen) {
+    private void setVisibilityOfMenu(Boolean moreButtonOpen) {
         FloatingActionButton InfoButton = findViewById(R.id.InfoButton);
         FloatingActionButton ContactButton = findViewById(R.id.ContactButton);
         FloatingActionButton BookButton = findViewById(R.id.BookButton);
