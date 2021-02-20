@@ -6,7 +6,7 @@ $authorised = authorised("add book");
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_error("Request method must be POST");
 } else if ($authorised) {
-    add_book($_POST, $_FILES["book"]);
+    manage_book($_POST, $_FILES["book"], false);
 }
 
 header("Location: " . $_SESSION["redirect"]);

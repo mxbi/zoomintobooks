@@ -1,7 +1,7 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 
-$isbn = $_GET["isbn"];
+$isbn = sanitise($_GET["isbn"]);
 $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
 $book = fetch_book($isbn);
 $title = ($book === NULL) ? "Unknown book" : $book["title"];
@@ -15,7 +15,7 @@ $authorised = authorised("edit book", array("isbn" => $isbn));
 display_status();
 if ($authorised) {
     echo "    <h3>Edit book properties</h3>\n";
-    show_book_form("edit", $isbn);
+    show_book_form(true, $isbn);
     echo "    <h3>Resources linked to this book</h3>\n";
 ?>
    <a class="card-list-item card-list-add-item" href="resource/new?isbn=$isbn">

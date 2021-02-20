@@ -10,7 +10,7 @@ make_header("Add book", "", "");
 $authorised = authorised("add book");
 display_status();
 if ($authorised) {
-    show_book_form("new", 0);
+    show_book_form(false, 0);
 }
 ?>
   </main>
