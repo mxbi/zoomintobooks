@@ -5,7 +5,12 @@
     <string name="welcome">Welcome</string>
     <string name="dots">dots</string>
     <string name="info">info</string>
-    <string name="contact">contact</string>
+    <string name="contact">Contact</string>
     <string name="book">book</string>
-    <string name="settings">settings</string>
+    <string name="settings">Settings</string>
+    <string name="barcodeScan">Fit the barcode\nwithin the border</string>
+    <string name="search">Search</string>
+    <string name="returntoprev">return</string>
+    <string name="about_us">About us</string>
+    <string name="about_the_book">About the book</string>
 </resources>

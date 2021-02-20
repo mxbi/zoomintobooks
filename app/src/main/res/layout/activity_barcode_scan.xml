@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+
+
+        android:layout_height="match_parent"
+        android:background="@color/beige_1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/nameBar"
+
+            android:layout_width="match_parent"
+            android:layout_height="124dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/ScreenTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/barcodeScan"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textColor="@color/brown_1"
+                android:textSize="36sp"
+                android:textStyle="bold|italic"
+                android:translationY="15dp" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/InfoButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige_2"
+            android:clickable="true"
+            android:contentDescription="@string/info"
+            android:focusable="true"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:tint="@color/beige_1"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/MoreButton"
+            app:layout_constraintEnd_toEndOf="@+id/MoreButton"
+            app:rippleColor="@color/beige_1"
+            app:srcCompat="@drawable/ic_baseline_info_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/ContactButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige_2"
+            android:clickable="true"
+            android:contentDescription="@string/contact"
+            android:focusable="true"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:tint="@color/beige_1"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/InfoButton"
+            app:layout_constraintEnd_toEndOf="@+id/InfoButton"
+            app:rippleColor="@color/beige_1"
+            app:srcCompat="@drawable/ic_baseline_mail_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/BookButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige_2"
+            android:clickable="true"
+            android:contentDescription="@string/book"
+            android:focusable="true"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:tint="@color/beige_1"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/ContactButton"
+            app:layout_constraintEnd_toEndOf="@+id/ContactButton"
+            app:rippleColor="@color/beige_1"
+            app:srcCompat="@drawable/ic_baseline_menu_book_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/SettingButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/beige_2"
+            android:clickable="true"
+            android:contentDescription="@string/settings"
+            android:focusable="true"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:tint="@color/beige_1"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/BookButton"
+            app:layout_constraintEnd_toEndOf="@+id/BookButton"
+            app:rippleColor="@color/beige_1"
+            app:srcCompat="@drawable/ic_baseline_settings_24" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/MoreButton"
+            style="@style/Theme.Buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/brown_1"
+            android:clickable="true"
+            android:contentDescription="@string/dots"
+            android:focusable="true"
+            android:src="@drawable/dots"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/beige_1"
+            app:tint="@color/beige_1" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/Return"
+            style="@style/Theme.Buttons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="@color/brown_1"
+            android:clickable="true"
+            android:contentDescription="@string/returntoprev"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:rippleColor="@color/beige_1"
+            app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"
+            app:tint="@color/beige_1" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
