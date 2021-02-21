@@ -205,4 +205,8 @@ function book_cover_path($isbn) {
 function book_upload_path($isbn, $type) {
     return "/var/www/zib/books/uploads/$isbn.$type";
 }
+
+function book_images_path($isbn) {
+    return "/var/www/zib/books/images/$isbn";
+}
 ?>

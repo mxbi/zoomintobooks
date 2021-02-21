@@ -177,14 +177,15 @@ function manage_book($values, $file, $edit) {
         if ($file_present) {
             $cover = generate_cover($file, $type, $isbn);
             $upload = upload_book($file, $type, $isbn);
-            if (!$cover || !$upload) add_error("Failed to upload book");
+            $images = extract_images($file, $type, $isbn);
+            if (!$cover || !$upload || !$images) add_error("Failed to upload book");
         } else if ($new_isbn !== $isbn) { // Editing ISBN without changing file
             $success = rename(book_cover_path($isbn), book_cover_path($new_isbn));
             if (!$success) add_error("Failed to move cover");
             $old_upload_path = book_upload_path($isbn, $type);
             $new_upload_path = book_upload_path($new_isbn, $type);
             $success = $success && rename($old_upload_path, $new_upload_path);
-            if (!$success) add_error("Failed to move uploaded file from $old_upload_path to $new_upload_path");
+            if (!$success) add_error("Failed to move uploaded file");
         }
     }
 
@@ -210,12 +211,10 @@ function generate_cover($file, $type, $isbn) {
     $input = escapeshellarg($file['tmp_name']);
     $output = escapeshellarg(book_cover_path_no_ext($isbn));
     $size = 128;
-    $out = null;
-    $retval = null;
     $cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to $size";
-    $success = exec($cmd, $out, $retval);
+    $success = exec($cmd);
     if ($success === false) {
-        add_error("Failed to generate cover ($cmd failed with $retval: " . implode("\n", $out) . ")");
+        add_error("Failed to generate cover");
     } else {
         $success = true;
     }
@@ -224,6 +223,22 @@ function generate_cover($file, $type, $isbn) {
 
 function upload_book($file, $type, $isbn) {
     return move_uploaded_file($file["tmp_name"], book_upload_path($isbn, $type));
+}
+
+function extract_images($file, $type, $isbn) {
+    $input = escapeshellarg(book_upload_path($isbn, $type));
+    $dir = book_images_path($isbn);
+    if (!mkdir($dir, 0774)) {
+        add_error("Failed to make image directory $dir");
+        return false;
+    } else {
+        $escdir = escapeshellarg($dir);
+        $cmd = "cd $escdir && /usr/bin/pdfimages -png $input image";
+        $success = exec($cmd);
+        if ($success === false) add_error("Failed to extract images");
+        else $success = true;
+        return $success;
+    }
 }
 
 function rollback_book($isbn, $type) {
