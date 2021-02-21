@@ -107,6 +107,11 @@ h2 {
     box-shadow: 0 0 3px #97574E;
 }
 
+.errors ul {
+    margin: 0;
+    padding-left: 30px;
+}
+
 .success {
     padding: 10px;
     background-color: #52974E;

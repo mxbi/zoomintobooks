@@ -1,7 +1,7 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 
-$rid = sanitise($_GET["rid"]);
+$rid = empty($_GET["rid"]) ? NULL : sanitise($_GET["rid"]);
 $_SESSION["redirect"] = "/console/resources/resource?rid=$rid";
 $resource = fetch_resource($rid);
 $title = ($resource === NULL) ? "Unknown resource" : $resource["name"];

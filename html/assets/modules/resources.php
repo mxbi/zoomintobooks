@@ -1,7 +1,7 @@
 <?php
 function fetch_resource($rid) {
     $rid = sanitise($rid);
-    if (!authorised("view resource", array("rid" => $rid))) return false;
+    if (!authorised("view resource", array("rid" => $rid))) return;
     return db_select("SELECT * FROM resource WHERE rid = $rid", true);
 }
 
