@@ -148,42 +148,57 @@ function manage_book($values, $file, $edit) {
 
     $type = NULL;
 
-    if ($file_present) {
-        $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
-        $cover = generate_cover($file, $type, $isbn);
-        $upload = upload_book($file, $type, $isbn);
-        if (!$cover || !$upload) {
-            rollback_book($isbn, $type);
-            return false;
-        }
-    } // TODO: move book to new isbn on edit
-
     if (!$edit) {
-        mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "INSERT INTO book(isbn, title, author, edition, publisher, type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
-        $r = mysqli_query($dbc, $q);
+        $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
+        if ($type) {
+            mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+            $q = "INSERT INTO book(isbn, title, author, edition, publisher, type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
+            $r = mysqli_query($dbc, $q);
 
-        if (!$r) {
-            add_error(mysqli_error($dbc));
+            if (!$r) {
+                add_error(mysqli_error($dbc));
+            } else {
+                $q2 = "INSERT INTO book_editable_by(isbn, username) VALUES ('$isbn', '$username')";
+                $r2 = mysqli_query($dbc, $q2);
+                if (!$r2) add_error(mysqli_error($dbc));
+            }
         } else {
-            $q2 = "INSERT INTO book_editable_by(isbn, username) VALUES ('$isbn', '$username')";
-            $r2 = mysqli_query($dbc, $q2);
-            if (!$r2) add_error(mysqli_error($dbc));
+            add_error("Failed to determine type for uploaded file");
         }
     } else {
+        $type = db_select("SELECT type FROM book WHERE isbn = '$isbn'", true)["type"];
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "UPDATE book SET isbn='$new_isbn', title='$title', author='$author', edition=$edition, publisher='$publisher'" . ($file_present ? ", type='$type'" : "") . " WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
         if (!$r) add_error(mysqli_error($dbc));
     }
 
+    if (!errors_occurred()) {
+        if ($file_present) {
+            $cover = generate_cover($file, $type, $isbn);
+            $upload = upload_book($file, $type, $isbn);
+            if (!$cover || !$upload) add_error("Failed to upload book");
+        } else if ($new_isbn !== $isbn) { // Editing ISBN without changing file
+            $success = rename(book_cover_path($isbn), book_cover_path($new_isbn));
+            if (!$success) add_error("Failed to move cover");
+            $old_upload_path = book_upload_path($isbn, $type);
+            $new_upload_path = book_upload_path($new_isbn, $type);
+            $success = $success && rename($old_upload_path, $new_upload_path);
+            if (!$success) add_error("Failed to move uploaded file from $old_upload_path to $new_upload_path");
+        }
+    }
+
     if (errors_occurred()) {
         rollback_book($isbn, $type);
     } else {
         if (mysqli_commit($dbc)) {
-            if ($edit) set_success("Updated $title");
-            else set_success("Added $title");
-            $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
+            if ($edit) {
+                set_success("Updated $title");
+                $_SESSION["redirect"] = "/console/books/book?isbn=$new_isbn";
+            } else {
+                set_success("Added $title");
+                $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
+            }
         } else {
             add_error("Commit failed");
             rollback_book($isbn, $type);
@@ -215,7 +230,7 @@ function rollback_book($isbn, $type) {
     // TODO: rollback to previous uploads if editing fails rather than deleting
     global $dbc;
     if (!mysqli_rollback($dbc)) add_error("Database rollback failed");
-    if (!unlink(book_cover_path($isbn))) add_error("Book cover rollback failed");
-    if (!unlink(book_upload_path($isbn, $type))) add_error("Book upload rollback failed");
+    //if (!unlink(book_cover_path($isbn))) add_error("Book cover rollback failed");
+    //if (!unlink(book_upload_path($isbn, $type))) add_error("Book upload rollback failed");
 }
 ?>
