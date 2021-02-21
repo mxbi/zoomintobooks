@@ -10,7 +10,15 @@ $_SESSION["redirect"] = "/console/resources/";
 $authorised = authorised("list resources");
 display_status();
 if ($authorised) {
-
+    if (authorised("add resource", array(), $errors=false)) { ?>
+   <a class="card-list-item card-list-add-item" href="new/">
+    <img src="/assets/images/icons/plus-5-128.png" alt="" />
+    <span>Add new resource</span>
+   </a>
+<?php
+    }
+    $resources = fetch_resources(); // Load all books editable by the user
+    show_resources($resources);
 } ?>
 
   </main>

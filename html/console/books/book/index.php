@@ -18,12 +18,12 @@ if ($authorised) {
     show_book_form(true, $isbn);
     echo "    <h3>Resources linked to this book</h3>\n";
 ?>
-   <a class="card-list-item card-list-add-item" href="resource/new?isbn=$isbn">
+   <a class="card-list-item card-list-add-item" href="resource/new?isbn=<?php echo $isbn;?>">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />
     <span>Link resource to book</span>
    </a>
 <?php
-    $resources = fetch_resources($isbn);
+    $resources = fetch_book_resources($isbn);
     show_resources($resources);
 }
 echo "   </main>\n";

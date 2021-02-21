@@ -16,6 +16,16 @@ function is_blank($s) {
     return preg_match("/^\s*$/", $s) === 1;
 }
 
+function is_valid_url($url) {
+    // TODO
+    return true;
+}
+
+function is_valid_resource_type($type) {
+    // TODO
+    return true;
+}
+
 function is_valid_isbn($isbn) {
     // TODO
     return true;
@@ -131,7 +141,8 @@ function authorised($action, $params=array(), $errors=true) {
             break;
 
         case "edit resource":
-            $authorised = resource_exists($params["isbn"]) && ($is_admin || can_edit_resource($params["rid"]));
+        case "view resource":
+            $authorised = resource_exists($params["rid"]) && ($is_admin || can_edit_resource($params["rid"]));
             break;
 
         case "view user":

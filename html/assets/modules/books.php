@@ -9,7 +9,7 @@ function fetch_books() {
     if (!authorised("list books")) return;
     $username = sanitise($_SESSION["username"]);
     $q  = "SELECT b.* FROM book AS b ";
-    $q .= "JOIN editable_by AS eb ON b.isbn = eb.isbn ";
+    $q .= "JOIN book_editable_by AS eb ON b.isbn = eb.isbn ";
     $q .= "AND eb.username = '$username' ";
     return db_select($q);
 }
@@ -24,7 +24,7 @@ function book_exists($isbn) {
 function can_edit_book($isbn) {
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($isbn);
-    $c = db_select("SELECT 1 FROM editable_by WHERE isbn = '$isbn' AND username = '$username'", true);
+    $c = db_select("SELECT 1 FROM book_editable_by WHERE isbn = '$isbn' AND username = '$username'", true);
     $c = $c ? $c : array();
     return count($c) === 1;
 }
@@ -144,7 +144,7 @@ function manage_book($values, $file, $edit) {
         if (!$r) {
             add_error(mysqli_error($dbc));
         } else {
-            $q2 = "INSERT INTO editable_by(isbn, username) VALUES ('$isbn', '$username')";
+            $q2 = "INSERT INTO book_editable_by(isbn, username) VALUES ('$isbn', '$username')";
             $r2 = mysqli_query($dbc, $q2);
             if (!$r2) add_error(mysqli_error($dbc));
         }
@@ -159,7 +159,8 @@ function manage_book($values, $file, $edit) {
         rollback_book($isbn, $type);
     } else {
         if (mysqli_commit($dbc)) {
-            set_success("Added $title");
+            if ($edit) set_success("Updated $title");
+            else set_success("Added $title");
             $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
         } else {
             add_error("Commit failed");
