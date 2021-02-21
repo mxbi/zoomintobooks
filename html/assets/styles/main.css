@@ -132,6 +132,7 @@ h2 {
 }
 
 .card-list-item:hover {
+    background-color: #FFFAED;
     border: 1px solid #C7AF8F;
     box-shadow: 0 0 3px #666;
 }

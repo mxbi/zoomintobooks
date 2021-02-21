@@ -10,6 +10,9 @@ function init() {
     if (!isset($_SESSION["errors"])) {
         $_SESSION["errors"] = array();
     }
+
+    $is_admin = isset($_SESSION["account_type"]) && $_SESSION["account_type"] === "admin";
+    $is_logged_in = isset($_SESSION["username"]);
 }
 
 function is_blank($s) {
@@ -109,11 +112,12 @@ function get_type($file, $max_size, $legal_types) {
 }
 
 function authorised($action, $params=array(), $errors=true) {
-    if (!isset($_SESSION["username"])) {
+    global $is_logged_in;
+    global $is_admin;
+    if (!$is_logged_in) {
         if ($errors) add_error("You must <a href=\"/login/\">log in</a> first");
         return false;
     }
-    $is_admin = $_SESSION["account_type"] == "admin";
 
     $authorised = false;
     switch ($action) {
@@ -126,7 +130,7 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "list resources":
             if (isset($params["isbn"])) { // List resources for a book
-                $authorised = book_exists($params["isbn"]) && ($is_admin || can_edit_book($params["isbn"]));
+                $authorised = book_exists($params["isbn"]) && can_edit_book($params["isbn"]);
             } else { // List owned resources
                 $authorised = true;
             }
@@ -134,12 +138,12 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "edit book":
         case "view book":
-            $authorised = book_exists($params["isbn"]) && ($is_admin || can_edit_book($params["isbn"]));
+            $authorised = book_exists($params["isbn"]) && can_edit_book($params["isbn"]);
             break;
 
         case "edit resource":
         case "view resource":
-            $authorised = resource_exists($params["rid"]) && ($is_admin || can_edit_resource($params["rid"]));
+            $authorised = resource_exists($params["rid"]) && can_edit_resource($params["rid"]);
             break;
 
         case "view user":

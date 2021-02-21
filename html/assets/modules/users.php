@@ -11,6 +11,13 @@ function authenticate($username, $password) {
     }
 }
 
+function publisher_exists($publisher) {
+    $publisher = sanitise($publisher);
+    $c = db_select("SELECT 1 FROM publisher WHERE publisher = '$publisher'", true);
+    $c = $c ? $c : array();
+    return count($c) === 1;
+}
+
 function fetch_publisher($username) {
     if (!authorised("view user", array("username" => $username))) return array();
     $username = sanitise($username);

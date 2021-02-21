@@ -6,11 +6,16 @@ function fetch_resource($rid) {
 }
 
 function fetch_resources() {
+    global $is_admin;
     if (!authorised("list resources")) return;
-    $username = sanitise($_SESSION["username"]);
-    $q  = "SELECT r.* FROM resource AS r ";
-    $q .= "JOIN resource_editable_by AS eb ON eb.rid = r.rid AND eb.username = '$username'";
-    return db_select($q);
+    if ($is_admin) {
+        return db_select("SELECT * FROM resource");
+    } else {
+        $username = sanitise($_SESSION["username"]);
+        $q  = "SELECT r.* FROM resource AS r ";
+        $q .= "JOIN resource_editable_by AS eb ON eb.rid = r.rid AND eb.username = '$username'";
+        return db_select($q);
+    }
 }
 
 function fetch_book_resources($isbn) {
@@ -45,6 +50,8 @@ function show_resources($resources)  {
 }
 
 function can_edit_resource($rid) {
+    global $is_admin;
+    if ($is_admin) return true;
     $username = sanitise($_SESSION["username"]);
     $rid = sanitise($rid);
     $c = db_select("SELECT 1 FROM resource_editable_by WHERE rid = $rid AND username = '$username'", true);

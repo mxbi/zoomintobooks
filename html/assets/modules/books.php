@@ -6,12 +6,17 @@ function fetch_book($isbn) {
 }
 
 function fetch_books() {
+    global $is_admin;
     if (!authorised("list books")) return;
-    $username = sanitise($_SESSION["username"]);
-    $q  = "SELECT b.* FROM book AS b ";
-    $q .= "JOIN book_editable_by AS eb ON b.isbn = eb.isbn ";
-    $q .= "AND eb.username = '$username' ";
-    return db_select($q);
+    if ($is_admin) {
+        return db_select("SELECT * FROM book");
+    } else {
+        $username = sanitise($_SESSION["username"]);
+        $q  = "SELECT b.* FROM book AS b ";
+        $q .= "JOIN book_editable_by AS eb ON b.isbn = eb.isbn ";
+        $q .= "AND eb.username = '$username' ";
+        return db_select($q);
+    }
 }
 
 function book_exists($isbn) {
@@ -22,6 +27,8 @@ function book_exists($isbn) {
 }
 
 function can_edit_book($isbn) {
+    global $is_admin;
+    if ($is_admin) return true;
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($isbn);
     $c = db_select("SELECT 1 FROM book_editable_by WHERE isbn = '$isbn' AND username = '$username'", true);
@@ -43,6 +50,7 @@ function get_book_type($isbn) {
 }
 
 function show_book_form($edit, $isbn=NULL) {
+    global $is_admin;
     if (!$edit && !authorised("add book")) return;
     if ($edit && !authorised("edit book", array("isbn" => $isbn))) return;
     $values = array();
@@ -77,6 +85,12 @@ if (!$edit) { ?>
      <label for="author">Author</label>
      <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo get_form_value("author", $values); ?>" />
     </div>
+<?php if ($is_admin) { ?>
+    <div class="input-container">
+     <label for="publisher">Publisher</label>
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo get_form_value("publisher", $values); ?>" />
+    </div>
+<?php } ?>
     <div class="input-container">
      <label for="edition">Edition</label>
      <input type="number" name="edition" id="edition-input" value="<?php echo get_form_value("edition", $values, $default=1); ?>" min="1" step="1" />
@@ -93,6 +107,7 @@ if (!$edit) { ?>
 }
 
 function manage_book($values, $file, $edit) {
+    global $is_admin;
     global $dbc;
 
     $username = sanitise($_SESSION["username"]);
@@ -102,6 +117,13 @@ function manage_book($values, $file, $edit) {
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
 
+    $publisher = NULL;
+    if ($is_admin) {
+        $publisher = sanitise($values["publisher"]);
+    } else {
+        $publisher = fetch_publisher($_SESSION["username"])["publisher"];
+    }
+
     if (!$edit && !authorised("add book")) return false;
     if ($edit && !authorised("edit book", array("isbn" => $isbn))) return false;
 
@@ -109,6 +131,7 @@ function manage_book($values, $file, $edit) {
     $_SESSION["sticky"]["title"] = $title;
     $_SESSION["sticky"]["author"] = $author;
     $_SESSION["sticky"]["edition"] = $edition;
+    $_SESSION["sticky"]["publisher"] = $publisher;
 
     $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
@@ -117,12 +140,11 @@ function manage_book($values, $file, $edit) {
     if (is_blank($title)) add_error("Title is blank");
     if (is_blank($author)) add_error("Author is blank");
     if (!is_pos_int($edition)) add_error("Edition is invalid");
+    if (!publisher_exists($publisher)) add_error("No such publisher");
 
     if (errors_occurred()) return false;
 
     // Perform updates to database and file system
-
-    $publisher = fetch_publisher($_SESSION["username"])["publisher"];
 
     $type = NULL;
 
