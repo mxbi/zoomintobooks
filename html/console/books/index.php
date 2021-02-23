@@ -22,10 +22,11 @@ if ($authorised) {
         $isbn = $book["isbn"];
         $title = $book["title"];
         $author = $book["author"];
+        $edition = $book["edition"];
         $resource_count = count_resources($isbn);
         echo "   <a class=\"card-list-item\" href=\"book?isbn=$isbn\">\n";
-        echo "    <img src=\"book/cover?isbn=$isbn\" alt=\"Front cover of $title\" height=\"128\" />\n";
-        echo "    <p>$title</p>\n";
+        echo "    <img src=\"book/cover?isbn=$isbn\" class=\"preview\" alt=\"Front cover of $title\" height=\"128\" />\n";
+        echo "    <h4>$title<small> - edition $edition</small></h4>\n";
         echo "    <p>$author</p>\n";
         echo "    <p>$resource_count resources</p>\n";
         echo "   </a>\n";

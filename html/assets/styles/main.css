@@ -129,12 +129,27 @@ h2 {
     margin: 20px;
     padding: 20px;
     display: block;
+    overflow: hidden;
 }
 
 .card-list-item:hover {
     background-color: #FFFAED;
     border: 1px solid #C7AF8F;
     box-shadow: 0 0 3px #666;
+}
+
+.card-list-item img.preview {
+    float: left;
+    margin-right: 10px;
+    border: 1px solid #523A1A;
+}
+
+.card-list-item h4 {
+    margin-top: 0;
+}
+
+.card-list-item p {
+    margin: 0;
 }
 
 .card-list-add-item {

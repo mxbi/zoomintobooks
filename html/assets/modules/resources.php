@@ -51,10 +51,10 @@ function show_resources($resources)  {
         $url = $resource["url"];
         $display = $resource["display"];
         echo "   <a class=\"card-list-item\" href=\"resource?rid=$rid\">\n";
-        echo "    <img src=\"resource/preview?rid=$rid\" alt=\"Preview of $name\" height=\"128\" />\n";
+        echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
         echo "    <h4>$name</h4>\n";
         echo "    <p>$url</p>\n";
-        echo "    <p>Display as $display</p>\n";
+        echo "    <p>Displayed as $display</p>\n";
         echo "   </a>\n";
     }
 }
@@ -80,13 +80,14 @@ function show_resource_form($edit, $rid=NULL) {
             return;
         }
     }
+    $rid = $edit ? $values["rid"] : -1;
     $display = get_form_value("display", $values, $default="overlay");
     $downloadable = get_form_value("downloadable", $values, $default="1") === "1";
-    $uploaded = was_resource_uploaded($values["rid"]);
+    $uploaded = was_resource_uploaded($rid);
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
-    <input type="hidden" name="rid" value="<?php echo $edit ? $values["rid"] : -1;?>" />
+    <input type="hidden" name="rid" value="<?php echo $rid;?>" />
     <div class="input-container">
      <label for="name">Name</label>
      <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo get_form_value("name", $values); ?>" />

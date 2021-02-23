@@ -24,10 +24,10 @@ if ($authorised) {
         $type = $user["type"];
         $publisher = fetch_publisher($username);
         echo "   <a class=\"card-list-item\" href=\"user?username=$username\">\n";
-        echo "    <p>$username</p>\n";
-        echo "    <p>$type</p>\n";
+        echo "    <h4>$username</h4>\n";
+        echo "    <p>" . ucfirst($type) . " account</p>\n";
         if ($publisher) {
-            echo "    <p>" . $publisher["publisher"] . "</p>\n";
+            echo "    <p>Publisher: " . $publisher["publisher"] . "</p>\n";
         }
         echo "   </a>\n";
     }
