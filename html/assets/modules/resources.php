@@ -33,18 +33,28 @@ function resource_exists($rid) {
     return count($c) === 1;
 }
 
+function get_resource_mime_type($rid) {
+    $rid = sanitise($rid);
+    $type = db_select("SELECT type FROM resource WHERE rid = $rid", true);
+    return $type ? $type["type"] : NULL;
+}
+
+function was_resource_uploaded($rid) {
+    return get_resource_mime_type($rid) ? true : false;
+}
+
 function show_resources($resources)  {
     if (!authorised("list resources")) return;
     foreach ($resources as $resource) {
         $rid = $resource["rid"];
         $name = $resource["name"];
         $url = $resource["url"];
-        $type = $resource["type"];
+        $display = $resource["display"];
         echo "   <a class=\"card-list-item\" href=\"resource?rid=$rid\">\n";
         echo "    <img src=\"resource/preview?rid=$rid\" alt=\"Preview of $name\" height=\"128\" />\n";
-        echo "    <p>$name</p>\n";
+        echo "    <h4>$name</h4>\n";
         echo "    <p>$url</p>\n";
-        echo "    <p>$type</p>\n";
+        echo "    <p>Display as $display</p>\n";
         echo "   </a>\n";
     }
 }
@@ -70,8 +80,9 @@ function show_resource_form($edit, $rid=NULL) {
             return;
         }
     }
-    $type = get_form_value("edition", $values, $default="overlay");
+    $display = get_form_value("display", $values, $default="overlay");
     $downloadable = get_form_value("downloadable", $values, $default="1") === "1";
+    $uploaded = was_resource_uploaded($values["rid"]);
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
@@ -83,16 +94,22 @@ function show_resource_form($edit, $rid=NULL) {
     <div class="input-container">
      <label for="url">URL</label>
      <input type="text" name="url" id="url-input" placeholder="URL" value="<?php echo get_form_value("url", $values); ?>" />
+<?php if ($uploaded) { echo "     <span>This resource was uploaded to this server</span>\n"; } ?>
     </div>
-    TODO: file upload
     <div class="input-container">
-     <label for="type">Type</label>
-     <select name="type" id="type-input">
-      <option value="overlay" <?php echo $type === "overlay" ? "selected=\"selected\"" : ""; ?>>AR overlay image</option>
-      <option value="image" <?php echo $type === "image" ? "selected=\"selected\"" : ""; ?>>Normal image</option>
-      <option value="video" <?php echo $type === "video" ? "selected=\"selected\"" : ""; ?>>Video</option>
-      <option value="audio" <?php echo $type === "audio" ? "selected=\"selected\"" : ""; ?>>Audio</option>
-      <option value="webpage" <?php echo $type === "webpage" ? "selected=\"selected\"" : ""; ?>>Webpage</option>
+     <label for="resource">Resource upload</label>
+     <input type="file" name="resource" id="resource-input" />
+     <span>Uploading a file will make it publicly accessible on our server.</span>
+<?php if ($uploaded) { echo "     <span>Uploading another resource will overwrite the old one.</span>\n"; } ?>
+    </div>
+    <div class="input-container">
+     <label for="display">Display mode</label>
+     <select name="display" id="display-input">
+      <option value="overlay" <?php echo $display === "overlay" ? "selected=\"selected\"" : ""; ?>>AR overlay image</option>
+      <option value="image" <?php echo $display === "image" ? "selected=\"selected\"" : ""; ?>>Normal image</option>
+      <option value="video" <?php echo $display === "video" ? "selected=\"selected\"" : ""; ?>>Video</option>
+      <option value="audio" <?php echo $display === "audio" ? "selected=\"selected\"" : ""; ?>>Audio</option>
+      <option value="webpage" <?php echo $display === "webpage" ? "selected=\"selected\"" : ""; ?>>Webpage</option>
      </select>
     </div>
     <div class="input-container">
@@ -105,28 +122,31 @@ function show_resource_form($edit, $rid=NULL) {
     unset($_SESSION["sticky"]);
 }
 
-function manage_resource($values, $edit) {
+function manage_resource($file, $values, $edit) {
     global $dbc;
 
     $username = sanitise($_SESSION["username"]);
     $rid = sanitise($values["rid"]);
     $name = sanitise($values["name"]);
     $url = sanitise($values["url"]);
-    $type = sanitise($values["type"]);
+    $display = sanitise($values["display"]);
     $downloadable = !empty($values["downloadable"]) && $values["downloadable"] === "downloadable";
+    $downloadable = $downloadable ? 1 : 0;
 
     if (!$edit && !authorised("add resource")) return false;
     if ($edit && !authorised("edit resource", array("rid" => $rid))) return false;
 
     $_SESSION["sticky"]["name"] = $name;
     $_SESSION["sticky"]["url"] = $url;
-    $_SESSION["sticky"]["type"] = $type;
+    $_SESSION["sticky"]["display"] = $display;
     $_SESSION["sticky"]["downloadable"] = $downloadable ? "downloadable" : "";
 
-    if (!is_valid_url($url)) add_error("URL is invalid");
+    $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
+
+    if (!$file_present && !is_valid_url($url)) add_error("URL is invalid");
     if ($edit && !is_pos_int($rid)) add_error("rid is invalid");
     if (is_blank($name)) add_error("Name is blank");
-    if (!is_valid_resource_type($type)) add_error("Resource type is invalid");
+    if (!is_valid_resource_display_mode($display)) add_error("Resource display mode is invalid");
 
     if (errors_occurred()) return false;
 
@@ -136,7 +156,7 @@ function manage_resource($values, $edit) {
 
     if (!$edit) {
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "INSERT INTO resource(name, url, type, downloadable) VALUES ('$name', '$url', '$type', $downloadable)";
+        $q = "INSERT INTO resource(name, url, display, downloadable) VALUES ('$name', 'ERROR: URL NOT SET', '$display', $downloadable)";
         $r = mysqli_query($dbc, $q);
         if (!$r) {
             add_error(mysqli_error($dbc));
@@ -147,12 +167,26 @@ function manage_resource($values, $edit) {
             if (!$r2) add_error(mysqli_error($dbc));
         }
     } else {
-        $downloadable = $downloadable ? 1 : 0;
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "UPDATE resource SET name='$name', url='$url', type='$type', downloadable=$downloadable WHERE rid='$rid'";
+        $q = "UPDATE resource SET name='$name', url='ERROR: URL NOT SET', display='$display', downloadable=$downloadable WHERE rid='$rid'";
         $r = mysqli_query($dbc, $q);
         if (!$r) add_error(mysqli_error($dbc));
     }
+
+    $type = $file_present ? get_type($file, MAX_RESOURCE_FILE_SIZE, RESOURCE_TYPES) : NULL;
+    if (!errors_occurred() && $type) {
+        if (!move_uploaded_file($file["tmp_name"], resource_upload_path($rid, $type))) {
+            add_error("Failed to upload resource");
+        } else {
+            $url = "http://86.23.244.209:8080/console/resources/resource?rid=$rid";
+        }
+    }
+
+    $q = "UPDATE resource SET url='$url'" . ($type ? ", type='$type'" : "") . " WHERE rid='$rid'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) add_error(mysqli_error($dbc));
+
+    $_SESSION["sticky"]["url"] = $url;
 
     if (errors_occurred()) {
         mysqli_rollback($dbc);

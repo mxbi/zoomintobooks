@@ -9,5 +9,5 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     manage_book($_POST, $_FILES["book"], false);
 }
 
-header("Location: " . $_SESSION["redirect"]);
+//header("Location: " . $_SESSION["redirect"]);
 ?>

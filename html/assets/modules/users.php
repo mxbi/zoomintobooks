@@ -92,7 +92,9 @@ function add_user($values) {
 function add_publisher($values) {
     global $dbc;
     $publisher = sanitise($values["publisher"]);
+    $email = sanitise($values["email"]);
     $mode = sanitise($values["mode"]);
+    // TODO: make this consistent with how it's done in manage_book
     if ($mode === "edit" && !authorised("edit publisher", array("publisher" => $publisher))) return;
     if ($mode === "new"  && !authorised("add publisher")) return;
     if ($mode !== "edit" && $mode !== "new") {
@@ -101,7 +103,7 @@ function add_publisher($values) {
     }
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-    $q = "INSERT INTO publisher(publisher) VALUES ('$publisher')";
+    $q = "INSERT INTO publisher(publisher, email) VALUES ('$publisher', '$email')";
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error(mysqli_error($dbc));
@@ -174,6 +176,10 @@ function show_publisher_form($mode, $publisher = NULL) {
     <div class="input-container">
      <label for="publisher">Publisher name</label>
      <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" />
+    </div>
+    <div class="input-container">
+     <label for="email">Publisher e-mail</label>
+     <input type="email" name="email" id="email-input" placeholder="E-mail" required="required" />
     </div>
     <input type="submit" value="<?php echo $mode == "new" ? "Create publisher" : "Edit publisher"; ?>" />
    </form>

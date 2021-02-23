@@ -36,13 +36,13 @@ input[type="button"]:hover, input[type="submit"]:hover, button:hover, .button:ho
     box-shadow: 0 0 3px #666;
 }
 
-input[type="text"], input[type="password"], input[type="number"] {
+input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="email"] {
     padding: 10px;
     border: 1px solid #523A1A;
     border-radius: 5px;
 }
 
-input[type="text"]:hover, input[type="password"]:hover, input[type="number"]:hover, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+input[type="text"]:hover, input[type="password"]:hover, input[type="number"]:hover, input[type="url"]:hover, input[type="email"]:hover, input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus, input[type="url"]:focus, input[type="email"]:focus {
     border: 1px solid #C7AF8F;
     box-shadow: 0 0 3px #666;
     outline: 0;

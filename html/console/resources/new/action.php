@@ -6,7 +6,7 @@ $authorised = authorised("add resource");
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_error("Request method must be POST");
 } else if ($authorised) {
-    manage_resource($_POST, false);
+    manage_resource($_FILES["resource"], $_POST, false);
 }
 
 header("Location: " . $_SESSION["redirect"]);

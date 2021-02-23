@@ -63,7 +63,7 @@ function show_book_form($edit, $isbn=NULL) {
     }
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="100000000" />
 <?php
 if (!$edit) { ?>
     <div class="input-container">
@@ -110,6 +110,9 @@ function manage_book($values, $file, $edit) {
     global $is_admin;
     global $dbc;
 
+    var_dump($values);
+    var_dump($file);
+
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($values["isbn"]);
     $new_isbn = sanitise($values["new_isbn"]);
@@ -132,6 +135,8 @@ function manage_book($values, $file, $edit) {
     $_SESSION["sticky"]["author"] = $author;
     $_SESSION["sticky"]["edition"] = $edition;
     $_SESSION["sticky"]["publisher"] = $publisher;
+
+    var_dump($_SESSION);
 
     $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 

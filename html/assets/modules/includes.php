@@ -3,10 +3,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-define("MAX_BOOK_FILE_SIZE", 50000000);
+define("MAX_BOOK_FILE_SIZE", 100000000);
 define("MAX_RESOURCE_FILE_SIZE", 50000000);
 define("BOOK_TYPES", array("pdf"));
-define("RESOURCE_TYPES", array("jpeg", "png", "gif", "webm", "tiff"));
+define("RESOURCE_TYPES", array("jpeg", "png", "gif", "webm", "tiff", "mp3"));
 
 define("UPLOAD_ERROR_MSGS", array("unknown error", "file size exceeds php.ini directive", "file size exceeds MAX_FILE_SIZE", "file only partially uploaded", "no file uploaded", "missing temporary directory", "disk write failed", "blocked by PHP extension"));
 

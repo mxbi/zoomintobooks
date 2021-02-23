@@ -24,7 +24,7 @@ function is_valid_url($url) {
     return true;
 }
 
-function is_valid_resource_type($type) {
+function is_valid_resource_display_mode($type) {
     // TODO
     return true;
 }
@@ -88,20 +88,20 @@ function display_status() {
     }
 }
 
-function get_type($file, $max_size, $legal_types) {
+function get_type($file, $max_size, $legal_subtypes) {
     $path = escapeshellarg($file["tmp_name"]);
     $file_info = exec("file -i $path", $output, $status);
     if ($status) {
         add_error("Could not safely determine file type (" . UPLOAD_ERROR_MSGS[$file["error"]] . ")");
     } else {
-        $type = explode("/", explode(";", explode(":", $file_info)[1])[0])[1]; //Extract file subtype from MIME type output from "file" command
-        if (!in_array($type, $legal_types)) {
+        $type = explode(";", explode(":", $file_info)[1])[0]; //Extract file subtype from MIME type output from "file" command
+        if (!in_array(get_subtype($type), $legal_subtypes)) {
             add_error("File type $type is not allowed");
         }
-        if ($_FILES["book"]["size"] > $max_size) {
+        if ($file["size"] > $max_size) {
             add_error("File is too large");
         }
-        if (!isset($_FILES["book"]["error"]) || is_array($_FILES["book"]["error"])) {
+        if (!isset($file["error"]) || is_array($file["error"])) {
             add_error("Invalid parameters");
         }
         if (!errors_occurred()) {
@@ -109,6 +109,10 @@ function get_type($file, $max_size, $legal_types) {
         }
     }
     return false;
+}
+
+function get_subtype($type) {
+    return explode("/", $type)[1];
 }
 
 function authorised($action, $params=array(), $errors=true) {
@@ -203,10 +207,34 @@ function book_cover_path($isbn) {
 }
 
 function book_upload_path($isbn, $type) {
-    return "/var/www/zib/books/uploads/$isbn.$type";
+    return "/var/www/zib/books/uploads/$isbn." . get_subtype($type);
 }
 
 function book_images_path($isbn) {
     return "/var/www/zib/books/images/$isbn";
 }
+
+function resource_upload_path($rid, $type) {
+    return "/var/www/zib/resources/uploads/$rid." . get_subtype($type);
+}
+
+function resource_preview_path($rid) {
+    return "/var/www/zib/resources/previews/$rid.png";
+}
+
+function generate_text_image($lines, $w=100, $h=128) {
+    $img = imagecreatetruecolor($w, $h);
+    $white = imagecolorallocate($img, 255, 255, 255);
+    $black = imagecolorallocate($img, 0, 0, 0);
+    imagefilledrectangle($img, 0, 0, $w-1, $h-1, $black);
+    $font = $_SERVER["DOCUMENT_ROOT"] . "/assets/fonts/open_sans/OpenSans-Regular.ttf";
+    $top = 20;
+    foreach ($lines as $line) {
+        imagettftext($img, 10, 0, 10, $top, $white, $font, $line);
+        $top += 20;
+    }
+    imagepng($img);
+    imagedestroy($img);
+}
+
 ?>
