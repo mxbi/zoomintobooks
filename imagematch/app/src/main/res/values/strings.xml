@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">imageComparator</string>
+    <string name="menu_settings">Settings</string>
+    <string name="select">Select the two images to be compared</string>
+    <string name="start">Start processing</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="orb">ORB</string>
+    <string name="freak">FREAK</string>
+    <string name="brisk">BRISK</string>
+    <string name="brief">BRIEF</string>
+    <string name="surf">SURF</string>
+    <string name="sift">SIFT</string>
+    <string name="Apply">Apply Settings</string>
+    <string name="min_dist">Hamming distance between matched descriptors(Lower the more similar):</string>
+    <string name="min_dup">Minimum number of good matches to be recognized as a duplicate:</string>
+
+</resources>

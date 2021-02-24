@@ -1,5 +1,13 @@
 package com.example.zoomintobooks;
 
+import org.opencv.core.Core;
+import org.opencv.core.Core.MinMaxLocResult;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.imgcodecs.Imgcodecs;
+import org.opencv.imgproc.Imgproc;
+
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -24,12 +32,9 @@ import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.example.zoomintobooks.R;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class NewPostActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,7 +48,8 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
     private EditText editText;
     private Button sendButton;
     private ImageView imageView;
-    private Button galleryBtn;
+    private Button dstBtn;
+    private Button srcBtn;
     private Button cameraBtn;
 
     private Uri filePath;
@@ -59,10 +65,11 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
         imageView = (ImageView) findViewById(R.id.postImage);
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        galleryBtn = (Button) findViewById(R.id.pickImageButton);
+        dstBtn = (Button) findViewById(R.id.pickImageButton);
+        srcBtn = (Button) findViewById(R.id.pickSrcButton);
         cameraBtn = (Button) findViewById(R.id.cameraBtn);
 
-        galleryBtn.setOnClickListener(this);
+        dstBtn.setOnClickListener(this);
         cameraBtn.setOnClickListener(this);
     }
 
@@ -182,7 +189,7 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if (v == galleryBtn) {
+        if (v == dstBtn) {
             openGallery(v);
         }
 
@@ -190,5 +197,32 @@ public class NewPostActivity extends AppCompatActivity implements View.OnClickLi
             openCamera(v);
         }
 
+    }
+
+    private void match(Mat queryImage, Mat trainImage){
+
+        System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+        Mat source=null;
+        Mat template=null;
+        String filePath="C:\\Users\\mesutpiskin\\Desktop\\Object Detection\\Template Matching\\Sample Image\\";
+        //Load image file
+
+        source=Imgcodecs.imread(filePath+"kapadokya.jpg");
+        template=Imgcodecs.imread(filePath+"balon.jpg");
+
+        Mat outputImage=new Mat();
+        int machMethod=Imgproc.TM_CCOEFF;
+        //Template matching method
+        Imgproc.matchTemplate(source, template, outputImage, machMethod);
+
+
+        MinMaxLocResult mmr = Core.minMaxLoc(outputImage);
+        Point matchLoc=mmr.maxLoc;
+        //Draw rectangle on result image
+        Imgproc.rectangle(source, matchLoc, new Point(matchLoc.x + template.cols(),
+                matchLoc.y + template.rows()), new Scalar(255, 255, 255));
+
+        Imgcodecs.imwrite(filePath+"sonuc.jpg", source);
+        System.out.println("Complated.");
     }
 }

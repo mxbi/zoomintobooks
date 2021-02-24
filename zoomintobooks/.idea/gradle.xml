@@ -12,8 +12,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+<<<<<<< Updated upstream
             <option value="$PROJECT_DIR$/java" />
             <option value="$PROJECT_DIR$/openCVLibrary249" />
+=======
+            <option value="$PROJECT_DIR$/sdk" />
+>>>>>>> Stashed changes
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
