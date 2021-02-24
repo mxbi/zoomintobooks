@@ -16,9 +16,22 @@
         android:background="@color/beige_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="410dp"
+            android:layout_height="604dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameBar"
+            app:layout_constraintVertical_bias="0.0" />
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/nameBar"
@@ -147,6 +160,17 @@
             app:rippleColor="@color/beige_1"
             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:tint="@color/beige_1" />
+
+        <TextView
+            android:id="@+id/ResultOfBarScan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameBar"
+            app:layout_constraintVertical_bias="0.812" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,24 @@
 package com.uniform.zoomintobooks;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
+import org.w3c.dom.Text;
 
 public class BarcodeScanActivity extends AppCompatActivity {
     Boolean MoreButtonOpen = false;
@@ -30,6 +39,41 @@ public class BarcodeScanActivity extends AppCompatActivity {
         setMenuButtons();
 
 
+
+        ActivityCompat.requestPermissions(this, new String[]
+                        {Manifest.permission.CAMERA},
+                PackageManager.PERMISSION_GRANTED);
+
+        ScanButton(findViewById(R.id.view));
+
+
+    }
+
+
+    public void ScanButton(View view){
+        IntentIntegrator intentIntegrator = new IntentIntegrator(this);
+
+        intentIntegrator.setCameraId(0); //takes the back camera
+        intentIntegrator.setBarcodeImageEnabled(false); //if true, can also save the scan
+        intentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        //intentIntegrator.setTorchEnabled(true);
+        //can specify other parameters here, such as timeout, ask for permission, ...
+
+        intentIntegrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        TextView results = findViewById(R.id.ResultOfBarScan);
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (intentResult != null) { //we got something
+            if (intentResult.getContents() == null) { //something went wrong
+                results.setText("Scan unsuccessful");
+            } else {
+                results.setText(intentResult.getContents());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void setMenuButtons() {
