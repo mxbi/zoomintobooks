@@ -81,8 +81,8 @@ book_fields = {
 resource_fields = {
 	'rid' : fields.Integer,
 	'url' : fields.String,
-	'downloadable' : fields.Boolean,
-	'resource_type' : fields.String
+	'display' : fields.String,
+	'downloadable' : fields.Boolean
 }
 
 publisher_fields = {
