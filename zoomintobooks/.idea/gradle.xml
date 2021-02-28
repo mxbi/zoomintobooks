@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+<<<<<<< Updated upstream
   <component name="GradleMigrationSettings" migrationVersion="1" />
 <<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -9,18 +12,6 @@
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="1.8" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-<<<<<<< Updated upstream
-            <option value="$PROJECT_DIR$/java" />
-            <option value="$PROJECT_DIR$/openCVLibrary249" />
-=======
-            <option value="$PROJECT_DIR$/sdk" />
->>>>>>> Stashed changes
-          </set>
-        </option>
         <option name="resolveModulePerSourceSet" value="false" />
         <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
