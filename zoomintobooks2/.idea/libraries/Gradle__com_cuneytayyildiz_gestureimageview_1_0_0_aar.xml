@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.cuneytayyildiz:gestureimageview:1.0.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ccc4589d0067dc155229f191a892b5a4/jetified-gestureimageview-1.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ccc4589d0067dc155229f191a892b5a4/jetified-gestureimageview-1.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/ccc4589d0067dc155229f191a892b5a4/jetified-gestureimageview-1.0.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cuneytayyildiz/gestureimageview/1.0.0/425d4778a51fb5f0cd997f52e32872cd13c9ea7a/gestureimageview-1.0.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.cuneytayyildiz/gestureimageview/1.0.0/a721517a69012cc387a2b38e95cb73d83ca849b/gestureimageview-1.0.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

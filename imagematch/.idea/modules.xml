@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/image_match.iml" filepath="$PROJECT_DIR$/.idea/modules/image_match.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/image_match.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/image_match.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary249/image_match.openCVLibrary249.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary249/image_match.openCVLibrary249.iml" />
+    </modules>
+  </component>
+</project>

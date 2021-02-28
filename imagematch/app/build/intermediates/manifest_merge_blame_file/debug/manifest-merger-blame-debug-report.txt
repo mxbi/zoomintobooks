@@ -1,0 +1,70 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.imagematch"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+7-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:7:5-9:41
+8        android:minSdkVersion="16"
+8-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:8:9-34
+9        android:targetSdkVersion="30" />
+9-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:9:9-38
+10
+11    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+11-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:11:5-81
+11-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:11:22-78
+12
+13    <application
+13-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:13:5-37:19
+14        android:allowBackup="true"
+14-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:14:9-35
+15        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+15-->[androidx.core:core:1.3.1] C:\Users\Zenovarse\.gradle\caches\transforms-2\files-2.1\8dbd859d1cd89239b42e7382b4fc40d7\core-1.3.1\AndroidManifest.xml:24:18-86
+16        android:debuggable="true"
+17        android:icon="@drawable/ic_launcher"
+17-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:15:9-45
+18        android:label="@string/app_name"
+18-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:16:9-41
+19        android:testOnly="true"
+20        android:theme="@style/AppTheme" >
+20-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:17:9-40
+21        <activity
+21-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:18:9-29:20
+22            android:name="com.example.imagematch.MainActivity"
+22-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:19:13-63
+23            android:alwaysRetainTaskState="true"
+23-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:20:13-49
+24            android:label="@string/app_name"
+24-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:21:13-45
+25            android:launchMode="singleTop"
+25-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:22:13-43
+26            android:screenOrientation="landscape" >
+26-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:23:13-50
+27            <intent-filter>
+27-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:24:13-28:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:25:17-69
+28-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:25:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:27:17-77
+30-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:27:27-74
+31            </intent-filter>
+32        </activity>
+33        <activity
+33-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:30:9-36:20
+34            android:name="com.example.imagematch.Settings"
+34-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:31:13-59
+35            android:alwaysRetainTaskState="true"
+35-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:32:13-49
+36            android:label="@string/title_activity_settings"
+36-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:33:13-60
+37            android:launchMode="singleTop"
+37-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:34:13-43
+38            android:screenOrientation="landscape" >
+38-->C:\Users\Zenovarse\Documents\GitHub\zoomintobooks\imagematch\app\src\main\AndroidManifest.xml:35:13-50
+39        </activity>
+40    </application>
+41
+42</manifest>

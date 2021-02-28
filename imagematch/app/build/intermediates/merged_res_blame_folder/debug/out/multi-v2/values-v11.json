@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\Zenovarse\\Documents\\GitHub\\zoomintobooks\\imagematch\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v11\\values-v11.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Zenovarse\\Documents\\GitHub\\zoomintobooks\\imagematch\\app\\src\\main\\res\\values-v11\\styles.xml",
+                    "from": {
+                        "startLines": "8",
+                        "startColumns": "4",
+                        "startOffsets": "184",
+                        "endLines": "10",
+                        "endColumns": "12",
+                        "endOffsets": "318"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "4",
+                        "endColumns": "12",
+                        "endOffsets": "187"
+                    }
+                }
+            ]
+        }
+    ]
+}

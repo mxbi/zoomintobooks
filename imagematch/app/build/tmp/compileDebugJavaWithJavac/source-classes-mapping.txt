@@ -1,0 +1,14 @@
+com/torcellite/imageComparator/BuildConfig.java
+ com.torcellite.imageComparator.BuildConfig
+com/example/imagematch/Settings.java
+ com.example.imagematch.Settings
+ com.example.imagematch.Settings$1
+ com.example.imagematch.Settings$2
+com/example/imagematch/MainActivity.java
+ com.example.imagematch.MainActivity
+ com.example.imagematch.MainActivity$1
+ com.example.imagematch.MainActivity$2
+ com.example.imagematch.MainActivity$3
+ com.example.imagematch.MainActivity$4
+ com.example.imagematch.MainActivity$asyncTask
+ com.example.imagematch.MainActivity$asyncTask$1

@@ -1,0 +1,12 @@
+com/zoomintobooks/BuildConfig.java
+ com.zoomintobooks.BuildConfig
+com/zoomintobooks/ImageViewActivity.java
+ com.zoomintobooks.ImageViewActivity
+com/zoomintobooks/TouchImageView.java
+ com.zoomintobooks.TouchImageView
+ com.zoomintobooks.TouchImageView$1
+ com.zoomintobooks.TouchImageView$ScaleListener
+com/zoomintobooks/VideoActivity.java
+ com.zoomintobooks.VideoActivity
+com/zoomintobooks/MainActivity.java
+ com.zoomintobooks.MainActivity

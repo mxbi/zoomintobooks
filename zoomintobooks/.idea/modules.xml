@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/zoomintobooks.iml" filepath="$PROJECT_DIR$/.idea/zoomintobooks.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/zoomintobooks.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/zoomintobooks.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/java/zoomintobooks.java.iml" filepath="$PROJECT_DIR$/.idea/modules/java/zoomintobooks.java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/openCVLibrary249/zoomintobooks.openCVLibrary249.iml" filepath="$PROJECT_DIR$/.idea/modules/openCVLibrary249/zoomintobooks.openCVLibrary249.iml" />
+    </modules>
+  </component>
+</project>

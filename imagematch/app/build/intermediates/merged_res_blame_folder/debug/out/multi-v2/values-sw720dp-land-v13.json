@@ -1,0 +1,26 @@
+{
+    "logs": [
+        {
+            "outputFile": "C:\\Users\\Zenovarse\\Documents\\GitHub\\zoomintobooks\\imagematch\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-sw720dp-land-v13\\values-sw720dp-land-v13.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Zenovarse\\Documents\\GitHub\\zoomintobooks\\imagematch\\app\\src\\main\\res\\values-sw720dp-land\\dimens.xml",
+                    "from": {
+                        "startLines": "8",
+                        "startColumns": "4",
+                        "startOffsets": "207",
+                        "endColumns": "58",
+                        "endOffsets": "261"
+                    },
+                    "to": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "58",
+                        "endOffsets": "109"
+                    }
+                }
+            ]
+        }
+    ]
+}
