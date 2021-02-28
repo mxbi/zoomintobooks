@@ -42,27 +42,23 @@ public class ZoomUtils {
         connection.setRequestMethod("GET");
         connection.connect();
 
-        BufferedReader json  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-        //TEST JSON using String, TODO: remove once testing is done
-        //String json = new String("{'basic_info': {'isbn': 1, 'title': 'Nausea', 'author': 'Sartre', 'ar_blob': 'c2FydHJlLmpwZ3xDOi9Vc2Vycy92aWN0by9Eb2N1bWVudHMvQ2FtYnJpZGdlL0lCL0dyb3VwIFByb2plY3QvSW1hZ2VzL3NhcnRyZS5qcGcNCg==', 'ocr_blob': 'hi', 'edition': '1st'}, 'ar_resources': [], 'publisher_info': {'publisher': 'Journal', 'email': 'j'}}");
-        //JsonElement rootNode = JsonParser.parseString(json);
+        BufferedReader json = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
         JsonElement rootNode = JsonParser.parseReader(json);
         JsonObject details = rootNode.getAsJsonObject();
 
         JsonObject basicInfo = details.getAsJsonObject("basic_info");
+        JsonObject publisherInfo = details.getAsJsonObject("publisher_info");
         BookInfo book = new BookInfo();
         book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsInt());
         book.setTitle(basicInfo.getAsJsonPrimitive("title").getAsString());
         book.setAuthor(basicInfo.getAsJsonPrimitive("author").getAsString());
-        book.setARBlob ( basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
+        book.setARBlob(basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
         book.setOCRBlob(basicInfo.getAsJsonPrimitive("ocr_blob").getAsString());
         book.setEdition(basicInfo.getAsJsonPrimitive("edition").getAsString());
 
-        book.setPublisherInfo(details.getAsJsonObject("publisher_info"));
-        book.setPublisher(details.getAsJsonPrimitive("publisher").getAsString());
-        book.setEmail( details.getAsJsonPrimitive("email").getAsString());
+        book.setPublisher(publisherInfo.getAsJsonPrimitive("publisher").getAsString());
+        book.setEmail(publisherInfo.getAsJsonPrimitive("email").getAsString());
 
         book.setARResourceList(parseResources(details, "ar_resources"));
         book.setOCRResourceList(parseResources(details, "ocr_resources"));
