@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.uniform.zoomintobooks.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.IOException;
+
 public class WelcomeActivity extends AppCompatActivity {
     Boolean MoreButtonOpen = false;
 
@@ -94,7 +96,7 @@ public class WelcomeActivity extends AppCompatActivity {
         FloatingActionButton ContactButton = findViewById(R.id.ContactButton);
         FloatingActionButton BookButton = findViewById(R.id.BookButton);
         FloatingActionButton SettingButton = findViewById(R.id.SettingButton);
-        if(!moreButtonOpen){
+        if (!moreButtonOpen) {
             MoreButton.setAnimation(rotateOpen);
             InfoButton.setAnimation(fromBottom);
             ContactButton.setAnimation(fromBottom);
@@ -114,7 +116,7 @@ public class WelcomeActivity extends AppCompatActivity {
         FloatingActionButton ContactButton = findViewById(R.id.ContactButton);
         FloatingActionButton BookButton = findViewById(R.id.BookButton);
         FloatingActionButton SettingButton = findViewById(R.id.SettingButton);
-        if(!moreButtonOpen){
+        if (!moreButtonOpen) {
             InfoButton.setVisibility(View.VISIBLE);
             ContactButton.setVisibility(View.VISIBLE);
             BookButton.setVisibility(View.VISIBLE);
