@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
 
 
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -40,6 +41,31 @@
                 android:textStyle="bold|italic"
                 android:translationY="30dp" />
         </com.google.android.material.appbar.AppBarLayout>
+
+        <ListView
+            android:id="@+id/listview"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="60dp"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/SearchForBookView"
+            android:layout_below="@+id/SearchForBookView" />
+
+
+        <SearchView
+            android:id="@+id/SearchForBookView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:background="@drawable/serchborder"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search Here"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.294" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/InfoButton"

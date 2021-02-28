@@ -8,11 +8,20 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class SelectBookActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class SelectBookActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     Boolean MoreButtonOpen = false;
+    ListView list;
+    ListViewAdapter adapter;
+    SearchView editsearch;
+    ArrayList<String> arraylist = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +38,19 @@ public class SelectBookActivity extends AppCompatActivity {
         });
 
         setMenuButtons();
+
+        // Locate the ListView in listview_main.xml
+        list =  findViewById(R.id.listview);
+
+
+        // Pass results to ListViewAdapter Class
+        adapter = new ListViewAdapter(this, arraylist);
+        // Binds the Adapter to the ListView
+        list.setAdapter(adapter);
+
+        // Locate the EditText in listview_main.xml
+        editsearch = findViewById(R.id.SearchForBookView);
+        editsearch.setOnQueryTextListener(this);
     }
     private void setMenuButtons() {
         FloatingActionButton InfoButton = findViewById(R.id.InfoButton);
@@ -108,9 +130,17 @@ public class SelectBookActivity extends AppCompatActivity {
         }
     }
 
-    private int getViewWidth() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        //get books that match string into arraylist
+        arraylist = null;
+        adapter.notifyDataSetChanged();
+        return false;
     }
 }

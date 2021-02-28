@@ -22,17 +22,6 @@
         app:layout_constraintVertical_bias="1.0">
 
 
-        <View
-            android:id="@+id/view"
-            android:layout_width="410dp"
-            android:layout_height="604dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameBar"
-            app:layout_constraintVertical_bias="0.0" />
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/nameBar"
 
@@ -46,7 +35,6 @@
                 android:id="@+id/ScreenTitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/barcodeScan"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@color/brown_1"
@@ -161,16 +149,34 @@
             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:tint="@color/beige_1" />
 
-        <TextView
-            android:id="@+id/ResultOfBarScan"
+        <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameBar"
-            app:layout_constraintVertical_bias="0.812" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/AgainButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/try_again"
+                android:textSize="24sp"
+                android:theme="@style/Theme.Buttons" />
+
+            <Button
+                android:id="@+id/ContinueButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/continuefunction"
+                android:textSize="24sp"
+                android:theme="@style/Theme.Buttons"
+                android:visibility="invisible" />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

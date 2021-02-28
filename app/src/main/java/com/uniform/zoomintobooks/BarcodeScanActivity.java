@@ -12,13 +12,18 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.uniform.zoomintobooks.common.helpers.BookInfo;
+import com.uniform.zoomintobooks.common.helpers.BookResource;
+import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
-import org.w3c.dom.Text;
+import java.io.IOException;
+
 
 public class BarcodeScanActivity extends AppCompatActivity {
     Boolean MoreButtonOpen = false;
@@ -44,7 +49,7 @@ public class BarcodeScanActivity extends AppCompatActivity {
                         {Manifest.permission.CAMERA},
                 PackageManager.PERMISSION_GRANTED);
 
-        ScanButton(findViewById(R.id.view));
+        ScanButton(findViewById(R.id.nestedScrollView));
 
 
     }
@@ -64,16 +69,57 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        TextView results = findViewById(R.id.ResultOfBarScan);
+        TextView results = findViewById(R.id.ScreenTitle);
+        Button AgainButton = findViewById(R.id.AgainButton);
+        AgainButton.setOnClickListener(view -> {
+            Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
+            startActivity(startIntent);
+        });
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) { //we got something
             if (intentResult.getContents() == null) { //something went wrong
                 results.setText("Scan unsuccessful");
             } else {
-                results.setText(intentResult.getContents());
+                String Title = getBookName(intentResult.getContents());
+                if(Title.equals("error")){
+                    results.setText(Title);
+                } else {
+                    String resultString = "Found:\n"+Title;
+                    results.setText(resultString);
+                    Button ContinueButton = findViewById(R.id.ContinueButton);
+                    ContinueButton.setVisibility(View.VISIBLE);
+
+                    ContinueButton.setOnClickListener(v -> {
+                        Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
+                        startIntent.putExtra("isbn",intentResult.getContents());
+                        startActivity(startIntent);
+                    });
+
+                }
+
             }
         }
+
+
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private String getBookName(String contents) {
+        String url = "https://api.uniform.ml/books/"+contents;
+        BookInfo book =null;
+        try {
+            book = ZoomUtils.parseJSON(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(book==null){
+            return "error";
+        } else {
+            return book.getTitle();
+        }
+
+
+
     }
 
     private void setMenuButtons() {
@@ -155,9 +201,5 @@ public class BarcodeScanActivity extends AppCompatActivity {
         }
     }
 
-    private int getViewWidth() {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
-    }
+
 }

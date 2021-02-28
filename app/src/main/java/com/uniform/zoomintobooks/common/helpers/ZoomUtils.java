@@ -36,7 +36,7 @@ public class ZoomUtils {
         }
     }
 
-    public static void parseJSON(String resourceLink) throws IOException {
+    public static BookInfo parseJSON(String resourceLink) throws IOException {
         URL url = new URL(resourceLink);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET");
@@ -52,19 +52,21 @@ public class ZoomUtils {
         JsonObject details = rootNode.getAsJsonObject();
 
         JsonObject basicInfo = details.getAsJsonObject("basic_info");
-        int ISBN = basicInfo.getAsJsonPrimitive("isbn").getAsInt();
-        String title = basicInfo.getAsJsonPrimitive("title").getAsString();
-        String author = basicInfo.getAsJsonPrimitive("author").getAsString();
-        String ARBlob = basicInfo.getAsJsonPrimitive("ar_blob").getAsString();
-        String OCRBlob = basicInfo.getAsJsonPrimitive("ocr_blob").getAsString();
-        String edition = basicInfo.getAsJsonPrimitive("edition").getAsString();
+        BookInfo book = new BookInfo();
+        book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsInt());
+        book.setTitle(basicInfo.getAsJsonPrimitive("title").getAsString());
+        book.setAuthor(basicInfo.getAsJsonPrimitive("author").getAsString());
+        book.setARBlob ( basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
+        book.setOCRBlob(basicInfo.getAsJsonPrimitive("ocr_blob").getAsString());
+        book.setEdition(basicInfo.getAsJsonPrimitive("edition").getAsString());
 
-        JsonObject publisherInfo = details.getAsJsonObject("publisher_info");
-        String publisher = details.getAsJsonPrimitive("publisher").getAsString();
-        String email = details.getAsJsonPrimitive("email").getAsString();
+        book.setPublisherInfo(details.getAsJsonObject("publisher_info"));
+        book.setPublisher(details.getAsJsonPrimitive("publisher").getAsString());
+        book.setEmail( details.getAsJsonPrimitive("email").getAsString());
 
-        List<BookResource> ARResourceList = parseResources(details, "ar_resources");
-        List<BookResource> OCRResourceList = parseResources(details, "ocr_resources");
+        book.setARResourceList(parseResources(details, "ar_resources"));
+        book.setOCRResourceList(parseResources(details, "ocr_resources"));
+        return book;
 
     }
 

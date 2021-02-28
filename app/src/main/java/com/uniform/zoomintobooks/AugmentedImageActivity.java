@@ -96,6 +96,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     ARResources.add(dummyResource);
     //TODO: get values needed for OCR and AR from the main activity
+    String isbn = (String) getIntent().getExtras().get("isbn"); // this method gives you the isbn of the book you want.
     Intent intent = new Intent();
 
     setContentView(R.layout.activity_augimg);
