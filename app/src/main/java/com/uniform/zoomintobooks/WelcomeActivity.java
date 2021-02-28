@@ -3,8 +3,6 @@ package com.uniform.zoomintobooks;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
 import android.icu.text.IDNA;
 import android.os.Bundle;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import com.uniform.zoomintobooks.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.IOException;
 
 public class WelcomeActivity extends AppCompatActivity {
     Boolean MoreButtonOpen = false;

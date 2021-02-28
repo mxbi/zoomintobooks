@@ -1,6 +1,7 @@
 package com.uniform.zoomintobooks;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -27,6 +28,10 @@ import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
+import com.google.mlkit.vision.common.InputImage;
+import com.uniform.zoomintobooks.common.helpers.OCRAnalyzer;
+import com.uniform.zoomintobooks.common.helpers.TextureReader;
+import com.uniform.zoomintobooks.common.helpers.TextureReaderImage;
 import com.uniform.zoomintobooks.rendering.AugmentedImageRenderer;
 import com.uniform.zoomintobooks.common.helpers.AugmentedImageState;
 import com.uniform.zoomintobooks.common.helpers.BookResource;
@@ -59,6 +64,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private GLSurfaceView surfaceView;
   private ImageView fitToScanView;
   private RequestManager glideRequestManager;
+  private OCRAnalyzer ocrAnalyzer;
 
   private boolean installRequested;
 
@@ -71,6 +77,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private final AugmentedImageRenderer augmentedImageRenderer = new AugmentedImageRenderer();
 
   private boolean shouldConfigureSession = false;
+  private int gpuDownloadFrameBufferIndex = -1;
+
+  private final TextureReader textureReader = new TextureReader();
 
   private final Map<Integer, Pair<AugmentedImageState, Anchor>> augmentedImageMap = new HashMap<>();
   private final List<BookResource> ARResources = new ArrayList<>();
@@ -114,6 +123,13 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
     height = displayMetrics.heightPixels;
     width = displayMetrics.widthPixels;
+
+    try {
+      //TODO: this should take in input from the API.
+      ocrAnalyzer = new OCRAnalyzer(getApplicationContext().getAssets().openFd("computernetworks.json").getFileDescriptor(), this);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override
@@ -230,6 +246,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       // Create the texture and pass it to ARCore session to be filled during update().
       backgroundRenderer.createOnGlThread(/*context=*/ this);
       augmentedImageRenderer.createOnGlThread(/*context=*/ this);
+
+      textureReader.create(this, TextureReaderImage.IMAGE_FORMAT_RGBA, 1920, 1080, false);
     } catch (IOException e) {
       Log.e(TAG, "Failed to read an asset file", e);
     }
@@ -263,6 +281,35 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Frame frame = session.update();
       Camera camera = frame.getCamera();
 
+      try {
+        if (!ocrAnalyzer.isBlocked()) {
+          gpuDownloadFrameBufferIndex =
+                  textureReader.submitFrame(backgroundRenderer.getTextureId(), 1920, 1080);
+
+          if (gpuDownloadFrameBufferIndex >= 0) {
+            Log.d("[DEBUG]", "Submitting frame to OCRAnalyzer...");
+            TextureReaderImage image = textureReader.acquireFrame(gpuDownloadFrameBufferIndex);
+
+            // Steal frame from OpenGL
+            byte[] byteArray = new byte[1920 * 1080 * 4];
+            image.buffer.position(0);
+            image.buffer.get(byteArray, 0, image.buffer.capacity());
+            Bitmap bitmap = bitmapFromRgba(1920, 1080, byteArray);
+
+            textureReader.releaseFrame(gpuDownloadFrameBufferIndex);
+
+//            bitmap = Bitmap.createScaledBitmap(bitmap, 1280, 720, false);
+//            Log.d("[DEBUG]", "Submitted...");
+
+            // 90 degree rotation for portrait.
+            ocrAnalyzer.analyze(InputImage.fromBitmap(bitmap, 90));
+
+          }
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
       // Keep the screen unlocked while tracking, but allow it to lock when tracking stops.
       trackingStateHelper.updateKeepScreenOnFlag(camera.getTrackingState());
 
@@ -288,6 +335,27 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Log.e(TAG, "Exception on the OpenGL thread", t);
     }
   }
+
+  public static Bitmap bitmapFromRgba(int width, int height, byte[] bytes) {
+    int[] pixels = new int[bytes.length / 4];
+    int j = 0;
+
+    for (int i = 0; i < pixels.length; i++) {
+      int R = bytes[j++] & 0xff;
+      int G = bytes[j++] & 0xff;
+      int B = bytes[j++] & 0xff;
+      int A = bytes[j++] & 0xff;
+
+      int pixel = (A << 24) | (R << 16) | (G << 8) | B;
+      pixels[i] = pixel;
+    }
+
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+    return bitmap;
+  }
+
 
   private void configureSession() {
     Config config = new Config(session);
@@ -402,6 +470,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     return (float) Math.sqrt(dx*dx + dy*dy + dz*dz);
   }
+
+
 
   private boolean setupAugmentedImageDatabase(Config config) {
     AugmentedImageDatabase augmentedImageDatabase;
