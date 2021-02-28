@@ -47,7 +47,7 @@ class ARResourceModel(db.Model):
 	isbn = db.Column(db.Integer, db.ForeignKey("book.isbn"), primary_key=True)
 	ar_id = db.Column(db.Integer, primary_key=True)
 	rid = db.Column(db.Integer, db.ForeignKey("resource.rid")) 
-    trigger_type = db.Column(db.String)
+	trigger_type = db.Column(db.String)
 
 class OCRResourceModel(db.Model):
 	__tablename__ = "ocr_resource_link"
