@@ -12,7 +12,6 @@ public class BookInfo {
     private String OCRBlob;
     private String edition;
 
-    private JsonObject publisherInfo ;
     private String publisher;
     private String email;
 
@@ -45,10 +44,6 @@ public class BookInfo {
 
     public void setEdition(String edition) {
         this.edition = edition;
-    }
-
-    public void setPublisherInfo(JsonObject publisher_info) {
-        this.publisherInfo = publisher_info;
     }
 
     public void setPublisher(String publisher) {
