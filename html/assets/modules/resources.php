@@ -35,8 +35,8 @@ function resource_exists($rid) {
 
 function get_resource_mime_type($rid) {
     $rid = sanitise($rid);
-    $type = db_select("SELECT type FROM resource WHERE rid = $rid", true);
-    return $type ? $type["type"] : NULL;
+    $type = db_select("SELECT resource_type FROM resource WHERE rid = $rid", true);
+    return $type ? $type["resource_type"] : NULL;
 }
 
 function was_resource_uploaded($rid) {
@@ -179,11 +179,11 @@ function manage_resource($file, $values, $edit) {
         if (!move_uploaded_file($file["tmp_name"], resource_upload_path($rid, $type))) {
             add_error("Failed to upload resource");
         } else {
-            $url = "http://86.23.244.209:8080/console/resources/resource?rid=$rid";
+            $url = "https://uniform.ml/console/resources/resource?rid=$rid";
         }
     }
 
-    $q = "UPDATE resource SET url='$url'" . ($type ? ", type='$type'" : "") . " WHERE rid='$rid'";
+    $q = "UPDATE resource SET url='$url'" . ($type ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
 
@@ -199,6 +199,83 @@ function manage_resource($file, $values, $edit) {
         } else {
             add_error("Commit failed");
             mysqli_rollback($dbc);
+        }
+    }
+}
+
+function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit) {
+    global $dbc;
+    $isbn = sanitise($isbn);
+    if (!authorised("edit book", array("isbn" => $isbn))) return false;
+    // TODO: validation, sticky form
+
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'");
+    $types = array();
+
+    foreach ($trigger_images as $img) {
+        var_dump($img);
+        $type = get_type($img, MAX_TRIGGER_IMAGE_FILE_SIZE, TRIGGER_IMAGE_TYPES);
+        if ($type) {
+            $types[$img["tmp_name"]] = $type;
+        }
+    }
+    if (!errors_occurred()) {
+        $ar_id = $max["max_ar_id"] ? $max["max_ar_id"] : 0;
+        foreach ($trigger_images as $img) {
+            $ext = get_subtype($types[$img["tmp_name"]]);
+            if (!copy($img["tmp_name"], "/var/www/zib/books/images/$isbn/$ar_id.$ext")) {
+                add_error("Failed to copy trigger image");
+                break;
+            }
+            foreach ($resources as $rid) {
+                $rid = sanitise($rid);
+                $q = "INSERT INTO ar_resource_link (isbn, rid, ar_id, trigger_type) VALUES ('$isbn', $rid, $ar_id, '$type')";
+                $r = mysqli_query($dbc, $q);
+                if (!$r) {
+                    add_error(mysqli_error($dbc));
+                    break;
+                }
+            }
+            $ar_id++;
+            if (errors_occurred()) break;
+        }
+    }
+
+    if (!errors_occurred()) {
+        foreach ($resources as $rid) {
+            $rid = sanitise($rid);
+            foreach ($pages as $page) {
+                $q = "INSERT IGNORE INTO ocr_resource_link (isbn, rid, page) VALUES ('$isbn', $rid, $page)";
+                $r = mysqli_query($dbc, $q);
+                if (!$r) {
+                    add_error(mysqli_error($dbc));
+                    break;
+                } else {
+                    add_notice("Ignoring duplicate page $page");
+                }
+                $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
+                $r = mysqli_query($dbc, $q);
+                if (!$r) {
+                    add_error(mysqli_error($dbc));
+                }
+            }
+            if (errors_occurred()) break;
+        }
+    }
+
+    if (errors_occurred()) {
+        if (!mysqli_rollback($dbc)) {
+            add_error("Rollback failed");
+        }
+    } else {
+        if (!mysqli_commit($dbc)) {
+            add_error("Commit failed");
+            if (!mysqli_rollback($dbc)) {
+                add_error("Rollback failed");
+            }
+        } else {
+            set_success("Successfully linked resources to book");
         }
     }
 }

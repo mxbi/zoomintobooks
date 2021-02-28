@@ -1,10 +1,10 @@
 <?php
 function authenticate($username, $password) {
     $username = sanitise($username);
-    $result = db_select("SELECT password, type FROM user WHERE username = '$username'", true);
+    $result = db_select("SELECT password, user_type FROM user WHERE username = '$username'", true);
     if (password_verify($password, $result["password"])) {
         $_SESSION["username"] = $username;
-        $_SESSION["account_type"] = $result["type"];
+        $_SESSION["account_type"] = $result["user_type"];
         return true;
     } else {
         return false;
@@ -70,7 +70,7 @@ function add_user($values) {
     }
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-    $q = "INSERT INTO user(username, password, publisher, type) VALUES ('$username', '$hash', '$publisher', 'standard')";
+    $q = "INSERT INTO user(username, password, publisher, user_type) VALUES ('$username', '$hash', '$publisher', 'standard')";
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error(mysqli_error($dbc));

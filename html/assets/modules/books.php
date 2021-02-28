@@ -45,8 +45,8 @@ function count_resources($isbn) {
 function get_book_type($isbn) {
     if (!authorised("view book", array("isbn" => $isbn))) return;
     $isbn = sanitise($isbn);
-    $row = db_select("SELECT type FROM book WHERE isbn = '$isbn'", true);
-    return $row ? $row["type"] : NULL;
+    $row = db_select("SELECT book_type FROM book WHERE isbn = '$isbn'", true);
+    return $row ? $row["book_type"] : NULL;
 }
 
 function show_book_form($edit, $isbn=NULL) {
@@ -157,7 +157,7 @@ function manage_book($values, $file, $edit) {
         $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
         if ($type) {
             mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-            $q = "INSERT INTO book(isbn, title, author, edition, publisher, type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
+            $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
             $r = mysqli_query($dbc, $q);
 
             if (!$r) {
@@ -173,7 +173,7 @@ function manage_book($values, $file, $edit) {
     } else {
         $type = db_select("SELECT type FROM book WHERE isbn = '$isbn'", true)["type"];
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-        $q = "UPDATE book SET isbn='$new_isbn', title='$title', author='$author', edition=$edition, publisher='$publisher'" . ($file_present ? ", type='$type'" : "") . " WHERE isbn='$isbn'";
+        $q = "UPDATE book SET isbn='$new_isbn', title='$title', author='$author', edition=$edition, publisher='$publisher'" . ($file_present ? ", book_type='$type'" : "") . " WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
         if (!$r) add_error(mysqli_error($dbc));
     }
@@ -237,12 +237,13 @@ function extract_images($file, $type, $isbn) {
         add_error("Failed to make image directory $dir");
         return false;
     } else {
-        $escdir = escapeshellarg($dir);
+        return true;
+        /*$escdir = escapeshellarg($dir);
         $cmd = "cd $escdir && /usr/bin/pdfimages -png $input image";
         $success = exec($cmd);
         if ($success === false) add_error("Failed to extract images");
         else $success = true;
-        return $success;
+        return $success;*/
     }
 }
 
@@ -252,5 +253,81 @@ function rollback_book($isbn, $type) {
     if (!mysqli_rollback($dbc)) add_error("Database rollback failed");
     //if (!unlink(book_cover_path($isbn))) add_error("Book cover rollback failed");
     //if (!unlink(book_upload_path($isbn, $type))) add_error("Book upload rollback failed");
+}
+
+function update_blobs($isbn) {
+    global $dbc;
+    if (!authorised("edit book", array("isbn" => $isbn))) return;
+
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+
+    generate_ar_blob($isbn);
+    if (!errors_occurred()) generate_ocr_blob($isbn);
+
+    if (errors_occurred()) {
+        if (!mysqli_rollback($dbc)) {
+            add_error("Database rollback failed");
+        }
+    } else {
+        if (mysqli_commit($dbc)) {
+            set_success("Generated blobs");
+        } else {
+            add_error("Database commit failed");
+        }
+        if (!mysqli_rollback($dbc)) {
+            add_error("Database rollback failed");
+        }
+    }
+
+}
+
+function generate_ar_blob($isbn) {
+    global $dbc;
+    $imglist = generate_image_list($isbn);
+    $out_path = ar_blob_output_path($isbn);
+    $cmd = "/usr/bin/arcoreimg --input_image_list_path=$imglist --output_db_path=$out_path";
+    $output = null;
+    $ret = null;
+    $success = exec($cmd, $output, $ret);
+    $out_str = mysqli_real_escape_string($dbc, implode("\n", $output));
+    if ($success) {
+        $f = fopen($out_path, "r");
+        $ar_blob = fread($f, filesize($out_path));
+        fclose($f);
+        $q = "UPDATE book SET ar_blob='$ar_blob' WHERE isbn='$isbn'";
+        $r = mysqli_query($dbc, $q);
+        if (!$r) {
+            add_error(mysqli_error($dbc));
+        }
+    } else {
+        add_error("Failed to generate AR blob (error: $ret)\n$out_str");
+    }
+}
+
+function generate_ocr_blob($isbn) {
+    global $dbc;
+    $type = get_book_type($isbn);
+    $pdf = book_upload_path($isbn, $type);
+    $pages_result = db_select("SELECT page FROM ocr_resource_link WHERE isbn = '$isbn'");
+    if (empty($pages_result)) return;
+    $pages = array();
+    foreach ($pages_result as $result) {
+            $pages[] = $result["page"];
+    }
+    $pages_str = implode(",", $pages);
+    $cmd = "/usr/bin/python3 /home/zib/ocr/extract_pdf.py $pdf $pages_str -";
+    $output = null;
+    $ret = null;
+    $success = exec($cmd, $output, $ret);
+    $out_str = mysqli_real_escape_string($dbc, implode("\n", $output));
+    if ($success) {
+        $q = "UPDATE book SET ocr_blob='$out_str' WHERE isbn='$isbn'";
+        $r = mysqli_query($dbc, $q);
+        if (!$r) {
+            add_error(mysqli_error($dbc));
+        }
+    } else {
+        add_error("Failed to generate OCR blob (error: $ret)\n$out_str");
+    }
 }
 ?>

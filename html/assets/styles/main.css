@@ -8,7 +8,7 @@ i {
 
 body {
     font-family: open-sans, sans;
-    margin: 0;
+    margin: 0 0 20px 0;
     padding: 0;
     background-color: #EEE;
 }
@@ -19,13 +19,13 @@ body {
 
 header {
     padding: 10px 10px 5px 10px;
-    background-color: #523A1A;
-    background-image: linear-gradient(to right, #C7AF8F, #523A1A);
-    box-shadow: 0 0 5px #333;
+    background-color: #213D54;
+    background-image: linear-gradient(to right, #4E7696, #213D54);
+    box-shadow: 0 0 5px #666;
 }
 
 header * {
-    font-family: proza-libre, sans;
+    /* font-family: proza-libre, sans; */
     color: #FFF;
     text-decoration: none;
 }
@@ -47,7 +47,7 @@ h1 {
 
 #header-nav a:hover {
     background-color: #FFF;
-    color: #523A1A;
+    color: #213D54;
     box-shadow: inset 0 0 3px #666;
 }
 
@@ -74,7 +74,7 @@ h2 {
 
 .card {
     color: white;
-    background-color: #523A1A;
+    background-color: #213D54;
     text-decoration: none;
     border-radius: 5px;
     border: 0;
@@ -87,7 +87,7 @@ h2 {
 }
 
 .card:hover {
-    background-color: #C7AF8F;
+    background-color: #4E7696;
     box-shadow: 0 0 3px #666;
 }
 
@@ -99,24 +99,29 @@ h2 {
     display: inline-block;
 }
 
-.errors {
+.errors, .notices, .success {
     padding: 10px;
-    background-color: #97574E;
     margin: 10px;
     color: #FFF;
+}
+
+.errors {
+    background-color: #97574E;
     box-shadow: 0 0 3px #97574E;
 }
 
-.errors ul {
+.notices {
+    background-color: #213D54;
+    box-shadow: 0 0 3px #213D54;
+}
+
+.errors ul, .notices ul {
     margin: 0;
     padding-left: 30px;
 }
 
 .success {
-    padding: 10px;
     background-color: #52974E;
-    margin: 10px;
-    color: #FFF;
     box-shadow: 0 0 3px #52974E;
 }
 
@@ -124,8 +129,8 @@ h2 {
     display: block;
     text-decoration: none;
     border-radius: 5px;
-    border: 1px solid #523A1A;
-    color: #523A1A;
+    border: 1px solid #213D54;
+    color: #213D54;
     margin: 20px;
     padding: 20px;
     display: block;
@@ -133,15 +138,17 @@ h2 {
 }
 
 .card-list-item:hover {
-    background-color: #FFFAED;
-    border: 1px solid #C7AF8F;
+    background-color: #EEE;
+    border: 1px solid #4E7696;
     box-shadow: 0 0 3px #666;
 }
 
 .card-list-item img.preview {
     float: left;
     margin-right: 10px;
-    border: 1px solid #523A1A;
+    border: 1px solid #213D54;
+    max-width: 100%;
+    max-height: 256px;
 }
 
 .card-list-item h4 {
@@ -153,19 +160,28 @@ h2 {
 }
 
 .card-list-add-item {
-    background-color: #523A1A;
-    border: 0;
-    color: #FFF;
     font-size: 1.2em;
+    cursor: pointer;
 }
 
-.card-list-add-item:hover {
-    background-color: #C7AF8F;
-    border: 0;
+.card-list-add-item, .selected-card-list-item {
+    background-color: #213D54;
+    color: #FFF;
+}
+
+.card-list-add-item:hover, .selected-card-list-item:hover {
+    background-color: #4E7696;
 }
 
 .card-list-add-item img {
     height: 50px;
     vertical-align: middle;
     margin-right: 15px;
+}
+
+.limited-height-scrollable {
+    max-height: 500px;
+    border: 1px solid #213D54;
+    overflow-y: auto;
+    box-shadow: 0 0 3px #666 inset;
 }

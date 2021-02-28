@@ -10,6 +10,9 @@ function init() {
     if (!isset($_SESSION["errors"])) {
         $_SESSION["errors"] = array();
     }
+    if (!isset($_SESSION["notices"])) {
+        $_SESSION["notices"] = array();
+    }
 
     $is_admin = isset($_SESSION["account_type"]) && $_SESSION["account_type"] === "admin";
     $is_logged_in = isset($_SESSION["username"]);
@@ -64,6 +67,16 @@ function add_error($msg) {
 
 function clear_errors() {
     unset($_SESSION["errors"]);
+    $_SESSION["errors"] = array();
+}
+
+function add_notice($msg) {
+    $_SESSION["notices"][] = $msg;
+}
+
+function clear_notices() {
+    unset($_SESSION["notices"]);
+    $_SESSION["notices"] = array();
 }
 
 function set_success($msg) {
@@ -79,7 +92,18 @@ function display_status() {
         }
         echo "    </ul>\n";
         echo "   </div>\n";
-        $_SESSION["errors"] = array();
+        clear_errors();
+    }
+
+    if (!empty($_SESSION["notices"])) {
+        echo "   <div class=\"notices\">\n";
+        echo "    <ul>\n";
+        foreach ($_SESSION["notices"] as $notice) {
+            echo "     <li>$notice</li>\n";
+        }
+        echo "    </ul>\n";
+        echo "   </div>\n";
+        clear_notices();
     }
 
     if (!empty($_SESSION["success"])) {
@@ -195,6 +219,7 @@ function db_select($q, $one=false) {
         }
         mysqli_free_result($r);
     }
+    mysqli_commit($dbc);
     return $result;
 }
 
