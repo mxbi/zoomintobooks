@@ -109,7 +109,7 @@ public class BarcodeScanActivity extends AppCompatActivity {
             Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
             startActivity(startIntent);
         });
-        
+
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) { //we got something
             new BookScanTask().execute(intentResult);
