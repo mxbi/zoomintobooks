@@ -1,7 +1,7 @@
 <?php
 function fetch_resource($rid) {
-    $rid = sanitise($rid);
     if (!authorised("view resource", array("rid" => $rid))) return;
+    $rid = sanitise($rid);
     return db_select("SELECT * FROM resource WHERE rid = $rid", true);
 }
 
@@ -27,6 +27,7 @@ function fetch_book_resources($isbn) {
 }
 
 function resource_exists($rid) {
+    if ($rid === NULL) return false;
     $rid = sanitise($rid);
     $c = db_select("SELECT 1 FROM resource WHERE rid = $rid", true);
     $c = $c ? $c : array();
@@ -34,6 +35,7 @@ function resource_exists($rid) {
 }
 
 function get_resource_mime_type($rid) {
+    if ($rid === NULL) return NULL;
     $rid = sanitise($rid);
     $type = db_select("SELECT resource_type FROM resource WHERE rid = $rid", true);
     return $type ? $type["resource_type"] : NULL;
@@ -63,6 +65,7 @@ function can_edit_resource($rid) {
     global $is_admin;
     if ($is_admin) return true;
     $username = sanitise($_SESSION["username"]);
+    if ($rid === NULL) return false;
     $rid = sanitise($rid);
     $c = db_select("SELECT 1 FROM resource_editable_by WHERE rid = $rid AND username = '$username'", true);
     $c = $c ? $c : array();
