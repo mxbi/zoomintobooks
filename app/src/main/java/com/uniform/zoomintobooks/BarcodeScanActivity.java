@@ -133,8 +133,6 @@ public class BarcodeScanActivity extends AppCompatActivity {
             return book.getTitle();
         }
 
-
-
     }
 
     private void setMenuButtons() {
