@@ -121,8 +121,7 @@ def abort_if_invalid(missing_resource):
 
 class Book(Resource):
 	@marshal_with(all_fields)
-	def get(self, 
-	       ):
+	def get(self, isbn):
 		#retrieve all information about books
 		basic_result = BookModel.query.get(isbn)
 		if not basic_result:
