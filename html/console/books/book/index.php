@@ -24,8 +24,30 @@ if ($authorised) {
     <span>Link resource to book</span>
    </a>
 <?php
-    $resources = fetch_book_resources($isbn);
-    show_resources($resources);
+    if (authorised("list resources", array("isbn" => $isbn), false)) {
+        $resources = fetch_book_resources($isbn, "ar");
+        foreach ($resources as $resource) {
+            $rid = $resource["rid"];
+            $name = $resource["name"];
+            $url = $resource["url"];
+            $display = $resource["display"];
+            $ar_count = db_select("SELECT COUNT(1) AS ar_count FROM ar_resource_link WHERE isbn='$isbn' AND rid='$rid'", true)["ar_count"];
+            $ocr_pages = db_select("SELECT page FROM ocr_resource_link WHERE isbn='$isbn' AND rid='$rid'");
+            $pages = array();
+            foreach ($ocr_pages as $ocr_page) {
+                $pages[] = $ocr_page["page"];
+            }
+            $ocr_count = count($ocr_pages);
+            echo "   <a class=\"card-list-item\" href=\"/console/resources/resource?rid=$rid\">\n";
+            echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
+            echo "    <h4>$name</h4>\n";
+            echo "    <p>$url</p>\n";
+            echo "    <p>Displayed as $display</p>\n";
+            echo "    <p>Triggered by $ar_count " . ($ar_count == 1 ? "image" : "images") . "</p>\n";
+            echo "    <p>Triggered by " . count($pages) . ($ocr_count == 1 ? " page: " : ($ocr_count == 0 ? " pages" : " pages: ")) . implode(", ", $pages) . "</p>\n";
+            echo "   </a>\n";
+        }
+    }
 }
 echo "   </main>\n";
 make_footer();
