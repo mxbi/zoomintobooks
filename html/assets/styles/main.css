@@ -30,6 +30,12 @@ header * {
     text-decoration: none;
 }
 
+header img {
+    height: 50px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
 h1 {
     display: inline-block;
     margin: 0;

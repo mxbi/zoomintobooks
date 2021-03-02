@@ -33,7 +33,7 @@ function make_header($title, $description, $keywords) {
         }
     }
 ?>
-  <link rel="favicon" href="/assets/images/icons/favicon.png" />
+  <link rel="icon" href="/assets/images/icons/header.png" />
  </head>
  <body>
   <header>
