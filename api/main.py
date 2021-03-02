@@ -22,7 +22,7 @@ class PublisherModel(db.Model):
 class BookModel(db.Model):	 
 	__tablename__ = "book"
     
-	isbn = db.Column(db.Integer, primary_key=True)
+	isbn = db.Column(db.String, primary_key=True)
 	title = db.Column(db.String)
 	author = db.Column(db.String)
 	edition = db.Column(db.String)
@@ -44,7 +44,7 @@ class ResourceModel(db.Model):
 class ARResourceModel(db.Model):
 	__tablename__ = "ar_resource_link"
 
-	isbn = db.Column(db.Integer, db.ForeignKey("book.isbn"), primary_key=True)
+	isbn = db.Column(db.String, db.ForeignKey("book.isbn"), primary_key=True)
 	ar_id = db.Column(db.Integer, primary_key=True)
 	rid = db.Column(db.Integer, db.ForeignKey("resource.rid")) 
 	trigger_type = db.Column(db.String)
@@ -52,14 +52,14 @@ class ARResourceModel(db.Model):
 class OCRResourceModel(db.Model):
 	__tablename__ = "ocr_resource_link"
 
-	isbn = db.Column(db.Integer, db.ForeignKey("book.isbn"), primary_key=True)
+	isbn = db.Column(db.String, db.ForeignKey("book.isbn"), primary_key=True)
 	page = db.Column(db.Integer, primary_key=True)
 	rid = db.Column(db.Integer, db.ForeignKey("resource.rid"))
 
 class ResourceInstanceModel(db.Model):
 	__tablename__ = "resource_instance"
 
-	isbn = db.Column(db.Integer, db.ForeignKey("book.isbn"), primary_key=True)
+	isbn = db.Column(db.String, db.ForeignKey("book.isbn"), primary_key=True)
 	rid = db.Column(db.Integer, db.ForeignKey("resource.rid"), primary_key=True)
 
 
@@ -70,7 +70,7 @@ class BlobFormat(fields.Raw):
 
 
 book_fields = {
-    'isbn' : fields.Integer,
+    'isbn' : fields.String,
     'title' : fields.String,
     'author' : fields.String,
     'ar_blob' : BlobFormat,
@@ -102,7 +102,7 @@ book_list_fields = {
 
 search_result_fields = {
 	'title' : fields.String,
-	'isbn' : fields.Integer
+	'isbn' : fields.String
 }
 
 search_result_list_fields = {
@@ -121,9 +121,10 @@ def abort_if_invalid(missing_resource):
 
 class Book(Resource):
 	@marshal_with(all_fields)
-	def get(self, isbn):
+	def get(self, 
+	       ):
 		#retrieve all information about books
-		basic_result = BookModel.query.get(int(isbn))
+		basic_result = BookModel.query.get(isbn)
 		if not basic_result:
 			abort_if_invalid("ISBN")
 		publisher_info = db.session.query(PublisherModel).join(BookModel, BookModel.publisher == PublisherModel.publisher).filter(BookModel.isbn == isbn).first()
@@ -169,11 +170,11 @@ class AllBooks(Resource):
 		return {'books' : books}
 
 
-api.add_resource(AllResources, "/books/resources/<int:isbn>") #gets all resources for a particular book
+api.add_resource(AllResources, "/books/resources/<isbn>") #gets all resources for a particular book
 api.add_resource(TitleMatch, "/titles/<title>") #gets possible string matches for a book
 api.add_resource(BookResource, "/resources/<int:rid>") #gets a particular resource
 api.add_resource(AllBooks, "/books") #gets a list of all books
-api.add_resource(Book, "/books/<int:isbn>") #gets all information about a book
+api.add_resource(Book, "/books/<isbn>") #gets all information about a book
 
 
 if __name__ == '__main__':
