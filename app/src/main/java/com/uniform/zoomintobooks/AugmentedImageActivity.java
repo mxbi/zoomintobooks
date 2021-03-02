@@ -64,7 +64,6 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private GLSurfaceView surfaceView;
   private ImageView fitToScanView;
   private RequestManager glideRequestManager;
-  private OCRAnalyzer ocrAnalyzer;
 
   private boolean installRequested;
 
@@ -87,6 +86,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private float[] overlayCoords = new float[4];
 //  private final BookResource dummyResource = new BookResource(0, "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg/800px-The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg", true, "overlay");
 
+  private OCRAnalyzer ocrAnalyzer;
+  private boolean ocrEnabled;
   private int height = 0;
   private int width = 0;
 
@@ -94,11 +95,22 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-//    ARResources.add(dummyResource);
+    // Setup AR
     encodedDB = (String) getIntent().getExtras().get("book_ARBlob");
     ARResources.addAll((ArrayList<BookResource>) getIntent().getExtras().get("book_ARResourceList"));
     //TODO: get values needed for OCR and AR from the main activity
     String isbn = (String) getIntent().getExtras().get("book_isbn"); // this method gives you the isbn of the book you want.
+
+    // Setup OCR
+    String ocrBlob = (String) getIntent().getExtras().get("book_OCRBlob");
+    // TODO: OCR resources
+    if (ocrBlob != null) {
+      ocrAnalyzer = new OCRAnalyzer(ocrBlob, this);
+      ocrEnabled = true;
+    } else {
+      ocrEnabled = false;
+    }
+
     Intent intent = new Intent();
 
     setContentView(R.layout.activity_augimg);
@@ -127,8 +139,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     height = displayMetrics.heightPixels;
     width = displayMetrics.widthPixels;
 
-    //TODO: this should take in input from the API.
-    ocrAnalyzer = new OCRAnalyzer(null, this);
+
   }
 
   @Override
@@ -281,7 +292,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
       Camera camera = frame.getCamera();
 
       try {
-        if (!ocrAnalyzer.isBlocked()) {
+        if (ocrEnabled && !ocrAnalyzer.isBlocked()) {
           gpuDownloadFrameBufferIndex =
                   textureReader.submitFrame(backgroundRenderer.getTextureId(), 1920, 1080);
 
