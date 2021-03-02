@@ -7,8 +7,10 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -67,6 +69,38 @@ public class BarcodeScanActivity extends AppCompatActivity {
         intentIntegrator.initiateScan();
     }
 
+
+    // We perform the HTTP lookups on an asynchronous thread to avoid locking up the UI
+    private class BookScanTask extends AsyncTask<IntentResult, Void, Pair<IntentResult, String>> {
+        @Override
+        protected Pair<IntentResult, String> doInBackground(IntentResult... intentResults) {
+            IntentResult intentResult = intentResults[0];
+            String title = getBookName(intentResult.getContents());
+            return new Pair(intentResult, title);
+        }
+
+        protected void onPostExecute(Pair<IntentResult, String> data) {
+            IntentResult intentResult = data.first;
+            String title = data.second;
+
+            TextView results = findViewById(R.id.ScreenTitle);
+            if(title.equals("error")) {
+                results.setText(title);
+            } else {
+                String resultString = "Found:\n"+title;
+                results.setText(resultString);
+                Button ContinueButton = findViewById(R.id.ContinueButton);
+                ContinueButton.setVisibility(View.VISIBLE);
+
+                ContinueButton.setOnClickListener(v -> {
+                    Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
+                    startIntent.putExtra("isbn",intentResult.getContents());
+                    startActivity(startIntent);
+                });
+            }
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         TextView results = findViewById(R.id.ScreenTitle);
@@ -75,29 +109,10 @@ public class BarcodeScanActivity extends AppCompatActivity {
             Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
             startActivity(startIntent);
         });
+        
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) { //we got something
-            if (intentResult.getContents() == null) { //something went wrong
-                results.setText("Scan unsuccessful");
-            } else {
-                String Title = getBookName(intentResult.getContents());
-                if(Title.equals("error")){
-                    results.setText(Title);
-                } else {
-                    String resultString = "Found:\n"+Title;
-                    results.setText(resultString);
-                    Button ContinueButton = findViewById(R.id.ContinueButton);
-                    ContinueButton.setVisibility(View.VISIBLE);
-
-                    ContinueButton.setOnClickListener(v -> {
-                        Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
-                        startIntent.putExtra("isbn",intentResult.getContents());
-                        startActivity(startIntent);
-                    });
-
-                }
-
-            }
+            new BookScanTask().execute(intentResult);
         }
 
 
