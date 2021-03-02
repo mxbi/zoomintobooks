@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class BookInfo {
-    private int ISBN;
+    private String ISBN;
     private String title;
 
     private String author;
@@ -23,7 +23,7 @@ public class BookInfo {
     private List<BookResource> ARResourceList;
     private List<BookResource> OCRResourceList;
 
-    public void setISBN(int isbn) {
+    public void setISBN(String isbn) {
         this.ISBN = isbn;
     }
 
@@ -67,7 +67,7 @@ public class BookInfo {
         return title;
     }
 
-    public int getISBN() {
+    public String getISBN() {
         return ISBN;
     }
 

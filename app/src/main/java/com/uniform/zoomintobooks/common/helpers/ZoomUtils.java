@@ -50,7 +50,7 @@ public class ZoomUtils {
         JsonObject basicInfo = details.getAsJsonObject("basic_info");
         JsonObject publisherInfo = details.getAsJsonObject("publisher_info");
         BookInfo book = new BookInfo();
-        book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsInt());
+        book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsString());
         book.setTitle(basicInfo.getAsJsonPrimitive("title").getAsString());
         book.setAuthor(basicInfo.getAsJsonPrimitive("author").getAsString());
         book.setARBlob(basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
