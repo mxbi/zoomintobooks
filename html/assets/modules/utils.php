@@ -247,6 +247,10 @@ function resource_preview_path($rid) {
     return "/var/www/zib/resources/previews/$rid.png";
 }
 
+function ar_blob_output_path($isbn) {
+    return "/var/www/zib/books/ar/$isbn.imgdb";
+}
+
 function generate_text_image($lines, $w=100, $h=128) {
     $img = imagecreatetruecolor($w, $h);
     $white = imagecolorallocate($img, 255, 255, 255);

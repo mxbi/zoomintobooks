@@ -179,7 +179,7 @@ function manage_resource($file, $values, $edit) {
         if (!move_uploaded_file($file["tmp_name"], resource_upload_path($rid, $type))) {
             add_error("Failed to upload resource");
         } else {
-            $url = "https://uniform.ml/console/resources/resource?rid=$rid";
+            $url = "https://uniform.ml/console/resources/resource/upload?rid=$rid";
         }
     }
 
@@ -223,6 +223,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     if (!errors_occurred()) {
         $ar_id = $max["max_ar_id"] ? $max["max_ar_id"] : 0;
         foreach ($trigger_images as $img) {
+            $ar_id++;
             $ext = get_subtype($types[$img["tmp_name"]]);
             if (!copy($img["tmp_name"], "/var/www/zib/books/images/$isbn/$ar_id.$ext")) {
                 add_error("Failed to copy trigger image");
@@ -237,7 +238,6 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
                     break;
                 }
             }
-            $ar_id++;
             if (errors_occurred()) break;
         }
     }
@@ -246,6 +246,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
         foreach ($resources as $rid) {
             $rid = sanitise($rid);
             foreach ($pages as $page) {
+                if (empty($page)) continue;
                 $q = "INSERT IGNORE INTO ocr_resource_link (isbn, rid, page) VALUES ('$isbn', $rid, $page)";
                 $r = mysqli_query($dbc, $q);
                 if (!$r) {
@@ -254,11 +255,11 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
                 } else {
                     add_notice("Ignoring duplicate page $page");
                 }
-                $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
-                $r = mysqli_query($dbc, $q);
-                if (!$r) {
-                    add_error(mysqli_error($dbc));
-                }
+            }
+            $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
+            $r = mysqli_query($dbc, $q);
+            if (!$r) {
+                add_error(mysqli_error($dbc));
             }
             if (errors_occurred()) break;
         }

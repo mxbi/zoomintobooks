@@ -110,9 +110,6 @@ function manage_book($values, $file, $edit) {
     global $is_admin;
     global $dbc;
 
-    var_dump($values);
-    var_dump($file);
-
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($values["isbn"]);
     $new_isbn = sanitise($values["new_isbn"]);
@@ -136,7 +133,7 @@ function manage_book($values, $file, $edit) {
     $_SESSION["sticky"]["edition"] = $edition;
     $_SESSION["sticky"]["publisher"] = $publisher;
 
-    var_dump($_SESSION);
+    var_dump($file);
 
     $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
@@ -171,7 +168,7 @@ function manage_book($values, $file, $edit) {
             add_error("Failed to determine type for uploaded file");
         }
     } else {
-        $type = db_select("SELECT type FROM book WHERE isbn = '$isbn'", true)["type"];
+        $type = db_select("SELECT book_type FROM book WHERE isbn = '$isbn'", true)["book_type"];
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "UPDATE book SET isbn='$new_isbn', title='$title', author='$author', edition=$edition, publisher='$publisher'" . ($file_present ? ", book_type='$type'" : "") . " WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
@@ -281,18 +278,32 @@ function update_blobs($isbn) {
 
 }
 
+function generate_image_list($isbn) {
+    $dir = book_images_path($isbn);
+    $imglist = "$dir/imglist";
+    $f = fopen($imglist, "w");
+    $i = 0;
+    foreach (scandir("$dir") as $img) {
+        if ($img != "." && $img != ".." && $img != "imglist") {
+            fwrite($f, "$i|$dir/$img|0.1\n");
+        }
+    }
+    fclose($f);
+    return $imglist;
+}
+
 function generate_ar_blob($isbn) {
     global $dbc;
     $imglist = generate_image_list($isbn);
     $out_path = ar_blob_output_path($isbn);
-    $cmd = "/usr/bin/arcoreimg --input_image_list_path=$imglist --output_db_path=$out_path";
+    $cmd = "/usr/bin/arcoreimg build-db --input_image_list_path=$imglist --output_db_path=$out_path";
     $output = null;
     $ret = null;
     $success = exec($cmd, $output, $ret);
     $out_str = mysqli_real_escape_string($dbc, implode("\n", $output));
     if ($success) {
         $f = fopen($out_path, "r");
-        $ar_blob = fread($f, filesize($out_path));
+        $ar_blob = mysqli_real_escape_string($dbc, fread($f, filesize($out_path)));
         fclose($f);
         $q = "UPDATE book SET ar_blob='$ar_blob' WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
@@ -300,7 +311,7 @@ function generate_ar_blob($isbn) {
             add_error(mysqli_error($dbc));
         }
     } else {
-        add_error("Failed to generate AR blob (error: $ret)\n$out_str");
+        add_error("Failed to generate AR blob (error: $ret)\n$out_str $cmd");
     }
 }
 
@@ -315,7 +326,8 @@ function generate_ocr_blob($isbn) {
             $pages[] = $result["page"];
     }
     $pages_str = implode(",", $pages);
-    $cmd = "/usr/bin/python3 /home/zib/ocr/extract_pdf.py $pdf $pages_str -";
+    $cmd = "/usr/bin/python3 /var/www/zib/ocr/extract_pdf.py $pdf $pages_str -";
+    echo $cmd;
     $output = null;
     $ret = null;
     $success = exec($cmd, $output, $ret);
