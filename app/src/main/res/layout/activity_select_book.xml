@@ -71,11 +71,12 @@
             android:background="@drawable/serchborder"
             android:iconifiedByDefault="false"
             android:queryHint="Search Here"
+            android:textColor="@color/brown_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.294" />
+            app:layout_constraintTop_toBottomOf="@id/nameBar"
+            app:layout_constraintVertical_bias="0.185" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/InfoButton"

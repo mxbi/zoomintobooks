@@ -82,7 +82,13 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
         protected void onPostExecute(BookInfo bookInfo) {
 //            IntentResult intentResult = data.first;
-            String title = bookInfo.getTitle();
+            String title;
+            if(bookInfo==null){
+                title = "error";
+            } else{
+                title = bookInfo.getTitle();
+            }
+
 
             TextView results = findViewById(R.id.ScanBarcodeTitle);
             if(title.equals("error")) {
@@ -130,22 +136,6 @@ public class BarcodeScanActivity extends AppCompatActivity {
         }
 
         return book;
-    }
-
-    private String getBookName(String contents) {
-        String url = "https://api.uniform.ml/books/"+contents;
-        BookInfo book =null;
-        try {
-            book = ZoomUtils.parseJSON(url);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if(book==null){
-            return "error";
-        } else {
-            return book.getTitle();
-        }
-
     }
 
     private void setMenuButtons() {
