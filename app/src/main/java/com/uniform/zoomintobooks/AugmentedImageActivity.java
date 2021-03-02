@@ -482,7 +482,6 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
 
-
   private boolean setupAugmentedImageDatabase(Config config) {
     AugmentedImageDatabase augmentedImageDatabase;
 
