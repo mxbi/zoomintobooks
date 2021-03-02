@@ -59,22 +59,31 @@
             android:id="@+id/nameBar"
 
             android:layout_width="match_parent"
-            android:layout_height="124dp"
+            android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/Welcome"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/welcome"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/brown_1"
-                android:textSize="50sp"
-                android:textStyle="bold|italic"
-                android:translationY="30dp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/WelcomeTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:autoSizeMaxTextSize="100sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeTextType="uniform"
+                    android:text="@string/welcome"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textColor="@color/brown_1"
+                    android:textStyle="bold|italic" />
+            </LinearLayout>
+
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -83,9 +83,9 @@ public class BarcodeScanActivity extends AppCompatActivity {
             IntentResult intentResult = data.first;
             String title = data.second;
 
-            TextView results = findViewById(R.id.ScreenTitle);
+            TextView results = findViewById(R.id.ScanBarcodeTitle);
             if(title.equals("error")) {
-                results.setText(title);
+                results.setText("Book not in database");
             } else {
                 String resultString = "Found:\n"+title;
                 results.setText(resultString);
@@ -103,7 +103,6 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        TextView results = findViewById(R.id.ScreenTitle);
         Button AgainButton = findViewById(R.id.AgainButton);
         AgainButton.setOnClickListener(view -> {
             Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
