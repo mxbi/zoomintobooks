@@ -125,12 +125,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     height = displayMetrics.heightPixels;
     width = displayMetrics.widthPixels;
 
-    try {
-      //TODO: this should take in input from the API.
-      ocrAnalyzer = new OCRAnalyzer(getApplicationContext().getAssets().openFd("computernetworks.json").getFileDescriptor(), this);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    //TODO: this should take in input from the API.
+    ocrAnalyzer = new OCRAnalyzer(null, this);
   }
 
   @Override
