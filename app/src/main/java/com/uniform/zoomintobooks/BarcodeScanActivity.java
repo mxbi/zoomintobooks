@@ -71,24 +71,17 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
 
     // We perform the HTTP lookups on an asynchronous thread to avoid locking up the UI
-    private class BookScanTask extends AsyncTask<IntentResult, Void, BookInfo> {
+    private class BookScanTask extends AsyncTask<IntentResult, Void, Pair<IntentResult, String>> {
         @Override
-        protected BookInfo doInBackground(IntentResult... intentResults) {
+        protected Pair<IntentResult, String> doInBackground(IntentResult... intentResults) {
             IntentResult intentResult = intentResults[0];
-            String intentContents = intentResult.getContents();
-//            String title = getBookName(intentContents);
-            return getBookInfo(intentContents);
+            String title = getBookName(intentResult.getContents());
+            return new Pair(intentResult, title);
         }
 
-        protected void onPostExecute(BookInfo bookInfo) {
-//            IntentResult intentResult = data.first;
-            String title;
-            if(bookInfo==null){
-                title = "error";
-            } else{
-                title = bookInfo.getTitle();
-            }
-
+        protected void onPostExecute(Pair<IntentResult, String> data) {
+            IntentResult intentResult = data.first;
+            String title = data.second;
 
             TextView results = findViewById(R.id.ScanBarcodeTitle);
             if(title.equals("error")) {
@@ -101,7 +94,7 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
                 ContinueButton.setOnClickListener(v -> {
                     Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
-                    bookInfo.addAllToIntent(startIntent);
+                    startIntent.putExtra("isbn",intentResult.getContents());
                     startActivity(startIntent);
                 });
             }
@@ -125,17 +118,20 @@ public class BarcodeScanActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private BookInfo getBookInfo(String contents) {
+    private String getBookName(String contents) {
         String url = "https://api.uniform.ml/books/"+contents;
-        BookInfo book = null;
+        BookInfo book =null;
         try {
             book = ZoomUtils.parseJSON(url);
         } catch (IOException e) {
-            // TODO: Handle this more gracefully
             e.printStackTrace();
         }
+        if(book==null){
+            return "error";
+        } else {
+            return book.getTitle();
+        }
 
-        return book;
     }
 
     private void setMenuButtons() {

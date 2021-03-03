@@ -1,8 +1,6 @@
 package com.uniform.zoomintobooks.common.helpers;
 
-import java.io.Serializable;
-
-public class BookResource implements Serializable {
+public class BookResource {
     private int rid;
     private String url;
     private boolean downloadable;
@@ -22,6 +20,4 @@ public class BookResource implements Serializable {
     public boolean isOverlayable() {
         return display.equals("overlay");
     }
-
-
 }

@@ -27,7 +27,7 @@
             android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/beige_2"
+            android:theme="@style/Theme.ZoomIntoBooks"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
