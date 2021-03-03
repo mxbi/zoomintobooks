@@ -1,4 +1,4 @@
-package main.java.com.uniform.zoomintobooks;
+package com.uniform.zoomintobooks;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
