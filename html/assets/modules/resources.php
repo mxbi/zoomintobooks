@@ -84,8 +84,8 @@ function show_resource_form($edit, $rid=NULL) {
         }
     }
     $rid = $edit ? $values["rid"] : -1;
-    $display = get_form_value("display", $values, $default="overlay");
-    $downloadable = get_form_value("downloadable", $values, $default="1") === "1";
+    $display = empty($values["display"]) ? "overlay" : $values["display"];
+    $downloadable = empty($values["downloadable"]) ? true : $values["downloadable"] === "1";
     $uploaded = was_resource_uploaded($rid);
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
@@ -93,11 +93,11 @@ function show_resource_form($edit, $rid=NULL) {
     <input type="hidden" id="rid-input" name="rid" value="<?php echo $rid;?>" />
     <div class="input-container">
      <label for="name">Name</label>
-     <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo get_form_value("name", $values); ?>" />
+     <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo $values["name"]; ?>" />
     </div>
     <div class="input-container">
      <label for="url">URL</label>
-     <input type="text" name="url" id="url-input" placeholder="URL" value="<?php echo get_form_value("url", $values); ?>" />
+     <input type="text" name="url" id="url-input" placeholder="URL" value="<?php echo $values["url"]; ?>" />
 <?php if ($uploaded) { echo "     <span>This resource was uploaded to this server</span>\n"; } ?>
     </div>
     <div class="input-container">
@@ -139,11 +139,6 @@ function manage_resource($file, $values, $edit) {
 
     if (!$edit && !authorised("add resource")) return false;
     if ($edit && !authorised("edit resource", array("rid" => $rid))) return false;
-
-    $_SESSION["sticky"]["name"] = $name;
-    $_SESSION["sticky"]["url"] = $url;
-    $_SESSION["sticky"]["display"] = $display;
-    $_SESSION["sticky"]["downloadable"] = $downloadable ? "downloadable" : "";
 
     $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 

@@ -68,32 +68,32 @@ function show_book_form($edit, $isbn=NULL) {
 if (!$edit) { ?>
     <div class="input-container">
      <label for="isbn">ISBN</label>
-     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" value="<?php echo get_form_value("isbn", $values); ?>" />
+     <input type="text" name="isbn" id="isbn-input" placeholder="ISBN" required="required" value="<?php echo $values["isbn"]; ?>" />
     </div> <?php
 } else { ?>
     <div class="input-container">
-     <input type="hidden" name="isbn" id="isbn-input" value="<?php echo get_form_value("isbn", $values); ?>" />
+     <input type="hidden" name="isbn" id="isbn-input" value="<?php echo $values["isbn"]; ?>" />
      <label for="new_isbn">ISBN</label>
-     <input type="text" name="new_isbn" id="new-isbn-input" placeholder="ISBN" required="required" value="<?php echo get_form_value("isbn", $values); ?>" />
+     <input type="text" name="new_isbn" id="new-isbn-input" placeholder="ISBN" required="required" value="<?php echo $values["isbn"]; ?>" />
     </div> <?php
 } ?>
     <div class="input-container">
      <label for="title">Title</label>
-     <input type="text" name="title" id="title-input" placeholder="Title" required="required" value="<?php echo get_form_value("title", $values); ?>" />
+     <input type="text" name="title" id="title-input" placeholder="Title" required="required" value="<?php echo $values["title"]; ?>" />
     </div>
     <div class="input-container">
      <label for="author">Author</label>
-     <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo get_form_value("author", $values); ?>" />
+     <input type="text" name="author" id="author-input" placeholder="Author" required="required" value="<?php echo $values["author"]; ?>" />
     </div>
 <?php if ($is_admin) { ?>
     <div class="input-container">
      <label for="publisher">Publisher</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo get_form_value("publisher", $values); ?>" />
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo $values["publisher"]; ?>" />
     </div>
 <?php } ?>
     <div class="input-container">
      <label for="edition">Edition</label>
-     <input type="number" name="edition" id="edition-input" value="<?php echo get_form_value("edition", $values, $default=1); ?>" min="1" step="1" />
+     <input type="number" name="edition" id="edition-input" value="<?php echo empty($values["edition"]) ? 1 : $values["edition"]; ?>" min="1" step="1" />
     </div>
     <div class="input-container">
      <label for="book">Book upload</label>
@@ -126,13 +126,6 @@ function manage_book($values, $file, $edit) {
 
     if (!$edit && !authorised("add book")) return false;
     if ($edit && !authorised("edit book", array("isbn" => $isbn))) return false;
-
-    $_SESSION["sticky"]["isbn"] = $isbn;
-    $_SESSION["sticky"]["new_isbn"] = $new_isbn;
-    $_SESSION["sticky"]["title"] = $title;
-    $_SESSION["sticky"]["author"] = $author;
-    $_SESSION["sticky"]["edition"] = $edition;
-    $_SESSION["sticky"]["publisher"] = $publisher;
 
     $file_present = !empty($file) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 

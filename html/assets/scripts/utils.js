@@ -188,13 +188,3 @@ function managePublisher() {
     data.append("email", emailInput.value);
     request("manage-publisher-btn", "action.php", data);
 }
-
-function login() {
-    var usernameInput = document.getElementById("username-input");
-    var passwordInput = document.getElementById("password-input");
-
-    var data = new FormData();
-    data.append("username", usernameInput.value);
-    data.append("password", passwordInput.value);
-    request("login-btn", "action.php", data);
-}
