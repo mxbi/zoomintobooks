@@ -16,6 +16,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import android.util.Base64;
+import android.util.Log;
 
 public class ZoomUtils {
     public static InputStream parse(String encodedString) {
@@ -50,11 +51,16 @@ public class ZoomUtils {
         JsonObject basicInfo = details.getAsJsonObject("basic_info");
         JsonObject publisherInfo = details.getAsJsonObject("publisher_info");
         BookInfo book = new BookInfo();
-        book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsInt());
+        book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsString());
         book.setTitle(basicInfo.getAsJsonPrimitive("title").getAsString());
         book.setAuthor(basicInfo.getAsJsonPrimitive("author").getAsString());
         book.setARBlob(basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
-        book.setOCRBlob(basicInfo.getAsJsonPrimitive("ocr_blob").getAsString());
+        try {
+            book.setOCRBlob(basicInfo.getAsJsonPrimitive("ocr_blob").getAsString());
+        } catch (ClassCastException e) {
+            Log.w("[ZoomUtils]", "No OCR Blob provided");
+            book.setOCRBlob(null);
+        }
         book.setEdition(basicInfo.getAsJsonPrimitive("edition").getAsString());
 
         book.setPublisher(publisherInfo.getAsJsonPrimitive("publisher").getAsString());
