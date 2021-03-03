@@ -39,3 +39,4 @@ public class BookResource implements Serializable {
     public String getType(){
         return type;
     }
+}
