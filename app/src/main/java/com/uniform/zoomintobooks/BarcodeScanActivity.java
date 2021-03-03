@@ -21,10 +21,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.uniform.zoomintobooks.common.helpers.BookInfo;
-import com.uniform.zoomintobooks.common.helpers.BookResource;
 import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
 import java.io.IOException;
+
+import main.java.com.uniform.zoomintobooks.AugmentedImageActivity;
 
 
 public class BarcodeScanActivity extends AppCompatActivity {
@@ -100,7 +101,7 @@ public class BarcodeScanActivity extends AppCompatActivity {
                 ContinueButton.setVisibility(View.VISIBLE);
 
                 ContinueButton.setOnClickListener(v -> {
-                    Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
+                    Intent startIntent = new Intent(getApplicationContext(), AugmentedImageActivity.class);
                     bookInfo.addAllToIntent(startIntent);
                     startActivity(startIntent);
                 });

@@ -18,7 +18,7 @@
     android:id="@+id/myLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.uniform.zoomintobooks.AugmentedImageActivity"
+    tools:context="main.java.com.uniform.zoomintobooks.AugmentedImageActivity"
     android:layout_gravity="bottom">
 
   <android.opengl.GLSurfaceView
