@@ -16,7 +16,6 @@ public class BookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book);
 
 
-
         FloatingActionButton ReturnButton = findViewById(R.id.Return);
         ReturnButton.setOnClickListener(view -> {
             Intent startIntent = new Intent(view.getContext(), (Class) getIntent().getExtras().get("CurrentAct"));

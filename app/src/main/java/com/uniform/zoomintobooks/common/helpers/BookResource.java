@@ -1,6 +1,8 @@
 package com.uniform.zoomintobooks.common.helpers;
 
-public class BookResource {
+import java.io.Serializable;
+
+public class BookResource implements Serializable {
     private int rid;
     private String url;
     private boolean downloadable;
@@ -34,7 +36,11 @@ public class BookResource {
         return display.equals("overlay");
     }
 
+<<<<<<< HEAD
     public String getType(){
         return type;
     }
+=======
+
+>>>>>>> parent of 4c8ed7f (Revert "Merge branch 'main' of https://github.com/mxbi/zoomintobooks into main")
 }
