@@ -36,11 +36,6 @@ public class BookResource implements Serializable {
         return display.equals("overlay");
     }
 
-<<<<<<< HEAD
     public String getType(){
         return type;
     }
-=======
-
->>>>>>> parent of 4c8ed7f (Revert "Merge branch 'main' of https://github.com/mxbi/zoomintobooks into main")
-}
