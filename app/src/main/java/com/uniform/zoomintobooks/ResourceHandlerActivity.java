@@ -88,6 +88,9 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 OpenResource(uri, "image/*");
                 break;
             case ACTIVITY:
+                Intent i = new Intent(this, ImageActivity.class);
+                i.putExtra("uri",uri);
+                startActivity(i);
         }
     }
 
