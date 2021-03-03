@@ -43,7 +43,7 @@ function fetch_publishers() {
 }
 
 
-function add_user($values) {
+function manage_user($values, $edit) {
     global $dbc;
 
     $admin = sanitise($_SESSION["username"]);
@@ -52,21 +52,16 @@ function add_user($values) {
     $password2 = $values["password2"];
     $hash = password_hash($password, PASSWORD_DEFAULT);
     $publisher = sanitise($values["publisher"]);
-    $mode = sanitise($values["mode"]);
 
-    if ($mode === "edit" && !authorised("edit user", array("username" => $username))) return;
-    if ($mode === "new"  && !authorised("add user")) return;
-    if ($mode !== "edit" && $mode !== "new") {
-        add_error("Illegal mode: $mode");
-        return;
-    }
+    if ($edit && !authorised("edit user", array("username" => $username))) return;
+    if (!$edit && !authorised("add user")) return;
 
     $_SESSION["sticky"]["username"] = $username;
     $_SESSION["sticky"]["publisher"] = $publisher;
 
     if ($password !== $password2) {
         add_error("Passwords do not match");
-        return false;
+        return;
     }
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
@@ -75,32 +70,24 @@ function add_user($values) {
     if (!$r) {
         add_error(mysqli_error($dbc));
     } else {
-        $success = true;
         set_success("Created user $username");
         $_SESSION["redirect"] = "/console/users/";
     }
-    mysqli_free_result($r);
 
-    if (!$success) {
+    if (errors_occurred()) {
         mysqli_rollback($dbc);
     } else {
         mysqli_commit($dbc); // TODO: rollback on commit failure
     }
-    return $success;
 }
 
-function add_publisher($values) {
+function manage_publisher($values, $edit) {
     global $dbc;
     $publisher = sanitise($values["publisher"]);
     $email = sanitise($values["email"]);
-    $mode = sanitise($values["mode"]);
     // TODO: make this consistent with how it's done in manage_book
-    if ($mode === "edit" && !authorised("edit publisher", array("publisher" => $publisher))) return;
-    if ($mode === "new"  && !authorised("add publisher")) return;
-    if ($mode !== "edit" && $mode !== "new") {
-        add_error("Illegal mode: $mode");
-        return;
-    }
+    if ($edit && !authorised("edit publisher", array("publisher" => $publisher))) return;
+    if (!$edit  && !authorised("add publisher")) return;
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
     $q = "INSERT INTO publisher(publisher, email) VALUES ('$publisher', '$email')";
@@ -108,30 +95,24 @@ function add_publisher($values) {
     if (!$r) {
         add_error(mysqli_error($dbc));
     } else {
-        $success = true;
-        set_success("Created publisher $name");
+        set_success("Created publisher $publisher");
         $_SESSION["redirect"] = "/console/publishers/";
     }
-    mysqli_free_result($r);
 
-    if (!$success) {
+    if (errors_occurred()) {
         mysqli_rollback($dbc);
     } else {
         mysqli_commit($dbc); // TODO: rollback on commit failure
     }
-    return $success;
 }
 
-function show_user_form($mode, $username = NULL) {
-    if ($mode === "edit" && !authorised("edit user", array("username" => $username))) return;
-    if ($mode === "new"  && !authorised("add user")) return;
-    if ($mode !== "edit" && $mode !== "new") {
-        add_error("Illegal mode: $mode");
-        return;
-    }
+function show_user_form($edit, $username = NULL) {
+    if ($edit && !authorised("edit user", array("username" => $username))) return;
+    if (!$edit  && !authorised("add user")) return;
+
     // TODO: selectable menu of available publishers
     $values = array();
-    if ($mode == "edit") {
+    if ($edit) {
         $values = fetch_user($username);
         if (empty($values)) {
             add_error("Failed to load values for $username");
@@ -139,7 +120,6 @@ function show_user_form($mode, $username = NULL) {
     }
 ?>
    <form action="action.php" method="POST">
-    <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="username">Username</label>
      <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo get_form_value("username", $values); ?>" />
@@ -156,23 +136,17 @@ function show_user_form($mode, $username = NULL) {
      <label for="publisher">Publisher</label>
      <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo get_form_value("publisher", $values); ?>" />
     </div>
-    <input type="submit" value="<?php echo $mode == "new" ? "Create user" : "Edit user"; ?>" />
+    <input type="button" id="manage-user-btn" onclick="manageUser()" value="<?php echo $edit ? "Edit user" : "Create user"; ?>" />
    </form>
 <?php
     unset($_SESSION["sticky"]);
 }
 
-function show_publisher_form($mode, $publisher = NULL) {
-    if ($mode === "edit" && !authorised("edit publisher", array("publisher" => $publisher))) return;
-    if ($mode === "new"  && !authorised("add publisher")) return;
-    if ($mode !== "edit" && $mode !== "new") {
-        add_error("Illegal mode: $mode");
-        return;
-    }
-    // TODO: make sticky
+function show_publisher_form($edit, $publisher = NULL) {
+    if ($edit && !authorised("edit publisher", array("publisher" => $publisher))) return;
+    if (!$edit  && !authorised("add publisher")) return;
 ?>
    <form action="action.php" method="POST">
-    <input type="hidden" name="mode" value="<?php echo $mode; ?>" />
     <div class="input-container">
      <label for="publisher">Publisher name</label>
      <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" />
@@ -181,7 +155,7 @@ function show_publisher_form($mode, $publisher = NULL) {
      <label for="email">Publisher e-mail</label>
      <input type="email" name="email" id="email-input" placeholder="E-mail" required="required" />
     </div>
-    <input type="submit" value="<?php echo $mode == "new" ? "Create publisher" : "Edit publisher"; ?>" />
+    <input type="button" id="manage-publisher-btn" onclick="managePublisher()" value="<?php echo $edit ? "Edit publisher" : "Create publisher"; ?>" />
    </form>
 <?php
 }

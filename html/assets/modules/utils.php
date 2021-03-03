@@ -112,6 +112,15 @@ function display_status() {
     }
 }
 
+function json_status() {
+    $status = array("errors" => $_SESSION["errors"], "notices" => $_SESSION["notices"], "success" => $_SESSION["success"]);
+    clear_errors();
+    clear_notices();
+    $_SESSION["success"] = "";
+    header("Content-Type: application/json");
+    echo json_encode($status);
+}
+
 function get_type($file, $max_size, $legal_subtypes) {
     $path = escapeshellarg($file["tmp_name"]);
     $file_info = exec("file -i $path", $output, $status);
@@ -265,5 +274,3 @@ function generate_text_image($lines, $w=100, $h=128) {
     imagepng($img);
     imagedestroy($img);
 }
-
-?>

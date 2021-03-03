@@ -17,7 +17,7 @@ if ($authorised) {
     echo "    <h3>Edit book properties</h3>\n";
     show_book_form(true, $isbn);
     echo "    <h3>Resources linked to this book</h3>\n";
-    echo "    <button onclick=\"updateBlobs('$isbn')\">Update triggers</button>"; // TODO: explain better, only show when resource links changed
+    echo "    <button id=\"update-triggers-btn\" onclick=\"updateBlobs('$isbn')\">Update triggers</button>"; // TODO: explain better, only show when resource links changed
 ?>
    <a class="card-list-item card-list-add-item" href="resource/new?isbn=<?php echo $isbn;?>">
     <img src="/assets/images/icons/plus-5-128.png" alt="" />

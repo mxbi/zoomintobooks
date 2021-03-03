@@ -90,7 +90,7 @@ function show_resource_form($edit, $rid=NULL) {
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="50000000" />
-    <input type="hidden" name="rid" value="<?php echo $rid;?>" />
+    <input type="hidden" id="rid-input" name="rid" value="<?php echo $rid;?>" />
     <div class="input-container">
      <label for="name">Name</label>
      <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo get_form_value("name", $values); ?>" />
@@ -120,7 +120,7 @@ function show_resource_form($edit, $rid=NULL) {
      <label for="downloadable">Downloadable</label>
      <input type="checkbox" value="downloadable" name="downloadable" id="downloadable-input" <?php echo $downloadable ? "checked=\"checked\"" : "" ;?> />
     </div>
-    <input type="submit" value="<?php echo $edit ? "Edit resource" : "Add resource" ; ?>" />
+    <input type="button" onclick="manageResource()" id="manage-resource-btn" value="<?php echo $edit ? "Edit resource" : "Add resource" ; ?>" />
    </form>
 <?php
     unset($_SESSION["sticky"]);
@@ -130,7 +130,7 @@ function manage_resource($file, $values, $edit) {
     global $dbc;
 
     $username = sanitise($_SESSION["username"]);
-    $rid = sanitise($values["rid"]);
+    $rid = empty($values["rid"]) ? -1 : sanitise($values["rid"]);
     $name = sanitise($values["name"]);
     $url = sanitise($values["url"]);
     $display = sanitise($values["display"]);
@@ -216,15 +216,16 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'");
     $types = array();
 
+    $linked = false;
+
     foreach ($trigger_images as $img) {
-        var_dump($img);
         $type = get_type($img, MAX_TRIGGER_IMAGE_FILE_SIZE, TRIGGER_IMAGE_TYPES);
         if ($type) {
             $types[$img["tmp_name"]] = $type;
         }
     }
     if (!errors_occurred()) {
-        $ar_id = $max["max_ar_id"] ? $max["max_ar_id"] : 0;
+        $ar_id = empty($max["max_ar_id"]) ? 0 : $max["max_ar_id"];
         foreach ($trigger_images as $img) {
             $ar_id++;
             $ext = get_subtype($types[$img["tmp_name"]]);
@@ -234,11 +235,15 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
             }
             foreach ($resources as $rid) {
                 $rid = sanitise($rid);
-                $q = "INSERT INTO ar_resource_link (isbn, rid, ar_id, trigger_type) VALUES ('$isbn', $rid, $ar_id, '$type')";
+                $q = "INSERT IGNORE INTO ar_resource_link (isbn, rid, ar_id, trigger_type) VALUES ('$isbn', $rid, $ar_id, '$type')";
                 $r = mysqli_query($dbc, $q);
                 if (!$r) {
                     add_error(mysqli_error($dbc));
                     break;
+                } else if (mysqli_affected_rows($dbc) === 0) {
+                    add_notice("Ignoring duplicate trigger image $ar_id");
+                } else {
+                    $linked = true;
                 }
             }
             if (errors_occurred()) break;
@@ -255,8 +260,10 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
                 if (!$r) {
                     add_error(mysqli_error($dbc));
                     break;
+                } else if (mysqli_affected_rows($dbc) === 0) {
+                    add_notice("Ignoring duplicate trigger page $page");
                 } else {
-                    add_notice("Ignoring duplicate page $page");
+                    $linked = true;
                 }
             }
             $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
@@ -279,7 +286,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
                 add_error("Rollback failed");
             }
         } else {
-            set_success("Successfully linked resources to book");
+            if ($linked) set_success("Successfully linked resources to book");
         }
     }
 }

@@ -9,5 +9,4 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     manage_resource($_FILES["resource"], $_POST, false);
 }
 
-header("Location: " . $_SESSION["redirect"]);
-?>
+json_status();

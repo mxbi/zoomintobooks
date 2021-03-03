@@ -8,8 +8,8 @@ $authorised = authorised("edit resource", array("rid" => $rid));
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_error("Request method must be POST");
 } else if ($authorised) {
-    manage_resource($_FILES["resource"], $_POST, true);
+    $file = empty($_FILES["resource"]) ? NULL : $_FILES["resource"];
+    manage_resource($file, $_POST, true);
 }
 
-header("Location: " . $_SESSION["redirect"]);
-?>
+json_status();

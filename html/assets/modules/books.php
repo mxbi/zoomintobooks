@@ -62,7 +62,7 @@ function show_book_form($edit, $isbn=NULL) {
         }
     }
 ?>
-   <form action="action.php" method="POST" enctype="multipart/form-data">
+   <form method="POST" enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="100000000" />
 <?php
 if (!$edit) { ?>
@@ -72,7 +72,7 @@ if (!$edit) { ?>
     </div> <?php
 } else { ?>
     <div class="input-container">
-     <input type="hidden" name="isbn" value="<?php echo get_form_value("isbn", $values); ?>" />
+     <input type="hidden" name="isbn" id="isbn-input" value="<?php echo get_form_value("isbn", $values); ?>" />
      <label for="new_isbn">ISBN</label>
      <input type="text" name="new_isbn" id="new-isbn-input" placeholder="ISBN" required="required" value="<?php echo get_form_value("isbn", $values); ?>" />
     </div> <?php
@@ -100,7 +100,7 @@ if (!$edit) { ?>
      <input type="file" name="book" id="book-input" <?php echo $edit ? "" : "required=\"required\""; ?> />
      <?php if ($edit) echo "<p><small>File already uploaded. You may upload a new one if you wish. If you leave this blank, the existing file will not be changed.</small></p>\n"; ?>
     </div>
-    <input type="submit" value="<?php echo $edit ? "Edit book" : "Add book" ; ?>" />
+    <input id="manage-book-btn" type="button" onclick="manageBook()" value="<?php echo $edit ? "Edit book" : "Add book" ; ?>" />
    </form>
 <?php
     unset($_SESSION["sticky"]);
@@ -112,7 +112,7 @@ function manage_book($values, $file, $edit) {
 
     $username = sanitise($_SESSION["username"]);
     $isbn = sanitise($values["isbn"]);
-    $new_isbn = sanitise($values["new_isbn"]);
+    $new_isbn = empty($values["new_isbn"]) ? NULL : sanitise($values["new_isbn"]);
     $title = sanitise($values["title"]);
     $author = sanitise($values["author"]);
     $edition = sanitise($values["edition"]);
@@ -128,14 +128,13 @@ function manage_book($values, $file, $edit) {
     if ($edit && !authorised("edit book", array("isbn" => $isbn))) return false;
 
     $_SESSION["sticky"]["isbn"] = $isbn;
+    $_SESSION["sticky"]["new_isbn"] = $new_isbn;
     $_SESSION["sticky"]["title"] = $title;
     $_SESSION["sticky"]["author"] = $author;
     $_SESSION["sticky"]["edition"] = $edition;
     $_SESSION["sticky"]["publisher"] = $publisher;
 
-    var_dump($file);
-
-    $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
+    $file_present = !empty($file) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
     if (!$edit && !$file_present) add_error("No file uploaded");
     if (!is_valid_isbn($isbn)) add_error("ISBN is invalid");
@@ -181,7 +180,7 @@ function manage_book($values, $file, $edit) {
             $upload = upload_book($file, $type, $isbn);
             $images = extract_images($file, $type, $isbn);
             if (!$cover || !$upload || !$images) add_error("Failed to upload book");
-        } else if ($new_isbn !== $isbn) { // Editing ISBN without changing file
+        } else if ($edit && $new_isbn !== $isbn) { // Editing ISBN without changing file
             $success = rename(book_cover_path($isbn), book_cover_path($new_isbn));
             if (!$success) add_error("Failed to move cover");
             $old_upload_path = book_upload_path($isbn, $type);
@@ -327,7 +326,6 @@ function generate_ocr_blob($isbn) {
     }
     $pages_str = implode(",", $pages);
     $cmd = "/usr/bin/python3 /var/www/zib/ocr/extract_pdf.py $pdf $pages_str -";
-    echo $cmd;
     $output = null;
     $ret = null;
     $success = exec($cmd, $output, $ret);

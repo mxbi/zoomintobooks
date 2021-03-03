@@ -47,3 +47,9 @@ input[type="text"]:hover, input[type="password"]:hover, input[type="number"]:hov
     box-shadow: 0 0 3px #666;
     outline: 0;
 }
+
+input[type="button"][disabled], button[disabled] {
+    background-color: #999;
+    box-shadow: none;
+    cursor: wait;
+}

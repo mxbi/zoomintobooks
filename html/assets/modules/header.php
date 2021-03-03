@@ -34,6 +34,7 @@ function make_header($title, $description, $keywords) {
     }
 ?>
   <link rel="icon" href="/assets/images/icons/header.png" />
+  <script src="/assets/scripts/utils.js"></script>
  </head>
  <body>
   <header>

@@ -10,7 +10,7 @@ make_header("Add publisher", "", "");
 $authorised = authorised("add publisher");
 display_status();
 if ($authorised) {
-    show_publisher_form("new");
+    show_publisher_form(false);
 }
 ?>
   </main>

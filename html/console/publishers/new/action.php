@@ -6,8 +6,6 @@ $authorised = authorised("add publisher");
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_error("Request method must be POST");
 } else if ($authorised) {
-    add_publisher($_POST);
+    manage_publisher($_POST, false);
 }
-
-header("Location: " . $_SESSION["redirect"]);
-?>
+json_status();

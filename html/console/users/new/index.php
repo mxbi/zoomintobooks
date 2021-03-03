@@ -10,7 +10,7 @@ make_header("Add user", "", "");
 $authorised = authorised("add user");
 display_status();
 if ($authorised) {
-    show_user_form("new", "");
+    show_user_form(false);
 }
 ?>
   </main>

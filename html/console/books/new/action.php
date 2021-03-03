@@ -1,6 +1,5 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
-$_SESSION["redirect"] = "/console/books/new/";
 
 $authorised = authorised("add book");
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
@@ -9,5 +8,8 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     manage_book($_POST, $_FILES["book"], false);
 }
 
-header("Location: " . $_SESSION["redirect"]);
-?>
+if (!errors_occurred()) {
+    header("Location: " . $_SESSION["redirect"]);
+} else {
+    json_status();
+}
