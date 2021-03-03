@@ -491,6 +491,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     if (X_coord >= overlayCoords[0] && X_coord <= overlayCoords[1] && Y_coord >= overlayCoords[2] && Y_coord <= overlayCoords[3]) {
       //TODO: open new activity.
       System.out.println("Detected click.");
+
+      BookResource matchResource = ARResources.get(augIndex);
+      matchResource.
+      // P1(uri, mode)
     }
 
     return true;
