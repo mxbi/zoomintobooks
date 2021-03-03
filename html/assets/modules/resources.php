@@ -75,7 +75,7 @@ function can_edit_resource($rid) {
 function show_resource_form($edit, $rid=NULL) {
     if (!$edit && !authorised("add resource")) return;
     if ($edit && !authorised("edit resource", array("rid" => $rid))) return;
-    $values = array();
+    $values = array("name" => "", "url" => "", "display" => "overlay", "downloadable" => "1");
     if ($edit) {
         $values = fetch_resource($rid);
         if (empty($values)) {
@@ -84,8 +84,8 @@ function show_resource_form($edit, $rid=NULL) {
         }
     }
     $rid = $edit ? $values["rid"] : -1;
-    $display = empty($values["display"]) ? "overlay" : $values["display"];
-    $downloadable = empty($values["downloadable"]) ? true : $values["downloadable"] === "1";
+    $display = $values["display"];
+    $downloadable = ($values["downloadable"] === "1");
     $uploaded = was_resource_uploaded($rid);
 ?>
    <form action="action.php" method="POST" enctype="multipart/form-data">

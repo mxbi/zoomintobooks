@@ -53,7 +53,7 @@ function show_book_form($edit, $isbn=NULL) {
     global $is_admin;
     if (!$edit && !authorised("add book")) return;
     if ($edit && !authorised("edit book", array("isbn" => $isbn))) return;
-    $values = array();
+    $values = array("isbn" => "", "title" => "", "author" => "", "publisher" => "", "edition" => "1");
     if ($edit) {
         $values = fetch_book($isbn);
         if (empty($values)) {
@@ -93,7 +93,7 @@ if (!$edit) { ?>
 <?php } ?>
     <div class="input-container">
      <label for="edition">Edition</label>
-     <input type="number" name="edition" id="edition-input" value="<?php echo empty($values["edition"]) ? 1 : $values["edition"]; ?>" min="1" step="1" />
+     <input type="number" name="edition" id="edition-input" value="<?php echo $values["edition"]; ?>" min="1" step="1" />
     </div>
     <div class="input-container">
      <label for="book">Book upload</label>
@@ -286,8 +286,8 @@ function generate_image_list($isbn) {
 
 function generate_ar_blob($isbn) {
     global $dbc;
-    $imglist = generate_image_list($isbn);
-    $out_path = ar_blob_output_path($isbn);
+    $imglist = escapeshellarg(generate_image_list($isbn));
+    $out_path = escapeshellarg(ar_blob_output_path($isbn));
     $cmd = "/usr/bin/arcoreimg build-db --input_image_list_path=$imglist --output_db_path=$out_path";
     $output = null;
     $ret = null;
@@ -310,14 +310,14 @@ function generate_ar_blob($isbn) {
 function generate_ocr_blob($isbn) {
     global $dbc;
     $type = get_book_type($isbn);
-    $pdf = book_upload_path($isbn, $type);
+    $pdf = escapeshellarg(book_upload_path($isbn, $type));
     $pages_result = db_select("SELECT page FROM ocr_resource_link WHERE isbn = '$isbn'");
     if (empty($pages_result)) return;
     $pages = array();
     foreach ($pages_result as $result) {
             $pages[] = $result["page"];
     }
-    $pages_str = implode(",", $pages);
+    $pages_str = escapeshellarg(implode(",", $pages));
     $cmd = "/usr/bin/python3 /var/www/zib/ocr/extract_pdf.py $pdf $pages_str -";
     $output = null;
     $ret = null;

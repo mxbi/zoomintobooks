@@ -56,9 +56,6 @@ function manage_user($values, $edit) {
     if ($edit && !authorised("edit user", array("username" => $username))) return;
     if (!$edit && !authorised("add user")) return;
 
-    $_SESSION["sticky"]["username"] = $username;
-    $_SESSION["sticky"]["publisher"] = $publisher;
-
     if ($password !== $password2) {
         add_error("Passwords do not match");
         return;
@@ -111,7 +108,7 @@ function show_user_form($edit, $username = NULL) {
     if (!$edit  && !authorised("add user")) return;
 
     // TODO: selectable menu of available publishers
-    $values = array();
+    $values = array("username" => "", "publisher" => "");
     if ($edit) {
         $values = fetch_user($username);
         if (empty($values)) {
@@ -122,7 +119,7 @@ function show_user_form($edit, $username = NULL) {
    <form action="action.php" method="POST">
     <div class="input-container">
      <label for="username">Username</label>
-     <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo get_form_value("username", $values); ?>" />
+     <input type="text" name="username" id="username-input" placeholder="Username" required="required" value="<?php echo $values["username"]; ?>" />
     </div>
     <div class="input-container">
      <label for="password">Password</label>
@@ -134,7 +131,7 @@ function show_user_form($edit, $username = NULL) {
     </div>
     <div class="input-container">
      <label for="publisher">Publisher</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo get_form_value("publisher", $values); ?>" />
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" value="<?php echo $values["publisher"]; ?>" />
     </div>
     <input type="button" id="manage-user-btn" onclick="manageUser()" value="<?php echo $edit ? "Edit user" : "Create user"; ?>" />
    </form>
@@ -145,15 +142,23 @@ function show_user_form($edit, $username = NULL) {
 function show_publisher_form($edit, $publisher = NULL) {
     if ($edit && !authorised("edit publisher", array("publisher" => $publisher))) return;
     if (!$edit  && !authorised("add publisher")) return;
+
+    $values = array("publisher" => "", "email" => "");
+    if ($edit) {
+        $values = fetch_publisher($publisher);
+        if (empty($values)) {
+            add_error("Failed to load values for $publisher");
+        }
+    }
 ?>
    <form action="action.php" method="POST">
     <div class="input-container">
      <label for="publisher">Publisher name</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" required="required" />
+     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" value="<?php echo $values["publisher"]; ?>" required="required" />
     </div>
     <div class="input-container">
      <label for="email">Publisher e-mail</label>
-     <input type="email" name="email" id="email-input" placeholder="E-mail" required="required" />
+     <input type="email" name="email" id="email-input" placeholder="E-mail" value="<?php echo $values["email"]; ?>" required="required" />
     </div>
     <input type="button" id="manage-publisher-btn" onclick="managePublisher()" value="<?php echo $edit ? "Edit publisher" : "Create publisher"; ?>" />
    </form>
