@@ -29,6 +29,7 @@ import com.google.ar.core.Frame;
 import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.mlkit.vision.common.InputImage;
+import com.uniform.zoomintobooks.common.helpers.AsyncGetImageData;
 import com.uniform.zoomintobooks.common.helpers.OCRAnalyzer;
 import com.uniform.zoomintobooks.common.helpers.TextureReader;
 import com.uniform.zoomintobooks.common.helpers.TextureReaderImage;
@@ -378,6 +379,18 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     session.configure(config);
   }
 
+
+  private AugmentedImage augmentedImageResourceDisplay;
+  private AugmentedImageState augmentedImageStateResourceDisplay;
+  public void resourceDisplay(InputStream is){
+    AugmentedImageState augmentedImageState = new AugmentedImageState(augmentedImageResourceDisplay, true, is, this);
+    Intent i = new Intent(this, ResourceHandlerActivity.class);
+    i.putExtra("bitmap", augmentedImageState.getBmp());
+    i.putExtra("type", currentResource.getType());
+    i.putExtra("action", "display");
+    startActivity(i);
+  }
+
   private void drawAugmentedImages(
       Frame frame, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba) {
     Collection<AugmentedImage> updatedAugmentedImages =
@@ -398,16 +411,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           btn.setLayoutParams(fp);
           btn.setBackgroundColor(0xFFC7AF8F);
           btn.setOnClickListener(v -> {
-            //TODO: on click, open a new activity.
               currentResource = ARResources.get(augmentedImage.getIndex());
-              AugmentedImageState augmentedImageState;
-              InputStream is = ZoomUtils.getImageData(currentResource.getURL());
-              augmentedImageState = new AugmentedImageState(augmentedImage, true, is, this);
-              Intent i = new Intent(this, ResourceHandlerActivity.class);
-              i.putExtra("bitmap", augmentedImageState.getBmp());
-              i.putExtra("type", currentResource.getType());
-              i.putExtra("action", "display");
-              startActivity(i);
+              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
+              asyncGetImageData.setImgLink(currentResource.getURL());
+              asyncGetImageData.setAugmentedImageActivity(this);
+              augmentedImageResourceDisplay = augmentedImage;
+              asyncGetImageData.execute();
           });
           this.runOnUiThread(new Runnable() {
             public void run() {
