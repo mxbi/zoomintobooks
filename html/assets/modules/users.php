@@ -72,6 +72,7 @@ function manage_user($values, $edit) {
         rollback($dbc, array());
     } else if (commit($dbc, array())) {
         set_success("Created user $username");
+        $_SESSION["redirect"] = "/console/users/";
     }
 }
 
@@ -94,6 +95,7 @@ function manage_publisher($values, $edit) {
         rollback($dbc, array());
     } else if (commit($dbc, array())) {
         set_success("Created publisher $publisher");
+        $_SESSION["redirect"] = "/console/publishers/";
     }
 }
 
@@ -130,7 +132,6 @@ function show_user_form($edit, $username = NULL) {
     <input type="button" id="manage-user-btn" onclick="manageUser()" value="<?php echo $edit ? "Edit user" : "Create user"; ?>" />
    </form>
 <?php
-    unset($_SESSION["sticky"]);
 }
 
 function show_publisher_form($edit, $publisher = NULL) {
