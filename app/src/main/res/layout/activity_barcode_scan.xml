@@ -16,10 +16,10 @@
         android:background="@color/beige_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
+        app:layout_constraintVertical_bias="0.0">
 
 
         <com.google.android.material.appbar.AppBarLayout
@@ -27,9 +27,9 @@
 
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:background="@color/beige_2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/beige_2"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -159,34 +159,41 @@
             app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24"
             app:tint="@color/beige_1" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
+        <Button
+            android:id="@+id/NextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:textSize="24sp"
+            android:theme="@style/Theme.Buttons"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/nameBar"
+            app:layout_constraintVertical_bias="0.341" />
 
-            <Button
-                android:id="@+id/AgainButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/try_again"
-                android:textSize="24sp"
-                android:theme="@style/Theme.Buttons" />
+        <TextView
+            android:id="@+id/NotYourBook"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_your_book"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/NextButton"
+            app:layout_constraintVertical_bias="0.654" />
 
-            <Button
-                android:id="@+id/ContinueButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/continuefunction"
-                android:textSize="24sp"
-                android:theme="@style/Theme.Buttons"
-                android:visibility="invisible" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/TryAgain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/try_again"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:theme="@style/Theme.Buttons"
+            android:visibility="invisible"
+            app:layout_constraintTop_toBottomOf="@+id/NotYourBook" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

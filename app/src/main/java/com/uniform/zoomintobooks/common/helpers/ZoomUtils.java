@@ -54,7 +54,12 @@ public class ZoomUtils {
         book.setISBN(basicInfo.getAsJsonPrimitive("isbn").getAsString());
         book.setTitle(basicInfo.getAsJsonPrimitive("title").getAsString());
         book.setAuthor(basicInfo.getAsJsonPrimitive("author").getAsString());
-        book.setARBlob(basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
+        try {
+            book.setARBlob(basicInfo.getAsJsonPrimitive("ar_blob").getAsString());
+        } catch (ClassCastException e) {
+            Log.w("[ZoomUtils]", "No AR Blob provided");
+            book.setARBlob(null);
+        }
         try {
             book.setOCRBlob(basicInfo.getAsJsonPrimitive("ocr_blob").getAsString());
         } catch (ClassCastException e) {
@@ -81,8 +86,8 @@ public class ZoomUtils {
             int rid = resource.getAsJsonPrimitive("rid").getAsInt();
             String url = resource.getAsJsonPrimitive("url").getAsString();
             boolean downloadable = resource.getAsJsonPrimitive("downloadable").getAsBoolean();
-            String type = resource.getAsJsonPrimitive("display").getAsString();
-            bookResources.add(new BookResource(rid, url, downloadable, type));
+            String display = resource.getAsJsonPrimitive("display").getAsString();
+            bookResources.add(new BookResource(rid, url, downloadable, display));
         }
 
         return bookResources;

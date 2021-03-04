@@ -9,8 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Pair;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,7 +19,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.uniform.zoomintobooks.common.helpers.BookInfo;
-import com.uniform.zoomintobooks.common.helpers.BookResource;
 import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
 import java.io.IOException;
@@ -83,25 +80,34 @@ public class BarcodeScanActivity extends AppCompatActivity {
         protected void onPostExecute(BookInfo bookInfo) {
 //            IntentResult intentResult = data.first;
             String title;
-            if(bookInfo==null){
-                title = "error";
-            } else{
-                title = bookInfo.getTitle();
-            }
-
-
             TextView results = findViewById(R.id.ScanBarcodeTitle);
-            if(title.equals("error")) {
-                results.setText("Book not in database");
+            if(bookInfo==null) {
+                results.setText(R.string.book_not_in_database);
+                Button NextButton = findViewById(R.id.NextButton);
+                NextButton.setText(R.string.try_again);
+                NextButton.setOnClickListener(view -> {
+                    Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
+                    startActivity(startIntent);
+                });
             } else {
+                title = bookInfo.getTitle();
                 String resultString = "Found:\n"+title;
                 results.setText(resultString);
-                Button ContinueButton = findViewById(R.id.ContinueButton);
-                ContinueButton.setVisibility(View.VISIBLE);
+                Button NextButton = findViewById(R.id.NextButton);
+                NextButton.setText(R.string.continue_text);
+                Button TryAgain = findViewById(R.id.TryAgain);
+                TryAgain.setVisibility(View.VISIBLE);
+                TextView NotYourBook = findViewById(R.id.NotYourBook);
+                NotYourBook.setVisibility(View.VISIBLE);
 
-                ContinueButton.setOnClickListener(v -> {
+                NextButton.setOnClickListener(v -> {
                     Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
                     bookInfo.addAllToIntent(startIntent);
+                    startActivity(startIntent);
+                });
+
+                NotYourBook.setOnClickListener(view -> {
+                    Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
                     startActivity(startIntent);
                 });
             }
@@ -110,11 +116,7 @@ public class BarcodeScanActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Button AgainButton = findViewById(R.id.AgainButton);
-        AgainButton.setOnClickListener(view -> {
-            Intent startIntent = new Intent(getApplicationContext(),BarcodeScanActivity.class);
-            startActivity(startIntent);
-        });
+
 
         IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (intentResult != null) { //we got something
