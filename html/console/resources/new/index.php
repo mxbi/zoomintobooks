@@ -1,6 +1,5 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
-$_SESSION["redirect"] = "/console/resources/new/";
 make_header("Add resource", "", "");
 ?>
 

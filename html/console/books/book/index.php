@@ -2,7 +2,6 @@
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 
 $isbn = empty($_GET["isbn"]) ? NULL : sanitise($_GET["isbn"]);
-$_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
 $book = fetch_book($isbn);
 $title = ($book === NULL) ? "Unknown book" : $book["title"];
 

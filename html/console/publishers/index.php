@@ -1,7 +1,6 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 make_header("Manage publishers", "The Zoom Into Books management console", "");
-$_SESSION["redirect"] = "/console/publishers/";
 ?>
 
   <h2>Manage publishers</h2>

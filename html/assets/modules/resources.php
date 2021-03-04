@@ -188,9 +188,14 @@ function manage_resource($file, $values, $edit) {
     if (errors_occurred()) {
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
-        if ($edit) set_success("Updated $name");
-        else set_success("Added $name");
-        $_SESSION["redirect"] = "/console/resources/resource?rid=$rid";
+        if ($edit) {
+            set_success("Updated $name");
+        } else {
+            set_success("Added $name");
+            if (empty($_SESSION["redirect"])) {
+                $_SESSION["redirect"] = "/console/resources/resource?rid=$rid";
+            }
+        }
     }
 }
 
@@ -201,7 +206,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     // TODO: validation, sticky form
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-    $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'");
+    $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'", true);
     $types = array();
 
     $linked = false;
@@ -267,10 +272,12 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
         }
     }
 
+    unset($_SESSION["redirect"]);
     if (errors_occurred()) {
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
         if ($linked) set_success("Successfully linked resources to book");
+        $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
     }
 }
 ?>

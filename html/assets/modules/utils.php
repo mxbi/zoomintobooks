@@ -104,16 +104,21 @@ function display_status() {
 
 function json_status() {
     $status = array("errors" => $_SESSION["errors"], "notices" => $_SESSION["notices"], "success" => $_SESSION["success"]);
-    clear_errors();
-    clear_notices();
-    $_SESSION["success"] = "";
+    if (empty($_SESSION["redirect"])) {
+        clear_errors();
+        clear_notices();
+        $_SESSION["success"] = "";
+    } else {
+        $status["redirect"] = $_SESSION["redirect"];
+        unset($_SESSION["redirect"]);
+    }
     header("Content-Type: application/json");
     echo json_encode($status);
 }
 
 function get_type($file, $max_size, $legal_subtypes) {
     $path = escapeshellarg($file["tmp_name"]);
-    $file_info = exec("file -i $path", $output, $status);
+    $file_info = exec("/usr/bin/file -i $path", $output, $status);
     if ($status) {
         add_error("Could not safely determine file type (" . UPLOAD_ERROR_MSGS[$file["error"]] . ")");
     } else {
@@ -142,6 +147,7 @@ function authorised($action, $params=array(), $errors=true) {
     global $is_logged_in;
     global $is_admin;
     if (!$is_logged_in) {
+        $_SESSION["redirect"] = $_SERVER["REQUEST_URI"];
         if ($errors) add_error("You must <a href=\"/login/\">log in</a> first");
         return false;
     }

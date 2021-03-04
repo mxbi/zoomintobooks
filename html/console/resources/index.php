@@ -1,7 +1,6 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 make_header("Your resources", "The Zoom Into Books management console", "");
-$_SESSION["redirect"] = "/console/resources/";
 ?>
 
   <h2>Your resources</h2>

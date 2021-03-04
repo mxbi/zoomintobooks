@@ -80,8 +80,13 @@ function request(triggerId, action, data) {
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
             trigger.disabled = false;
-            console.log(this.response);
-            displayStatus(JSON.parse(this.response));
+            var status = JSON.parse(this.response);
+            console.log(status);
+            if (status.redirect !== undefined && status.redirect !== "") {
+                window.location.href = status.redirect;
+            } else {
+                displayStatus(JSON.parse(this.response));
+            }
         }
     };
     trigger.disabled = true;
