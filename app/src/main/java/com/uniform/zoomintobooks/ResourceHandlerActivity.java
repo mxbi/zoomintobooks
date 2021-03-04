@@ -30,7 +30,7 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         Intent i = getIntent();
-        String uri = i.getStringExtra("uri");
+        String uri = i.getStringExtra("url");
         String type = i.getStringExtra("type");
         String action = i.getStringExtra("action");
 
@@ -41,23 +41,27 @@ public class ResourceHandlerActivity extends AppCompatActivity {
             case "display":
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(uri),OpenResourceMode.ACTIVITY);
-                }else if (type.equals("image")) {
+                }else if (type.equals("image") || type.equals("overlay")) {
                     OpenImage(Uri.parse(uri), OpenResourceMode.ACTIVITY);
                 }else{
                     throw new UnsupportedOperationException("Displaying other resources not natively supported");
                 }
+                break;
             case "open":
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(uri),OpenResourceMode.ANDROID);
-                }else if (type.equals("image")) {
+                }else if (type.equals("image") || type.equals("overlay")) {
                     OpenImage(Uri.parse(uri), OpenResourceMode.ANDROID);
                 }else{
                     OpenResource(Uri.parse(uri), type);
                 }
+                break;
             case "save":
                 Save(directory, bytes);
+                break;
             case "export":
                 Export(directory, bytes);
+                break;
         }
     }
 

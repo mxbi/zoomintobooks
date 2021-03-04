@@ -7,9 +7,8 @@ public class BookResource implements Serializable {
     private String url;
     private boolean downloadable;
     private String display;
-    private String type;
 
-    public BookResource(int rid, String url, boolean downloadable, String display, String type) {
+    public BookResource(int rid, String url, boolean downloadable, String display) {
         this.rid = rid;
         this.url = url;
         this.downloadable = downloadable;
@@ -21,14 +20,13 @@ public class BookResource implements Serializable {
         this.url = bookResource.url;
         this.downloadable = bookResource.downloadable;
         this.display = bookResource.display;
-        this.type = bookResource.type;
     }
 
     public String getURL() {
         return url;
     }
 
-    public String setURL(String url){
+    public void setURL(String url){
         this.url = url;
     }
 
@@ -37,6 +35,6 @@ public class BookResource implements Serializable {
     }
 
     public String getType(){
-        return type;
+        return display;
     }
 }
