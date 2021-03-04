@@ -20,3 +20,4 @@ admin.php
 books
 resources
 tmp
+*.swp
