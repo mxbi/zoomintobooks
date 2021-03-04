@@ -15,4 +15,8 @@
     <string name="about_the_book">About the book</string>
     <string name="try_again">Try again</string>
     <string name="continuefunction">Continue</string>
+    <string name="continue_text">Continue</string>
+    <string name="error_scanning">Error Scanning</string>
+    <string name="book_not_in_database">Book not in database</string>
+    <string name="not_your_book">Not your book?</string>
 </resources>
