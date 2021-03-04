@@ -148,8 +148,6 @@ function manage_resource($file, $values, $edit) {
 
     if (errors_occurred()) return false;
 
-    // Perform updates to database and file system
-
     // TODO: produce preview of resource
 
     if (!$edit) {

@@ -66,15 +66,12 @@ function manage_user($values, $edit) {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error(mysqli_error($dbc));
-    } else {
-        set_success("Created user $username");
-        $_SESSION["redirect"] = "/console/users/";
     }
 
     if (errors_occurred()) {
-        mysqli_rollback($dbc);
-    } else {
-        mysqli_commit($dbc); // TODO: rollback on commit failure
+        rollback($dbc, array());
+    } else if (commit($dbc, array())) {
+        set_success("Created user $username");
     }
 }
 
@@ -91,15 +88,12 @@ function manage_publisher($values, $edit) {
     $r = mysqli_query($dbc, $q);
     if (!$r) {
         add_error(mysqli_error($dbc));
-    } else {
-        set_success("Created publisher $publisher");
-        $_SESSION["redirect"] = "/console/publishers/";
     }
 
     if (errors_occurred()) {
-        mysqli_rollback($dbc);
-    } else {
-        mysqli_commit($dbc); // TODO: rollback on commit failure
+        rollback($dbc, array());
+    } else if (commit($dbc, array())) {
+        set_success("Created publisher $publisher");
     }
 }
 
