@@ -264,3 +264,144 @@ function generate_text_image($lines, $w=100, $h=128) {
     imagepng($img);
     imagedestroy($img);
 }
+
+function generate_random_string($length = 32) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+
+function file_rollback($tmps) {
+    if (!$tmps) return true;
+    foreach ($tmps as $tmp => $path) {
+        if ((file_exists($path) && !rrm($path)) || (file_exists($tmp) && !rcp($tmp, $path))) {
+            add_error("Failed to rollback file operation");
+            return false;
+        }
+    }
+    return true;
+}
+
+function file_commit($tmp, $path) {
+    if (!$tmps) return true;
+    foreach ($tmps as $tmp => $path) {
+        if (file_exists($tmp) && !rrm($tmp)) {
+            add_error("Failed to commit file operation");
+            file_rollback($tmp, $path);
+            return false;
+        }
+    }
+    return true;
+}
+
+function file_ops($ops) {
+    $tmps = array();
+    foreach ($ops as $op) {
+        $path = $op["path"];
+        $tmp = "";
+        do {
+            $tmp = "/var/www/zib/tmp/" . generate_random_string();
+        } while (file_exists($tmp));
+
+        if (file_exists($path) && !rcp($path, $tmp)) {
+            add_error("Failed to make backup before executing file operation");
+            file_rollback($tmps);
+            return false;
+        }
+        $tmps[$tmp] = $path;
+
+        $type = $op["type"];
+        if ($type === "mv upload") {
+            if (!move_uploaded_file($op["file"]["tmp_name"], $path)) {
+                add_error("Failed to move uploaded file");
+            }
+        } else if ($type === "cp upload") {
+            if (!is_uploaded_file($op["file"]["tmp_name"]) || !rcp($op["file"]["tmp_name"], $path)) {
+                add_error("Failed to copy uploaded file $path");
+            }
+        } else if ($type === "cmd") {
+            $out = NULL;
+            $ret = NULL;
+            $success = exec(escapeshellcmd($op["cmd"]), $out, $ret);
+            if ($success === false) {
+                add_error($op["error"] . " " . $op["cmd"] . " (code: $ret): " . implode("\n", $out));
+            }
+        } else if ($type === "mkdir") {
+            if (!mkdir($path, $op["permission"])) {
+                add_error("Failed to make directory");
+            }
+        } else if ($type === "cp") {
+            if (file_exists($op["src"]) && !rcp($op["src"], $path)) {
+                add_error("Failed to copy file");
+            }
+        } else if ($type === "rm") {
+            if (file_exists($path) && !rrm($path)) {
+                add_error("Failed to remove file");
+            }
+        } else {
+            add_error("Unknown file operation: $type");
+        }
+        if (errors_occurred()) {
+            file_rollback($tmps);
+            return false;
+        }
+    }
+    return $tmps;
+}
+
+function rollback($dbc, $tmps) {
+    if (!mysqli_rollback($dbc) && file_rollback($tmps)) {
+        add_error("Rollback failed");
+        return false;
+    }
+    return true;
+}
+
+function commit($dbc, $tmps) {
+    if (!mysqli_commit($dbc) && file_commit($tmps)) {
+        add_error("Commit failed");
+        rollback($dbc, $tmps);
+        return false;
+    }
+    return true;
+}
+
+
+//https://www.php.net/manual/en/function.copy.php#104020
+function rrm($dir) {
+    if (is_dir($dir)) {
+        $files = scandir($dir);
+        $success = true;
+        foreach ($files as $file) {
+            if ($file != "." && $file != "..") $success = $success && rrm("$dir/$file");
+        }
+        return $success && rmdir($dir);
+    } else if (file_exists($dir)) {
+        return unlink($dir);
+    } else {
+        return false;
+    }
+}
+
+function rcp($src, $dst) {
+    if (file_exists($dst)) {
+        if (!rrm($dst)) return false;
+    }
+    if (is_dir($src)) {
+        if (!mkdir($dst, 0744)) return false;
+        $success = true;
+        $files = scandir($src);
+        foreach ($files as $file) {
+            if ($file != "." && $file != "..") $success = $success && rcp("$src/$file", "$dst/$file");
+        }
+        return $success;
+    } else if (file_exists($src)) {
+        return copy($src, $dst);
+    } else {
+        return false;
+    }
+}

@@ -123,7 +123,6 @@ function show_resource_form($edit, $rid=NULL) {
     <input type="button" onclick="manageResource()" id="manage-resource-btn" value="<?php echo $edit ? "Edit resource" : "Add resource" ; ?>" />
    </form>
 <?php
-    unset($_SESSION["sticky"]);
 }
 
 function manage_resource($file, $values, $edit) {
@@ -172,11 +171,12 @@ function manage_resource($file, $values, $edit) {
         if (!$r) add_error(mysqli_error($dbc));
     }
 
+    $tmps = array();
     $type = $file_present ? get_type($file, MAX_RESOURCE_FILE_SIZE, RESOURCE_TYPES) : NULL;
+    $path = resource_upload_path($rid, $type);
     if (!errors_occurred() && $type) {
-        if (!move_uploaded_file($file["tmp_name"], resource_upload_path($rid, $type))) {
-            add_error("Failed to upload resource");
-        } else {
+        $tmps = file_ops(array(array("type" => "mv upload", "file" => $file, "path" => $path)));
+        if ($tmps) {
             $url = "https://uniform.ml/console/resources/resource/upload?rid=$rid";
         }
     }
@@ -185,19 +185,12 @@ function manage_resource($file, $values, $edit) {
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
 
-    $_SESSION["sticky"]["url"] = $url;
-
     if (errors_occurred()) {
-        mysqli_rollback($dbc);
-    } else {
-        if (mysqli_commit($dbc)) {
-            if ($edit) set_success("Updated $name");
-            else set_success("Added $name");
-            $_SESSION["redirect"] = "/console/resources/resource?rid=$rid";
-        } else {
-            add_error("Commit failed");
-            mysqli_rollback($dbc);
-        }
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        if ($edit) set_success("Updated $name");
+        else set_success("Added $name");
+        $_SESSION["redirect"] = "/console/resources/resource?rid=$rid";
     }
 }
 
@@ -219,15 +212,19 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
             $types[$img["tmp_name"]] = $type;
         }
     }
+    $tmps = array();
     if (!errors_occurred()) {
         $ar_id = empty($max["max_ar_id"]) ? 0 : $max["max_ar_id"];
         foreach ($trigger_images as $img) {
             $ar_id++;
             $ext = get_subtype($types[$img["tmp_name"]]);
-            if (!copy($img["tmp_name"], "/var/www/zib/books/images/$isbn/$ar_id.$ext")) {
-                add_error("Failed to copy trigger image");
-                break;
+            $cp_upload_op = array("type" => "cp upload", "file" => $img, "path" => "/var/www/zib/books/images/$isbn/$ar_id.$ext");
+            $this_tmp = file_ops(array($cp_upload_op));
+            if (!$this_tmp) break;
+            foreach ($this_tmp as $tmp => $path) {
+                $tmps[$tmp] = $path;
             }
+
             foreach ($resources as $rid) {
                 $rid = sanitise($rid);
                 $q = "INSERT IGNORE INTO ar_resource_link (isbn, rid, ar_id, trigger_type) VALUES ('$isbn', $rid, $ar_id, '$type')";
@@ -271,18 +268,9 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     }
 
     if (errors_occurred()) {
-        if (!mysqli_rollback($dbc)) {
-            add_error("Rollback failed");
-        }
-    } else {
-        if (!mysqli_commit($dbc)) {
-            add_error("Commit failed");
-            if (!mysqli_rollback($dbc)) {
-                add_error("Rollback failed");
-            }
-        } else {
-            if ($linked) set_success("Successfully linked resources to book");
-        }
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        if ($linked) set_success("Successfully linked resources to book");
     }
 }
 ?>

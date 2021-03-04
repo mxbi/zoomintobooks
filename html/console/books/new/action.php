@@ -8,8 +8,4 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
     manage_book($_POST, $_FILES["book"], false);
 }
 
-if (!errors_occurred()) {
-    header("Location: " . $_SESSION["redirect"]);
-} else {
-    json_status();
-}
+json_status();

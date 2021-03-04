@@ -167,81 +167,48 @@ function manage_book($values, $file, $edit) {
         if (!$r) add_error(mysqli_error($dbc));
     }
 
+    $tmps = array();
     if (!errors_occurred()) {
-        if ($file_present) {
-            $cover = generate_cover($file, $type, $isbn);
-            $upload = upload_book($file, $type, $isbn);
-            $images = extract_images($file, $type, $isbn);
-            if (!$cover || !$upload || !$images) add_error("Failed to upload book");
+        if (!$edit && $file_present) {
+            $input = $file['tmp_name'];
+            $output = book_cover_path_no_ext($isbn);
+            $cover_cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to 128";
+            $cover_op = array("type" => "cmd", "cmd" => $cover_cmd, "error" => "Failed to generate cover", "path" => book_cover_path($isbn), "file" => $file);
+
+            $upload_op = array("type" => "mv upload", "file" => $file, "path" => book_upload_path($isbn, $type));
+
+            $img_dir = book_images_path($isbn);
+            $make_img_dir_op = array("type" => "mkdir", "path" => $img_dir, "permission" => 0744);
+
+            $ops = array($cover_op, $upload_op, $make_img_dir_op);
+
+            $tmps = file_ops($ops);
         } else if ($edit && $new_isbn !== $isbn) { // Editing ISBN without changing file
-            $success = rename(book_cover_path($isbn), book_cover_path($new_isbn));
-            if (!$success) add_error("Failed to move cover");
-            $old_upload_path = book_upload_path($isbn, $type);
-            $new_upload_path = book_upload_path($new_isbn, $type);
-            $success = $success && rename($old_upload_path, $new_upload_path);
-            if (!$success) add_error("Failed to move uploaded file");
+            $cp_cover_op = array("type" => "cp", "src" => book_cover_path($isbn), "path" => book_cover_path($new_isbn));
+            $rm_cover_op = array("type" => "rm", "path" => book_cover_path($isbn));
+            $cp_upload_op = array("type" => "cp", "src" => book_upload_path($isbn, $type), "path" => book_upload_path($new_isbn, $type));
+            $rm_upload_op = array("type" => "rm", "path" => book_upload_path($isbn, $type));
+            $cp_ar_op = array("type" => "cp", "src" => ar_blob_output_path($isbn), "path" => ar_blob_output_path($new_isbn));
+            $rm_ar_op = array("type" => "rm", "path" => ar_blob_output_path($isbn));
+            $cp_imgs_op = array("type" => "cp", "src" => book_images_path($isbn), "path" => book_images_path($new_isbn));
+            $rm_imgs_op = array("type" => "rm", "path" => book_images_path($isbn));
+
+            $ops = array($cp_cover_op, $rm_cover_op, $cp_upload_op, $rm_upload_op, $cp_ar_op, $rm_ar_op, $cp_imgs_op, $rm_imgs_op);
+            $tmps = file_ops($ops);
         }
     }
 
     if (errors_occurred()) {
-        rollback_book($isbn, $type);
-    } else {
-        if (mysqli_commit($dbc)) {
-            if ($edit) {
-                set_success("Updated $title");
-                $_SESSION["redirect"] = "/console/books/book?isbn=$new_isbn";
-            } else {
-                set_success("Added $title");
-                $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
-            }
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        if ($edit) {
+            set_success("Updated $title");
+            $_SESSION["redirect"] = "/console/books/book?isbn=$new_isbn";
         } else {
-            add_error("Commit failed");
-            rollback_book($isbn, $type);
+            set_success("Added $title");
+            $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
         }
     }
-}
-
-function generate_cover($file, $type, $isbn) {
-    $input = escapeshellarg($file['tmp_name']);
-    $output = escapeshellarg(book_cover_path_no_ext($isbn));
-    $size = 128;
-    $cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to $size";
-    $success = exec($cmd);
-    if ($success === false) {
-        add_error("Failed to generate cover");
-    } else {
-        $success = true;
-    }
-    return $success;
-}
-
-function upload_book($file, $type, $isbn) {
-    return move_uploaded_file($file["tmp_name"], book_upload_path($isbn, $type));
-}
-
-function extract_images($file, $type, $isbn) {
-    $input = escapeshellarg(book_upload_path($isbn, $type));
-    $dir = book_images_path($isbn);
-    if (!mkdir($dir, 0774)) {
-        add_error("Failed to make image directory $dir");
-        return false;
-    } else {
-        return true;
-        /*$escdir = escapeshellarg($dir);
-        $cmd = "cd $escdir && /usr/bin/pdfimages -png $input image";
-        $success = exec($cmd);
-        if ($success === false) add_error("Failed to extract images");
-        else $success = true;
-        return $success;*/
-    }
-}
-
-function rollback_book($isbn, $type) {
-    // TODO: rollback to previous uploads if editing fails rather than deleting
-    global $dbc;
-    if (!mysqli_rollback($dbc)) add_error("Database rollback failed");
-    //if (!unlink(book_cover_path($isbn))) add_error("Book cover rollback failed");
-    //if (!unlink(book_upload_path($isbn, $type))) add_error("Book upload rollback failed");
 }
 
 function update_blobs($isbn) {
@@ -250,24 +217,14 @@ function update_blobs($isbn) {
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
 
-    generate_ar_blob($isbn);
+    $tmps = generate_ar_blob($isbn);
     if (!errors_occurred()) generate_ocr_blob($isbn);
 
     if (errors_occurred()) {
-        if (!mysqli_rollback($dbc)) {
-            add_error("Database rollback failed");
-        }
-    } else {
-        if (mysqli_commit($dbc)) {
-            set_success("Generated blobs");
-        } else {
-            add_error("Database commit failed");
-        }
-        if (!mysqli_rollback($dbc)) {
-            add_error("Database rollback failed");
-        }
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        set_success("Generated blobs");
     }
-
 }
 
 function generate_image_list($isbn) {
@@ -286,14 +243,16 @@ function generate_image_list($isbn) {
 
 function generate_ar_blob($isbn) {
     global $dbc;
-    $imglist = escapeshellarg(generate_image_list($isbn));
-    $out_path = escapeshellarg(ar_blob_output_path($isbn));
+    $imglist = generate_image_list($isbn);
+    $out_path = ar_blob_output_path($isbn);
     $cmd = "/usr/bin/arcoreimg build-db --input_image_list_path=$imglist --output_db_path=$out_path";
-    $output = null;
-    $ret = null;
-    $success = exec($cmd, $output, $ret);
-    $out_str = mysqli_real_escape_string($dbc, implode("\n", $output));
-    if ($success) {
+    $arcoreimg_op = array("type" => "cmd", "cmd" => $cmd, "path" => $out_path, "error" => "Failed to generate AR blob");
+    $ops = array($arcoreimg_op);
+    $tmps = file_ops($ops);
+
+    unlink($imglist);
+
+    if (!errors_occurred()) {
         $f = fopen($out_path, "r");
         $ar_blob = mysqli_real_escape_string($dbc, fread($f, filesize($out_path)));
         fclose($f);
@@ -302,9 +261,8 @@ function generate_ar_blob($isbn) {
         if (!$r) {
             add_error(mysqli_error($dbc));
         }
-    } else {
-        add_error("Failed to generate AR blob (error: $ret)\n$out_str $cmd");
     }
+    return $tmps;
 }
 
 function generate_ocr_blob($isbn) {
