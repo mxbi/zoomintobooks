@@ -3,18 +3,33 @@ package com.uniform.zoomintobooks;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Output;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.uniform.zoomintobooks.common.helpers.BookResource;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
@@ -140,6 +155,125 @@ public class ResourceHandlerActivity extends AppCompatActivity {
             outputStream.close();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private FileInputStream Open(String directory) throws FileNotFoundException {
+        FileInputStream inputStream = null;
+
+        inputStream = openFileInput(directory);
+
+        return inputStream;
+    }
+
+    private class UrlToUri<S,T> extends HashMap<S,T>{
+        int filename=90;
+        @Nullable
+        @Override
+        public T get(@Nullable Object key) {
+            readFileInStore();
+            return super.get(key);
+        }
+
+        @Nullable
+        @Override
+        public T put(S key, T value) {
+            T t = super.put(key, value);
+            saveFileInStore();
+            return t;
+        }
+
+        public String newUri(){
+            readFileInStore();
+            this.filename++;
+            String s = String.valueOf(filename);
+            saveFileInStore();
+            return s;
+        }
+    }
+    private UrlToUri<String,String> urlToUri = new UrlToUri<String, String>();
+
+    static String FILE_IN_STORE_DIRECTORY = "fileInStore";
+
+    private void readFileInStore(){
+        FileInputStream is = null;
+        try {
+            is = Open(FILE_IN_STORE_DIRECTORY);
+            try {
+                ObjectInputStream os = new ObjectInputStream(is);
+                this.urlToUri = (UrlToUri<String, String>) os.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            byte[] bytes = {};
+            Save(FILE_IN_STORE_DIRECTORY, bytes);
+            e.printStackTrace();
+        }
+    }
+
+    private void saveFileInStore(){
+        OutputStream os = null;
+        try {
+            os = openFileOutput(FILE_IN_STORE_DIRECTORY, Context.MODE_PRIVATE);
+            ObjectOutputStream ois = new ObjectOutputStream(os);
+            ois.writeObject(urlToUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public InputStream getImageData(String imgLink) {
+        InputStream is = null;
+        try {
+            if(urlToUri.containsKey(imgLink)){
+                String uri = urlToUri.get(imgLink);
+                is = Open(uri);
+            }else{
+                is = getImageDataNetwork(imgLink);
+
+                // save internet file to local file
+                BufferedInputStream bis = new BufferedInputStream(is);
+                FileOutputStream outputStream;
+                try {
+                    String uri = urlToUri.newUri();
+                    outputStream = openFileOutput(uri, Context.MODE_PRIVATE);
+                    byte[] buf = new byte[8192];
+                    int length;
+                    while ((length = bis.read(buf)) > 0) {
+                        outputStream.write(buf, 0, length);
+                    }
+                    outputStream.close();
+                    bis.reset();
+                    is = bis;
+                    urlToUri.put(imgLink, uri);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            is = getImageDataNetwork(imgLink);
+        } catch (IOException e) {
+            is = getImageDataNetwork(imgLink);
+        }
+        return is;
+    }
+
+    public InputStream getImageDataNetwork(String imgLink) {
+
+        try {
+            URL url = new URL(imgLink);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            InputStream is = conn.getInputStream();
+
+            return is;
+        }
+        catch (IOException e) {
+            return null;
         }
     }
 }
