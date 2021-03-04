@@ -199,9 +199,14 @@ function manage_resource($file, $values, $edit) {
 
 function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit) {
     global $dbc;
-    $isbn = sanitise($isbn);
-    if (!authorised("edit book", array("isbn" => $isbn))) return false;
-    // TODO: validation, sticky form
+    if (!authorised("edit book", array("isbn" => $isbn))) return;
+
+    $isbn = is_valid_isbn(sanitise($isbn));
+    if (!$isbn) add_error("Invalid ISBN");
+    if (empty($resources)) add_error("No resources selected");
+    if (empty($trigger_images) && empty($pages)) add_error("No triggers specified");
+
+    if (errors_occurred()) return;
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
     $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'", true);

@@ -130,7 +130,8 @@ function manage_book($values, $file, $edit) {
     $file_present = !empty($file) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
     if (!$edit && !$file_present) add_error("No file uploaded");
-    if (!is_valid_isbn($isbn)) add_error("ISBN is invalid");
+    if (!$edit && !($isbn = is_valid_isbn($isbn))) add_error("ISBN is invalid");
+    if ($new_isbn !== NULL && !($new_isbn = is_valid_isbn($new_isbn))) add_error("New ISBN is invalid");
     if (is_blank($title)) add_error("Title is blank");
     if (is_blank($author)) add_error("Author is blank");
     if (!is_pos_int($edition)) add_error("Edition is invalid");
@@ -214,6 +215,12 @@ function manage_book($values, $file, $edit) {
 function update_blobs($isbn) {
     global $dbc;
     if (!authorised("edit book", array("isbn" => $isbn))) return;
+
+    $isbn = is_valid_isbn(sanitise($isbn));
+    if (!$isbn) {
+        add_error("Invalid ISBN");
+        return;
+    }
 
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
 

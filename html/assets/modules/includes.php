@@ -9,6 +9,7 @@ define("MAX_TRIGGER_IMAGE_FILE_SIZE", 50000000);
 define("BOOK_TYPES", array("pdf"));
 define("RESOURCE_TYPES", array("jpeg", "png", "gif", "webm", "tiff", "mp3"));
 define("TRIGGER_IMAGE_TYPES", array("jpeg", "png", "tiff"));
+define("DISPLAY_MODES", array("overlay", "image", "audio", "video", "webpage"));
 
 define("UPLOAD_ERROR_MSGS", array("unknown error", "file size exceeds php.ini directive", "file size exceeds MAX_FILE_SIZE", "file only partially uploaded", "no file uploaded", "missing temporary directory", "disk write failed", "blocked by PHP extension"));
 

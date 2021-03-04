@@ -23,23 +23,50 @@ function is_blank($s) {
 }
 
 function is_valid_url($url) {
-    // TODO
-    return true;
+    return filter_var($url, FILTER_VALIDATE_URL) !== false;
 }
 
 function is_valid_resource_display_mode($type) {
-    // TODO
-    return true;
+    return in_array($type, DISPLAY_MODES);
 }
 
 function is_valid_isbn($isbn) {
-    // TODO
-    return true;
+    $isbn = preg_replace('/[^\d]/', '', $isbn);
+    $sum = 0;
+    $len = strlen($isbn);
+    $check = "";
+    if ($len === 10) {
+        $digits = str_split(substr($isbn, 0, 9));
+
+        foreach ($digits as $index => $digit) {
+            $sum += (10 - $index) * $digit;
+        }
+
+        $check = 11 - ($sum % 11);
+
+        // 10 -> X, 11 -> 0
+        if ($check == 10) $check = "X";
+        else if ($check == 11) $check = "0";
+    } else if ($len === 13) {
+        $digits = str_split(substr($isbn, 0, 12));
+        foreach($digits as $index => $digit) {
+            $sum += ($index % 2) ? $digit * 3 : $digit;
+        }
+        $check = (10 - $sum % 10);
+        if ($check == 10) $check = "0";
+    } else {
+        return false;
+    }
+
+    if ($check == substr($isbn, -1)) {
+        return $isbn;
+    } else {
+        return false;
+    }
 }
 
 function is_pos_int($s) {
-    // TODO
-    return true;
+    return is_numeric($s) && $s > 0 && $s == round($s);
 }
 
 function sanitise($s) {
