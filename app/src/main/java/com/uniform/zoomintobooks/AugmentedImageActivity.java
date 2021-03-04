@@ -400,8 +400,11 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           btn.setOnClickListener(v -> {
             //TODO: on click, open a new activity.
               currentResource = ARResources.get(augmentedImage.getIndex());
+              AugmentedImageState augmentedImageState;
+              InputStream is = ZoomUtils.getImageData(currentResource.getURL());
+              augmentedImageState = new AugmentedImageState(augmentedImage, true, is, this);
               Intent i = new Intent(this, ResourceHandlerActivity.class);
-              i.putExtra("url", currentResource.getURL());
+              i.putExtra("bitmap", augmentedImageState.getBmp());
               i.putExtra("type", currentResource.getType());
               i.putExtra("action", "display");
               startActivity(i);

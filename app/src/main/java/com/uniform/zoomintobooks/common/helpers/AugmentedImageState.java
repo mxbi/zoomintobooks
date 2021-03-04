@@ -36,6 +36,10 @@ public class AugmentedImageState {
 
     }
 
+    public Bitmap getBmp(){
+        return bmp;
+    }
+
     public AugmentedImage getAugImg() {
         return augImg;
     }

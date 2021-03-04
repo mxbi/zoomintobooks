@@ -55,8 +55,14 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
         imageView = (ImageView) findViewById(R.id.postImage);
         Intent intent = getIntent();
-        Uri uri = (Uri) getIntent().getExtras().get("uri");
-        imageView.setImageURI(uri);
+
+        if (intent.hasExtra("uri")){
+            Uri uri = (Uri) getIntent().getExtras().get("uri");
+            imageView.setImageURI(uri);
+        } else if (intent.hasExtra("bitmap")){
+            Bitmap bmp = (Bitmap) intent.getExtras().get("bitmap");
+            imageView.setImageBitmap(bmp);
+        }
 
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
