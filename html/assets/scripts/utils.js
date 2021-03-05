@@ -104,6 +104,8 @@ function request(triggerId, action, data, callback="", args={}) {
 function askUser(msg, callback, args) {
     var body = document.body;
     body.style.overflow = "hidden";
+    var dialogBackground = document.createElement("div");
+    dialogBackground.classList.add("dialog-bg");
     var dialogBox = document.createElement("div");
     dialogBox.classList.add("dialog");
     var msgP = document.createElement("p");
@@ -111,15 +113,16 @@ function askUser(msg, callback, args) {
     var yesBtn = document.createElement("button");
     yesBtn.textContent = "Yes";
     yesBtn.classList.add("yes-btn");
-    yesBtn.onclick = function () { dialogBox.parentNode.removeChild(dialogBox); window[callback](args); body.style.overflow = "auto"; };
+    yesBtn.onclick = function () { dialogBackground.parentNode.removeChild(dialogBackground); window[callback](args); body.style.overflow = "auto"; };
     var noBtn = document.createElement("button");
     noBtn.textContent = "No";
     noBtn.classList.add("no-btn");
-    noBtn.onclick = function () { dialogBox.parentNode.removeChild(dialogBox); body.style.overflow = "auto"; };
+    noBtn.onclick = function () { dialogBackground.parentNode.removeChild(dialogBackground); body.style.overflow = "auto"; };
     dialogBox.appendChild(msgP);
     dialogBox.appendChild(noBtn);
     dialogBox.appendChild(yesBtn);
-    body.appendChild(dialogBox);
+    dialogBackground.appendChild(dialogBox);
+    body.appendChild(dialogBackground);
 }
 
 function submitResourceLink() {

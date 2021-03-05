@@ -211,11 +211,20 @@ h2 {
     margin-left: 10px;
 }
 
-.card-list-delete-btn {
+.yes-btn {
+    background-color: #52974E;
+}
+
+.card-list-delete-btn, .no-btn {
     background-color: #97574E;
 }
 
-.card-list-delete-btn:hover {
+.yes-btn:hover {
+    background-color: #64AD60;
+    box-shadow: 0 0 3px #666;
+}
+
+.card-list-delete-btn:hover, .no-btn:hover {
     background-color: #AD6960;
     box-shadow: 0 0 3px #666;    
 }
@@ -242,4 +251,14 @@ h2 {
 .dialog button {
     margin-left: 10px;
     float: right;
+}
+
+.dialog-bg {
+    background-color: rgba(64, 64, 64, 0.7);
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: fixed;
+    left: 0;
+    top: 0;
 }
