@@ -172,15 +172,17 @@ function manageResource() {
 
 function manageUser() {
     var usernameInput = document.getElementById("username-input");
+    var newUsernameInput = document.getElementById("new-username-input");
     var passwordInput = document.getElementById("password-input");
     var password2Input = document.getElementById("password2-input");
     var publisherInput = document.getElementById("publisher-input");
 
     var data = new FormData();
     data.append("username", usernameInput.value);
+    if (newUsernameInput) data.append("new_username", newUsernameInput.value);
     data.append("password", passwordInput.value);
     data.append("password2", password2Input.value);
-    data.append("publisher", publisherInput.value);
+    if (publisherInput) data.append("publisher", publisherInput.value);
     request("manage-user-btn", "action.php", data);
 }
 

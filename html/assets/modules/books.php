@@ -62,7 +62,7 @@ function show_book_form($edit, $isbn=NULL) {
         }
     }
 ?>
-   <form method="POST" enctype="multipart/form-data">
+   <form enctype="multipart/form-data">
     <input type="hidden" name="MAX_FILE_SIZE" value="100000000" />
 <?php
 if (!$edit) { ?>
@@ -103,7 +103,6 @@ if (!$edit) { ?>
     <input id="manage-book-btn" type="button" onclick="manageBook()" value="<?php echo $edit ? "Edit book" : "Add book" ; ?>" />
    </form>
 <?php
-    unset($_SESSION["sticky"]);
 }
 
 function manage_book($values, $file, $edit) {

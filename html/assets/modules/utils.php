@@ -208,7 +208,7 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "view user":
         case "edit user":
-            $authorised = $is_admin || $params["username"] === $_SESSION["username"];
+            $authorised = user_exists($params["username"]) && can_edit_user($params["username"]);
             break;
 
         case "view publisher":
