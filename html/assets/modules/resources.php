@@ -267,4 +267,42 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
         $_SESSION["redirect"] = "/console/books/book?isbn=$isbn";
     }
 }
-?>
+
+function unlink_resource($isbn, $rid) {
+    global $dbc;
+    if (!authorised("edit book", array("isbn" => $isbn))) return;
+
+    $isbn = is_valid_isbn(sanitise($isbn));
+    if (!$isbn) add_error("Invalid ISBN");
+    if (!resource_exists($rid)) add_error("Invalid rid");
+
+    if (errors_occurred()) return;
+
+    // TODO: delete ar trigger images if not used by other resource links
+
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q1 = "DELETE FROM resource_instance WHERE isbn='$isbn' AND rid=$rid";
+    $q2 = "DELETE FROM ar_resource_link WHERE isbn='$isbn' AND rid=$rid";
+    $q3 = "DELETE FROM ocr_resource_link WHERE isbn='$isbn' AND rid=$rid";
+
+    $r1 = mysqli_query($dbc, $q1);
+    if (!$r1) {
+        add_error(mysqli_error($dbc));
+    } else {
+        $r2 = mysqli_query($dbc, $q2);
+        if (!$r2) {
+            add_error(mysqli_error($dbc));
+        } else {
+            $r3 = mysqli_query($dbc, $q3);
+            if (!$r3) add_error(mysqli_error($dbc));
+        }
+    }
+
+    if (errors_occurred()) {
+        rollback($dbc, array());
+    } else if (commit($dbc, array())) {
+        $name = fetch_resource($rid)["name"];
+        $title = fetch_book($isbn)["title"];
+        set_success("Successfully unlinked $name from $title");
+    }
+}

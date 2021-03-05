@@ -73,7 +73,12 @@ function clearStatus() {
     while (success[0]) success[0].parentNode.removeChild(success[0]);
 }
 
-function request(triggerId, action, data) {
+function removeUnlinkedResource(response, args) {
+    var unlinkedResource = document.getElementById("resource-container-" + args["rid"]);
+    unlinkedResource.parentNode.removeChild(unlinkedResource);
+}
+
+function request(triggerId, action, data, callback="", args={}) {
     var trigger = document.getElementById(triggerId);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", action, true);
@@ -85,12 +90,36 @@ function request(triggerId, action, data) {
             if (status.redirect !== undefined && status.redirect !== "") {
                 window.location.href = status.redirect;
             } else {
+                if (callback != "") {
+                    window[callback](this.response, args);
+                }
                 displayStatus(JSON.parse(this.response));
             }
         }
     };
     trigger.disabled = true;
     xhr.send(data);
+}
+
+function askUser(msg, callback, args) {
+    var body = document.body;
+    body.style.overflow = "hidden";
+    var dialogBox = document.createElement("div");
+    dialogBox.classList.add("dialog");
+    var msgP = document.createElement("p");
+    msgP.textContent = msg;
+    var yesBtn = document.createElement("button");
+    yesBtn.textContent = "Yes";
+    yesBtn.classList.add("yes-btn");
+    yesBtn.onclick = function () { dialogBox.parentNode.removeChild(dialogBox); window[callback](args); body.style.overflow = "auto"; };
+    var noBtn = document.createElement("button");
+    noBtn.textContent = "No";
+    noBtn.classList.add("no-btn");
+    noBtn.onclick = function () { dialogBox.parentNode.removeChild(dialogBox); body.style.overflow = "auto"; };
+    dialogBox.appendChild(msgP);
+    dialogBox.appendChild(noBtn);
+    dialogBox.appendChild(yesBtn);
+    body.appendChild(dialogBox);
 }
 
 function submitResourceLink() {
@@ -196,4 +225,13 @@ function managePublisher() {
     if (newPublisherInput) data.append("new_publisher", newPublisherInput.value);
     data.append("email", emailInput.value);
     request("manage-publisher-btn", "action.php", data);
+}
+
+function unlinkResource(args) {
+    var isbn = args["isbn"];
+    var rid = args["rid"];
+    var data = new FormData();
+    data.append("isbn", isbn);
+    data.append("rid", rid);
+    request("unlink-resource-btn-" + rid, "unlink.php", data, "removeUnlinkedResource", {"rid": rid});
 }

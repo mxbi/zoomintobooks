@@ -6,7 +6,6 @@ $book = fetch_book($isbn);
 $title = ($book === NULL) ? "Unknown book" : $book["title"];
 
 make_header($title, "", "");
-echo "   <script src=\"/assets/scripts/utils.js\"></script>\n";
 echo "   <h2>$title</h2>\n";
 echo "   <main>\n";
 
@@ -46,9 +45,9 @@ if ($authorised) {
                 $trigger .= " " . $ocr_count . ($ocr_count == 1 ? " page" : " pages");
             }
 
-            echo "   <div class=\"card-list-item\">\n";
+            echo "   <div class=\"card-list-item\" id=\"resource-container-$rid\">\n";
             echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
-            echo "    <button class=\"card-list-btn card-list-delete-btn\" onclick=\"unlink-resource('$isbn', $rid)\">Unlink</button>";
+            echo "    <button class=\"card-list-btn card-list-delete-btn\" id=\"unlink-resource-btn-$rid\" onclick=\"askUser('Are you sure you want to unlink this resource?', 'unlinkResource', {'isbn': '$isbn', 'rid': $rid})\">Unlink</button>";
             echo "    <a class=\"button card-list-btn\" href=\"/console/resources/resource?rid=$rid\">Edit</a>";
             echo "    <h4>$name</h4>\n";
             echo "    <a href=\"$url\">$url</a>\n";

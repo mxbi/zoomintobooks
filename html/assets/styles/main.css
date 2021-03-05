@@ -148,12 +148,6 @@ h2 {
     background-color: #EEE;
 }
 
-a.card-list-item:hover {
-    background-color: #FFF;
-    border: 1px solid #4E7696;
-    box-shadow: 0 0 3px #666;
-}
-
 .card-list-item img.preview {
     float: left;
     margin-right: 10px;
@@ -231,4 +225,21 @@ a.card-list-item:hover {
     border: 1px solid #213D54;
     overflow-y: auto;
     box-shadow: 0 0 3px #666 inset;
+}
+
+.dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #666;
+    background-color: #EEE;
+    padding: 20px;
+    border: 1px solid #213D54;
+    border-radius: 5px;
+}
+
+.dialog button {
+    margin-left: 10px;
+    float: right;
 }
