@@ -22,6 +22,8 @@ label {
 }
 
 input[type="button"], input[type="submit"], button, .button {
+    font-family: open-sans, sans;
+    font-size: 0.9em;
     color: white;
     background-color: #213D54;
     text-decoration: none;

@@ -72,6 +72,10 @@ h2 {
     text-align: center;
 }
 
+/*
+ * Cards
+ */
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -141,10 +145,11 @@ h2 {
     padding: 20px;
     display: block;
     overflow: hidden;
+    background-color: #EEE;
 }
 
-.card-list-item:hover {
-    background-color: #EEE;
+a.card-list-item:hover {
+    background-color: #FFF;
     border: 1px solid #4E7696;
     box-shadow: 0 0 3px #666;
 }
@@ -170,9 +175,31 @@ h2 {
     cursor: pointer;
 }
 
+.selectable-card-list-item {
+    cursor: pointer;
+}
+
+.selectable-card-list-item:hover {
+    background-color: #FFF;
+}
+
+.selectable-card-list-item.selected-card-list-item:hover {
+    background-color: #4E7696;
+}
+
 .card-list-add-item, .selected-card-list-item {
     background-color: #213D54;
     color: #FFF;
+}
+
+.selected-card-list-item .card-list-btn {
+    background-color: #DDD;
+    color: #213D54;
+}
+
+.selected-card-list-item .card-list-btn:hover {
+    background-color: #FFF;
+    box-shadow: 0 0 3px #FFF;
 }
 
 .card-list-add-item:hover, .selected-card-list-item:hover {
@@ -183,6 +210,20 @@ h2 {
     height: 50px;
     vertical-align: middle;
     margin-right: 15px;
+}
+
+.card-list-btn {
+    float: right;
+    margin-left: 10px;
+}
+
+.card-list-delete-btn {
+    background-color: #97574E;
+}
+
+.card-list-delete-btn:hover {
+    background-color: #AD6960;
+    box-shadow: 0 0 3px #666;    
 }
 
 .limited-height-scrollable {

@@ -37,14 +37,24 @@ if ($authorised) {
                 $pages[] = $ocr_page["page"];
             }
             $ocr_count = count($ocr_pages);
-            echo "   <a class=\"card-list-item\" href=\"/console/resources/resource?rid=$rid\">\n";
+            $trigger = "";
+            if ($ar_count > 0) {
+                $trigger .= $ar_count . ($ar_count == 1 ? " image" : " images");
+                if ($ocr_count > 0) $trigger .= " and";
+            }
+            if ($ocr_count > 0) {
+                $trigger .= " " . $ocr_count . ($ocr_count == 1 ? " page" : " pages");
+            }
+
+            echo "   <div class=\"card-list-item\">\n";
             echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
+            echo "    <button class=\"card-list-btn card-list-delete-btn\" onclick=\"unlink-resource('$isbn', $rid)\">Unlink</button>";
+            echo "    <a class=\"button card-list-btn\" href=\"/console/resources/resource?rid=$rid\">Edit</a>";
             echo "    <h4>$name</h4>\n";
-            echo "    <p>$url</p>\n";
+            echo "    <a href=\"$url\">$url</a>\n";
             echo "    <p>Displayed as $display</p>\n";
-            echo "    <p>Triggered by $ar_count " . ($ar_count == 1 ? "image" : "images") . "</p>\n";
-            echo "    <p>Triggered by " . count($pages) . ($ocr_count == 1 ? " page: " : ($ocr_count == 0 ? " pages" : " pages: ")) . implode(", ", $pages) . "</p>\n";
-            echo "   </a>\n";
+            echo "    <p>Triggered by $trigger</p>\n";
+            echo "   </div>\n";
         }
     }
 }

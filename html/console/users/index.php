@@ -22,13 +22,14 @@ if ($authorised) {
         $username = $user["username"];
         $type = $user["user_type"];
         $publisher = $user["publisher"];
-        echo "   <a class=\"card-list-item\" href=\"user?username=$username\">\n";
+        echo "   <div class=\"card-list-item\">\n";
+        echo "    <a href=\"user?username=$username\" class=\"button card-list-btn\">Edit</a>\n";
         echo "    <h4>$username</h4>\n";
         echo "    <p>" . ucfirst($type) . " account</p>\n";
         if ($publisher) {
-            echo "    <p>Publisher: " . $publisher["publisher"] . "</p>\n";
+            echo "    <p>Publisher: $publisher</p>\n";
         }
-        echo "   </a>\n";
+        echo "   </div>\n";
     }
 } ?>
   </main>

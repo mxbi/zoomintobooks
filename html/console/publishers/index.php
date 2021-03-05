@@ -23,10 +23,11 @@ if ($authorised) {
         // TODO: show preview of users and books associated with publisher
         $name = $publisher["publisher"];
         $email = $publisher["email"];
-        echo "   <a class=\"card-list-item\" href=\"publisher?publisher=$name\">\n";
+        echo "   <div class=\"card-list-item\">\n";
+        echo "    <a class=\"button card-list-btn\" href=\"publisher?publisher=$name\">Edit</a>\n";
         echo "    <h4>$name</h4>\n";
-        echo "    <p>$email</p>\n";
-        echo "   </a>\n";
+        echo "    <a href=\"mailto:$email\">$email</a>\n";
+        echo "   </div>\n";
     }
 } ?>
   </main>

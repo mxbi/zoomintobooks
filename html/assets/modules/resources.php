@@ -45,22 +45,6 @@ function was_resource_uploaded($rid) {
     return get_resource_mime_type($rid) ? true : false;
 }
 
-function show_resources($resources)  {
-    if (!authorised("list resources")) return;
-    foreach ($resources as $resource) {
-        $rid = $resource["rid"];
-        $name = $resource["name"];
-        $url = $resource["url"];
-        $display = $resource["display"];
-        echo "   <a class=\"card-list-item\" href=\"resource?rid=$rid\">\n";
-        echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
-        echo "    <h4>$name</h4>\n";
-        echo "    <p>$url</p>\n";
-        echo "    <p>Displayed as $display</p>\n";
-        echo "   </a>\n";
-    }
-}
-
 function can_edit_resource($rid) {
     global $is_admin;
     if ($is_admin) return true;
@@ -171,8 +155,8 @@ function manage_resource($file, $values, $edit) {
 
     $tmps = array();
     $type = $file_present ? get_type($file, MAX_RESOURCE_FILE_SIZE, RESOURCE_TYPES) : NULL;
-    $path = resource_upload_path($rid, $type);
     if (!errors_occurred() && $type) {
+        $path = resource_upload_path($rid, $type);
         $tmps = file_ops(array(array("type" => "mv upload", "file" => $file, "path" => $path)));
         if ($tmps) {
             $url = "https://uniform.ml/console/resources/resource/upload?rid=$rid";

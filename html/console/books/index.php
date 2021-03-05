@@ -22,13 +22,18 @@ if ($authorised) {
         $title = $book["title"];
         $author = $book["author"];
         $edition = $book["edition"];
+        $publisher = $book["publisher"];
         $resource_count = count_resources($isbn);
-        echo "   <a class=\"card-list-item\" href=\"book?isbn=$isbn\">\n";
-        echo "    <img src=\"book/cover?isbn=$isbn\" class=\"preview\" alt=\"Front cover of $title\" height=\"128\" />\n";
+        echo "   <div class=\"card-list-item\">\n";
+        echo "    <a href=\"book/upload?isbn=$isbn\">\n";
+        echo "     <img src=\"book/cover?isbn=$isbn\" class=\"preview\" alt=\"Front cover of $title\" height=\"128\" />\n";
+        echo "    </a>\n";
+        echo "    <a class=\"button card-list-btn\" href=\"book?isbn=$isbn\">Edit</a>\n";
         echo "    <h4>$title<small> - edition $edition</small></h4>\n";
-        echo "    <p>$author</p>\n";
+        echo "    <p>By <strong>$author</strong></p>\n";
+        if ($is_admin) echo "<p>Published by <strong>$publisher</strong></p>\n";
         echo "    <p>$resource_count resources</p>\n";
-        echo "   </a>\n";
+        echo "   </div>\n";
     }
 } ?>
   </main>
