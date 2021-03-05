@@ -212,9 +212,12 @@ function authorised($action, $params=array(), $errors=true) {
             break;
 
         case "view publisher":
+        case "edit publisher":
+            $authorised = publisher_exists($params["publisher"]) && can_edit_publisher($params["publisher"]);
+            break;
+
         case "add user":
         case "add publisher":
-        case "edit publisher":
         case "list users":
         case "list publishers":
             $authorised = $is_admin;

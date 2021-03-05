@@ -11,13 +11,6 @@ function authenticate($username, $password) {
     }
 }
 
-function publisher_exists($publisher) {
-    $publisher = sanitise($publisher);
-    $c = db_select("SELECT 1 FROM publisher WHERE publisher = '$publisher'", true);
-    $c = $c ? $c : array();
-    return count($c) === 1;
-}
-
 function user_exists($username) {
     if ($username === NULL) return false;
     $username = sanitise($username);
@@ -31,17 +24,6 @@ function can_edit_user($username) {
     return $is_admin || ($_SESSION["username"] == $username);
 }
 
-function can_edit_publisher($publisher) {
-    global $is_admin;
-    return $is_admin;
-}
-
-function fetch_publisher($username) {
-    if (!authorised("view user", array("username" => $username))) return array();
-    $username = sanitise($username);
-    return db_select("SELECT p.* FROM publisher AS p JOIN user AS u ON p.publisher = u.publisher AND u.username = '$username'", true);
-}
-
 function fetch_users() {
     if (!authorised("list users")) return array();
     $username = sanitise($_SESSION["username"]);
@@ -53,13 +35,6 @@ function fetch_user($username) {
     $username = sanitise($username);
     return db_select("SELECT username, publisher, user_type FROM user WHERE username = '$username'", true);
 }
-
-function fetch_publishers() {
-    if (!authorised("list publishers")) return array();
-    $username = sanitise($_SESSION["username"]);
-    return db_select("SELECT * FROM publisher");
-}
-
 
 function manage_user($values, $edit) {
     global $dbc;
@@ -120,28 +95,6 @@ function manage_user($values, $edit) {
     }
 }
 
-function manage_publisher($values, $edit) {
-    global $dbc;
-    $publisher = sanitise($values["publisher"]);
-    $email = sanitise($values["email"]);
-    if ($edit && !authorised("edit publisher", array("publisher" => $publisher))) return;
-    if (!$edit  && !authorised("add publisher")) return;
-
-    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-    $q = "INSERT INTO publisher(publisher, email) VALUES ('$publisher', '$email')";
-    $r = mysqli_query($dbc, $q);
-    if (!$r) {
-        add_error(mysqli_error($dbc));
-    }
-
-    if (errors_occurred()) {
-        rollback($dbc, array());
-    } else if (commit($dbc, array())) {
-        set_success("Created publisher $publisher");
-        $_SESSION["redirect"] = "/console/publishers/";
-    }
-}
-
 function show_user_form($edit, $username = NULL) {
     if ($edit && !authorised("edit user", array("username" => $username))) return;
     if (!$edit  && !authorised("add user")) return;
@@ -190,31 +143,3 @@ if (!$edit) { ?>
    </form>
 <?php
 }
-
-function show_publisher_form($edit, $publisher = NULL) {
-    if ($edit && !authorised("edit publisher", array("publisher" => $publisher))) return;
-    if (!$edit  && !authorised("add publisher")) return;
-
-    $values = array("publisher" => "", "email" => "");
-    if ($edit) {
-        $values = fetch_publisher($publisher);
-        if (empty($values)) {
-            add_error("Failed to load values for $publisher");
-        }
-    }
-?>
-   <form action="action.php" method="POST">
-    <div class="input-container">
-     <label for="publisher">Publisher name</label>
-     <input type="text" name="publisher" id="publisher-input" placeholder="Publisher" value="<?php echo $values["publisher"]; ?>" required="required" />
-    </div>
-    <div class="input-container">
-     <label for="email">Publisher e-mail</label>
-     <input type="email" name="email" id="email-input" placeholder="E-mail" value="<?php echo $values["email"]; ?>" required="required" />
-    </div>
-    <input type="button" id="manage-publisher-btn" onclick="managePublisher()" value="<?php echo $edit ? "Edit publisher" : "Create publisher"; ?>" />
-   </form>
-<?php
-}
-
-?>

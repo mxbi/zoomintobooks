@@ -120,7 +120,7 @@ function manage_book($values, $file, $edit) {
     if ($is_admin) {
         $publisher = sanitise($values["publisher"]);
     } else {
-        $publisher = fetch_publisher($_SESSION["username"])["publisher"];
+        $publisher = fetch_user_publisher($_SESSION["username"])["publisher"];
     }
 
     if (!$edit && !authorised("add book")) return false;

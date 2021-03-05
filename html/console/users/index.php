@@ -17,11 +17,11 @@ if ($authorised) {
    </a>
 <?php
     }
-    $users = fetch_users(); // Load all users by this user
+    $users = fetch_users();
     foreach ($users as $user) {
         $username = $user["username"];
         $type = $user["user_type"];
-        $publisher = fetch_publisher($username);
+        $publisher = $user["publisher"];
         echo "   <a class=\"card-list-item\" href=\"user?username=$username\">\n";
         echo "    <h4>$username</h4>\n";
         echo "    <p>" . ucfirst($type) . " account</p>\n";

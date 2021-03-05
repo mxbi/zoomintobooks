@@ -188,10 +188,12 @@ function manageUser() {
 
 function managePublisher() {
     var publisherInput = document.getElementById("publisher-input");
+    var newPublisherInput = document.getElementById("new-publisher-input");
     var emailInput = document.getElementById("email-input");
 
     var data = new FormData();
     data.append("publisher", publisherInput.value);
+    if (newPublisherInput) data.append("new_publisher", newPublisherInput.value);
     data.append("email", emailInput.value);
     request("manage-publisher-btn", "action.php", data);
 }
