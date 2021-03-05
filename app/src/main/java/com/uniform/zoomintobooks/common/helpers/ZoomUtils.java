@@ -6,15 +6,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import android.util.ArrayMap;
 import android.util.Base64;
 import android.util.Log;
 
@@ -94,4 +98,25 @@ public class ZoomUtils {
 
     }
 
+    public static ArrayMap<String, String> parseJSONlist(String resourceLink) throws IOException {
+        ArrayMap<String, String> booklist = new ArrayMap<String, String>();
+        URL url = new URL(resourceLink);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("GET");
+        connection.connect();
+
+        BufferedReader json = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+        JsonElement rootNode = JsonParser.parseReader(json);
+        JsonObject details = rootNode.getAsJsonObject();
+
+        JsonArray results = details.getAsJsonArray("results");
+        for(int i=0; i<results.size();i++){
+            JsonArray s = results.get(i).getAsJsonArray();
+            String Title = s.get(0).getAsString();
+            String isbn = s.get(1).getAsString();
+            booklist.put(isbn,Title);
+        }
+        return booklist;
+    }
 }

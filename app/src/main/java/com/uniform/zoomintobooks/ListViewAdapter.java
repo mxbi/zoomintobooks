@@ -30,6 +30,10 @@ public class ListViewAdapter extends BaseAdapter {
         this.arraylist.addAll(animalNamesList);
     }
 
+    public void changeData(ArrayList<String> titlelist) {
+        this.animalNamesList = titlelist;
+    }
+
     public class ViewHolder {
         TextView name;
     }

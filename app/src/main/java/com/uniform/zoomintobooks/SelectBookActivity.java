@@ -3,24 +3,35 @@ package com.uniform.zoomintobooks;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.util.ArrayMap;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.uniform.zoomintobooks.common.helpers.BookInfo;
+import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class SelectBookActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
     Boolean MoreButtonOpen = false;
     ListView list;
     ListViewAdapter adapter;
     SearchView editsearch;
-    ArrayList<String> arraylist = new ArrayList<>();
+    ArrayList<String> Titlelist = new ArrayList<>();
+    ArrayList<String> ISBNlist = new ArrayList<>();
 
 
     @Override
@@ -44,9 +55,11 @@ public class SelectBookActivity extends AppCompatActivity implements SearchView.
 
 
         // Pass results to ListViewAdapter Class
-        adapter = new ListViewAdapter(this, arraylist);
+        adapter = new ListViewAdapter(this, Titlelist);
         // Binds the Adapter to the ListView
         list.setAdapter(adapter);
+
+        new BookListTask().execute("sdyatiegrcbaruioenawegcfyuia");
 
         // Locate the EditText in listview_main.xml
         editsearch = findViewById(R.id.SearchForBookView);
@@ -138,9 +151,54 @@ public class SelectBookActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        //get books that match string into arraylist
-        arraylist = null;
-        adapter.notifyDataSetChanged();
+
+        new BookListTask().execute(newText);
         return false;
+    }
+
+    private class BookListTask extends AsyncTask<String, Void, ArrayMap<String, String>> {
+
+
+
+        @Override
+        protected ArrayMap<String, String> doInBackground(String... strings) {
+            String string;
+            if(strings[0].equals("")){
+                string = "asdfghqwertyukl xdfhjkl";
+            } else{
+                string = strings[0];
+            }
+            String url = "https://api.uniform.ml/titles/"+string;
+            ArrayMap<String, String> booklist = new ArrayMap<String, String>();
+            try {
+                booklist = ZoomUtils.parseJSONlist(url);
+            } catch (IOException e) {
+                // TODO: Handle this more gracefully
+                e.printStackTrace();
+            }
+
+            return booklist;
+        }
+
+        protected void onPostExecute( ArrayMap<String, String> booklist) {
+
+            //get books that match string into arraylist
+
+            Titlelist = new ArrayList<>();
+            ISBNlist = new ArrayList<>();
+            Set<String> set = booklist.keySet();
+            Iterator<String> itset = set.iterator();
+            while(itset.hasNext()){
+                String key = itset.next();
+                Titlelist.add(booklist.get(key));
+                ISBNlist.add(key);
+            }
+
+            adapter.changeData(Titlelist);
+
+            adapter.notifyDataSetChanged();
+
+//
+        }
     }
 }
