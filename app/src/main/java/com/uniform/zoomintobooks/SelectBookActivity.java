@@ -2,6 +2,7 @@ package com.uniform.zoomintobooks;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,12 +10,14 @@ import android.util.ArrayMap;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.zxing.integration.android.IntentResult;
 import com.uniform.zoomintobooks.common.helpers.BookInfo;
 import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
@@ -55,16 +58,24 @@ public class SelectBookActivity extends AppCompatActivity implements SearchView.
 
 
         // Pass results to ListViewAdapter Class
-        adapter = new ListViewAdapter(this, Titlelist);
+        adapter = new ListViewAdapter(this, Titlelist,ISBNlist);
         // Binds the Adapter to the ListView
         list.setAdapter(adapter);
 
         new BookListTask().execute("sdyatiegrcbaruioenawegcfyuia");
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String item = adapter.getItem(position);
+                new BookScanTask().execute(item);
+            }
+        });
 
         // Locate the EditText in listview_main.xml
         editsearch = findViewById(R.id.SearchForBookView);
         editsearch.setOnQueryTextListener(this);
     }
+
     private void setMenuButtons() {
         FloatingActionButton InfoButton = findViewById(R.id.InfoButton);
         InfoButton.setOnClickListener(view -> {
@@ -194,11 +205,38 @@ public class SelectBookActivity extends AppCompatActivity implements SearchView.
                 ISBNlist.add(key);
             }
 
-            adapter.changeData(Titlelist);
+            adapter.changeData(Titlelist,ISBNlist);
 
             adapter.notifyDataSetChanged();
 
 //
         }
+    }
+    private class BookScanTask extends AsyncTask<String, Void, BookInfo> {
+        @Override
+        protected BookInfo doInBackground(String... Strings) {
+            String intentResult = Strings[0];
+            return getBookInfo(intentResult);
+        }
+
+        protected void onPostExecute(BookInfo bookInfo) {
+            Intent startIntent = new Intent(getApplicationContext(),AugmentedImageActivity.class);
+            bookInfo.addAllToIntent(startIntent);
+            startActivity(startIntent);
+
+        }
+    }
+
+    private BookInfo getBookInfo(String contents) {
+        String url = "https://api.uniform.ml/books/"+contents;
+        BookInfo book = null;
+        try {
+            book = ZoomUtils.parseJSON(url);
+        } catch (IOException e) {
+            // TODO: Handle this more gracefully
+            e.printStackTrace();
+        }
+
+        return book;
     }
 }

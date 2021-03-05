@@ -19,20 +19,21 @@ public class ListViewAdapter extends BaseAdapter {
 
     Context mContext;
     LayoutInflater inflater;
-    private List<String> animalNamesList = null;
-    private ArrayList<String> arraylist;
+    ArrayList<String> Titlelist = new ArrayList<>();
+    ArrayList<String> ISBNlist = new ArrayList<>();
 
-    public ListViewAdapter(Context context, List<String> animalNamesList) {
+    public ListViewAdapter(Context context, ArrayList<String> Titlelist,ArrayList<String> ISBNlist) {
         mContext = context;
-        this.animalNamesList = animalNamesList;
+        this.Titlelist = Titlelist;
+        this.ISBNlist = ISBNlist;
         inflater = LayoutInflater.from(mContext);
-        this.arraylist = new ArrayList<>();
-        this.arraylist.addAll(animalNamesList);
     }
 
-    public void changeData(ArrayList<String> titlelist) {
-        this.animalNamesList = titlelist;
+    public void changeData(ArrayList<String> titlelist,ArrayList<String> ISBNlist) {
+        this.Titlelist = titlelist;
+        this.ISBNlist = ISBNlist;
     }
+
 
     public class ViewHolder {
         TextView name;
@@ -40,12 +41,12 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return animalNamesList.size();
+        return Titlelist.size();
     }
 
     @Override
     public String getItem(int position) {
-        return animalNamesList.get(position);
+        return ISBNlist.get(position);
     }
 
     @Override
@@ -65,24 +66,10 @@ public class ListViewAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         // Set the results into TextViews
-        holder.name.setText(animalNamesList.get(position));
+        holder.name.setText(Titlelist.get(position));
         return view;
     }
 
-    // Filter Class
-    public void filter(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
-        animalNamesList.clear();
-        if (charText.length() == 0) {
-            animalNamesList.addAll(arraylist);
-        } else {
-            for (String wp : arraylist) {
-                if (wp.toLowerCase(Locale.getDefault()).contains(charText)) {
-                    animalNamesList.add(wp);
-                }
-            }
-        }
-        notifyDataSetChanged();
-    }
+
 
 }
