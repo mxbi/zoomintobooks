@@ -2,6 +2,7 @@ package com.uniform.zoomintobooks;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -29,7 +30,7 @@ import com.google.ar.core.Frame;
 import com.google.ar.core.Pose;
 import com.google.ar.core.Session;
 import com.google.mlkit.vision.common.InputImage;
-import com.uniform.zoomintobooks.common.helpers.AsyncGetImageData;
+//import com.uniform.zoomintobooks.common.helpers.AsyncGetImageData;
 import com.uniform.zoomintobooks.common.helpers.OCRAnalyzer;
 import com.uniform.zoomintobooks.common.helpers.TextureReader;
 import com.uniform.zoomintobooks.common.helpers.TextureReaderImage;
@@ -382,12 +383,17 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
   private AugmentedImage augmentedImageResourceDisplay;
   private AugmentedImageState augmentedImageStateResourceDisplay;
-  public void resourceDisplay(InputStream is){
-    AugmentedImageState augmentedImageState = new AugmentedImageState(augmentedImageResourceDisplay, true, is, this);
-    Intent i = new Intent(this, ResourceHandlerActivity.class);
-    i.putExtra("bitmap", augmentedImageState.getBmp());
-    i.putExtra("type", currentResource.getType());
-    i.putExtra("action", "display");
+  public void resourceDisplay(){
+//    AugmentedImageState augmentedImageState = new AugmentedImageState(augmentedImageResourceDisplay, true, is, this);
+//    Intent i = new Intent(this, ResourceHandlerActivity.class);
+//    i.putExtra("bitmap", BitmapFactory.decodeByteArray(currentResource.getImageData(), 0, currentResource.getImageData().length));
+//    i.putExtra("type", currentResource.getType());
+//    i.putExtra("action", "display");
+//    startActivity(i);
+
+//    Intent i = new Intent(Intent.ACTION_VIEW);
+    Intent i = new Intent(this, WebViewActivity.class);
+    i.putExtra("url", currentResource.getURL());
     startActivity(i);
   }
 
@@ -412,8 +418,12 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           btn.setBackgroundColor(0xFFC7AF8F);
           btn.setOnClickListener(v -> {
               currentResource = ARResources.get(augmentedImage.getIndex());
-
-              useResourceHandler("image", currentResource.getURL());
+//              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
+//              asyncGetImageData.setImgLink(currentResource.getURL());
+//              asyncGetImageData.setAugmentedImageActivity(this);
+//              augmentedImageResourceDisplay = augmentedImage;
+//              asyncGetImageData.execute();
+              resourceDisplay();
           });
           this.runOnUiThread(new Runnable() {
             public void run() {
