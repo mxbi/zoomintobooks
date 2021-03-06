@@ -58,6 +58,17 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                     throw new UnsupportedOperationException("Displaying other resources not natively supported");
                 }
                 break;
+            case "downloadAndOpen":
+                String uri_r = getUriFromUrl(url);
+                String fileUri = getFilesDir().toURI().getPath().concat(uri_r);
+                if(type.equals("video")){
+                    OpenVideo(Uri.parse(fileUri),OpenResourceMode.ANDROID);
+                }else if (type.equals("image") || type.equals("overlay")) {
+                    OpenImage(Uri.parse(fileUri), OpenResourceMode.ANDROID);
+                }else{
+                    OpenResource(Uri.parse(fileUri), type);
+                }
+                break;
             case "display":
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(uri),OpenResourceMode.ACTIVITY);
