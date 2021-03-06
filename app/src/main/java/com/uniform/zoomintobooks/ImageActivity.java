@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -16,13 +15,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.uniform.zoomintobooks.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,14 +58,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
         imageView = (ImageView) findViewById(R.id.postImage);
         Intent intent = getIntent();
-
-        if (intent.hasExtra("uri")){
-            Uri uri = (Uri) getIntent().getExtras().get("uri");
-            imageView.setImageURI(uri);
-        } else if (intent.hasExtra("bitmap")){
-            Bitmap bmp = (Bitmap) intent.getExtras().get("bitmap");
-            imageView.setImageBitmap(bmp);
-        }
+        Uri uri = (Uri) getIntent().getExtras().get("uri");
+        imageView.setImageURI(uri);
 
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
