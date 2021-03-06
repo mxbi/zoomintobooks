@@ -13,6 +13,7 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -407,6 +408,46 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
   }
 
+  private int currentResourceID = -1;
+  private Button button;
+  private void registerButton(int augmentedImageIndex) {
+    if (currentResourceID != augmentedImageIndex) { // button doesn't already exist
+      FrameLayout fl = findViewById(R.id.myLayout);
+
+      Button btn = new Button(this);
+      button = btn;
+      btn.setText("Click to view resource.");
+      FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+      fp.gravity = Gravity.BOTTOM | Gravity.CENTER;
+      btn.setLayoutParams(fp);
+      btn.setBackgroundColor(0xFFC7AF8F);
+      btn.setOnClickListener(v -> {
+        displayResource(currentResource);
+      });
+
+      currentResource = ARResources.get(augmentedImageIndex);
+      this.runOnUiThread(new Runnable() {
+        public void run() {
+          fl.addView(btn);
+        }
+      });
+
+      currentResourceID = augmentedImageIndex;
+    }
+  }
+
+  private void deregisterButton() {
+    // TODO: Remove the button
+    ViewGroup layout = (ViewGroup) button.getParent();
+//    button.getParent().removeView(button);
+    if (layout != null) {
+      layout.removeView(button);
+    }
+    button = null;
+
+    currentResourceID = -1;
+  }
+
   private void drawAugmentedImages(
       Frame frame, float[] projmtx, float[] viewmtx, float[] colorCorrectionRgba) {
     Collection<AugmentedImage> updatedAugmentedImages =
@@ -414,37 +455,18 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     // Iterate to update augmentedImageMap, remove elements we cannot draw.
     for (AugmentedImage augmentedImage : updatedAugmentedImages) {
+      // TODO: Stop bad things from happening when we have more than one augmented image at once
       switch (augmentedImage.getTrackingState()) {
         case PAUSED:
           // When an image is in PAUSED state, but the camera is not PAUSED, it has been detected,
           // but not yet tracked.
-          FrameLayout fl = findViewById(R.id.myLayout);
-
-          Button btn = new Button(this);
-          btn.setText("Click to view resource.");
-          FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-          fp.gravity = Gravity.BOTTOM | Gravity.CENTER;
-          btn.setLayoutParams(fp);
-          btn.setBackgroundColor(0xFFC7AF8F);
-          btn.setOnClickListener(v -> {
-//              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
-//              asyncGetImageData.setImgLink(currentResource.getURL());
-//              asyncGetImageData.setAugmentedImageActivity(this);
-//              augmentedImageResourceDisplay = augmentedImage;
-//              asyncGetImageData.execute();
-              displayResource(currentResource);
-          });
-
-          currentResource = ARResources.get(augmentedImage.getIndex());
-          this.runOnUiThread(new Runnable() {
-            public void run() {
-              fl.addView(btn);
-            }
-          });
+          registerButton(augmentedImage.getIndex());
 
           break;
 
         case TRACKING:
+          registerButton(augmentedImage.getIndex());
+
           // Have to switch to UI Thread to update View.
           this.runOnUiThread(
               new Runnable() {
@@ -473,6 +495,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           break;
 
         case STOPPED:
+          // Currently never called, because image remains always tracked
+          deregisterButton();
           augmentedImageMap.remove(augmentedImage.getIndex());
           break;
         default:
