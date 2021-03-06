@@ -1,21 +1,18 @@
 package com.uniform.zoomintobooks;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.util.Output;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.widget.MediaController;
-import android.widget.VideoView;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import com.uniform.zoomintobooks.ImageActivity;
+import com.uniform.zoomintobooks.VideoActivity;
+import com.uniform.zoomintobooks.common.helpers.UrlToUri;
 
-import com.uniform.zoomintobooks.common.helpers.BookResource;
-
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -26,33 +23,41 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 import static android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
-
-/**
- * Created by Devendra K Chavan on April,2020
- */
 
 public class ResourceHandlerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        readFileInStore();
+        saveFileInStore();
 
         Intent i = getIntent();
-        String uri = i.getStringExtra("url");
+        String url = i.getStringExtra("url");
+        String uri = i.getStringExtra("uri");
         String type = i.getStringExtra("type");
         String action = i.getStringExtra("action");
 
-        byte[] bytes = i.getByteArrayExtra("file");
-        String directory = i.getStringExtra("directory");
-
         switch (action){
+            case "downloadAndDisplay":
+                String uri_l = getUriFromUrl(url);
+                String trueUri = getFilesDir().toURI().getPath().concat(uri_l);
+                if(type.equals("video")){
+                    OpenVideo(Uri.parse(trueUri),OpenResourceMode.ACTIVITY);
+                }else if (type.equals("image") || type.equals("overlay")) {
+                    OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
+                }else{
+                    throw new UnsupportedOperationException("Displaying other resources not natively supported");
+                }
+                break;
             case "display":
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(uri),OpenResourceMode.ACTIVITY);
@@ -70,12 +75,6 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 }else{
                     OpenResource(Uri.parse(uri), type);
                 }
-                break;
-            case "save":
-                Save(directory, bytes);
-                break;
-            case "export":
-                Export(directory, bytes);
                 break;
         }
     }
@@ -166,31 +165,6 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         return inputStream;
     }
 
-    private class UrlToUri<S,T> extends HashMap<S,T>{
-        int filename=90;
-        @Nullable
-        @Override
-        public T get(@Nullable Object key) {
-            readFileInStore();
-            return super.get(key);
-        }
-
-        @Nullable
-        @Override
-        public T put(S key, T value) {
-            T t = super.put(key, value);
-            saveFileInStore();
-            return t;
-        }
-
-        public String newUri(){
-            readFileInStore();
-            this.filename++;
-            String s = String.valueOf(filename);
-            saveFileInStore();
-            return s;
-        }
-    }
     private UrlToUri<String,String> urlToUri = new UrlToUri<String, String>();
 
     static String FILE_IN_STORE_DIRECTORY = "fileInStore";
@@ -227,53 +201,127 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         }
     }
 
-    public InputStream getImageData(String imgLink) {
-        InputStream is = null;
-        try {
-            if(urlToUri.containsKey(imgLink)){
-                String uri = urlToUri.get(imgLink);
-                is = Open(uri);
-            }else{
-                is = getImageDataNetwork(imgLink);
+    public String get(String key) {
+        readFileInStore();
+        return this.urlToUri.get(key);
+    }
 
-                // save internet file to local file
-                BufferedInputStream bis = new BufferedInputStream(is);
-                FileOutputStream outputStream;
-                try {
-                    String uri = urlToUri.newUri();
-                    outputStream = openFileOutput(uri, Context.MODE_PRIVATE);
-                    byte[] buf = new byte[8192];
-                    int length;
-                    while ((length = bis.read(buf)) > 0) {
-                        outputStream.write(buf, 0, length);
-                    }
-                    outputStream.close();
-                    bis.reset();
-                    is = bis;
-                    urlToUri.put(imgLink, uri);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (FileNotFoundException e) {
-            is = getImageDataNetwork(imgLink);
-        } catch (IOException e) {
-            is = getImageDataNetwork(imgLink);
+    public String put(String key, String value) {
+        String t = this.urlToUri.put(key, value);
+        saveFileInStore();
+        return t;
+    }
+
+    public void deleteFileInStore(){
+        File f = new File(FILE_IN_STORE_DIRECTORY);
+        f.delete();
+    }
+
+    public String newUri(String url){
+        readFileInStore();
+        String extension ="";
+
+        if(url.contains(".")){
+            extension = url.substring(url.lastIndexOf('.'));
         }
-        return is;
+
+        String s = this.urlToUri.newUri(extension);
+        saveFileInStore();
+        return s;
+    }
+
+    public String getUriFromUrl(String url) {
+        String uri = "";
+        if(urlToUri.containsKey(url)){
+            uri = get(url);
+            return uri;
+        }else{
+            InputStream is = getImageDataNetwork(url);
+
+            // save internet file to local file
+            FileOutputStream outputStream;
+            try {
+                String newUri = newUri(url);
+                outputStream = openFileOutput(newUri, Context.MODE_PRIVATE);
+
+                Future<OutputStream> future = new AsyncDownload().download(is, outputStream);
+                while(!future.isDone()) {
+                    System.out.println("Downloading...");
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                outputStream.close();
+                put(url, newUri);
+                return newUri;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return uri;
+    }
+
+    public class AsyncGet {
+
+        private ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        public Future<InputStream> get(String urlString) {
+            return executor.submit(() -> {
+                try {
+                    URL url = new URL(urlString);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    InputStream is = conn.getInputStream();
+
+                    return is;
+                }
+                catch (IOException e) {
+                    return null;
+                }
+            });
+        }
+    }
+
+    public class AsyncDownload {
+        private ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        public Future<OutputStream> download(InputStream is, OutputStream os) {
+            return executor.submit(() -> {
+                byte[] buf = new byte[8192];
+                int length = 0;
+                while (true) {
+                    try {
+                        if (!((length = is.read(buf)) > 0)) break;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    os.write(buf, 0, length);
+                }
+                return os;
+            });
+        }
     }
 
     public InputStream getImageDataNetwork(String imgLink) {
-
+        Future<InputStream> future = new AsyncGet().get(imgLink);
+        while(!future.isDone()) {
+            System.out.println("Getting image...");
+            try {
+                Thread.sleep(300);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        InputStream is = null;
         try {
-            URL url = new URL(imgLink);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            InputStream is = conn.getInputStream();
-
-            return is;
+            is = future.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-        catch (IOException e) {
-            return null;
-        }
+        return is;
     }
 }
