@@ -381,9 +381,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
 
-  private AugmentedImage augmentedImageResourceDisplay;
-  private AugmentedImageState augmentedImageStateResourceDisplay;
-  public void resourceDisplay(){
+  public void displayResource(BookResource resource) {
 //    AugmentedImageState augmentedImageState = new AugmentedImageState(augmentedImageResourceDisplay, true, is, this);
 //    Intent i = new Intent(this, ResourceHandlerActivity.class);
 //    i.putExtra("bitmap", BitmapFactory.decodeByteArray(currentResource.getImageData(), 0, currentResource.getImageData().length));
@@ -392,9 +390,21 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 //    startActivity(i);
 
 //    Intent i = new Intent(Intent.ACTION_VIEW);
-    Intent i = new Intent(this, WebViewActivity.class);
-    i.putExtra("url", currentResource.getURL());
-    startActivity(i);
+    if (resource.getType().equals("image") || resource.getType().equals("overlay")) {
+      Intent i = new Intent(this, ResourceHandlerActivity.class);
+      i.putExtra("type", "image");
+      i.putExtra("action", "downloadAndDisplay");
+      i.putExtra("url", resource.getURL());
+
+      startActivity(i);
+
+    } else {
+      Intent i = new Intent(this, WebViewActivity.class);
+      i.putExtra("url", resource.getURL());
+
+      startActivity(i);
+    }
+
   }
 
   private void drawAugmentedImages(
@@ -417,14 +427,15 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
           btn.setLayoutParams(fp);
           btn.setBackgroundColor(0xFFC7AF8F);
           btn.setOnClickListener(v -> {
-              currentResource = ARResources.get(augmentedImage.getIndex());
 //              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
 //              asyncGetImageData.setImgLink(currentResource.getURL());
 //              asyncGetImageData.setAugmentedImageActivity(this);
 //              augmentedImageResourceDisplay = augmentedImage;
 //              asyncGetImageData.execute();
-              resourceDisplay();
+              displayResource(currentResource);
           });
+
+          currentResource = ARResources.get(augmentedImage.getIndex());
           this.runOnUiThread(new Runnable() {
             public void run() {
               fl.addView(btn);
@@ -531,15 +542,15 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
     if (X_coord >= overlayCoords[0] && X_coord <= overlayCoords[1] && Y_coord >= overlayCoords[2] && Y_coord <= overlayCoords[3]) {
       //TODO: open new activity.
-//      String url = dummyResource.getURL();
-//      String type = dummyResource.getType();
-//
-//      Intent i = new Intent(this, ResourceHandlerActivity.class);
-//      i.putExtra("url", url);
-//      i.putExtra("type", type);
-//      i.putExtra("action", "display");
-//      startActivity(i);
+//      currentResource = ARResources.get(augmentedImage.getIndex());
+//              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
+//              asyncGetImageData.setImgLink(currentResource.getURL());
+//              asyncGetImageData.setAugmentedImageActivity(this);
+//              augmentedImageResourceDisplay = augmentedImage;
+//              asyncGetImageData.execute();
       System.out.println("Detected click.");
+      // let's hope currentResource is correct
+      displayResource(currentResource);
     }
     return true;
   }
