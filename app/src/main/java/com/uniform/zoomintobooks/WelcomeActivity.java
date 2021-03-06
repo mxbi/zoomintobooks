@@ -28,6 +28,13 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent i = new Intent(this, ResourceHandlerActivity.class);
+        i.putExtra("type", "image");
+        i.putExtra("action", "downloadAndDisplay");
+        i.putExtra("url", "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg/800px-The_Calling_of_Saint_Matthew-Caravaggo_%281599-1600%29.jpg");
+        startActivity(i);
+        
         setContentView(R.layout.activity_welcome);
 
         FloatingActionButton MoreButton = findViewById(R.id.MoreButton);
