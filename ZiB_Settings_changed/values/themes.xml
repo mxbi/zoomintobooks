@@ -1,0 +1,38 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ZoomIntoBooks" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/beige_2</item>
+        <item name="colorPrimaryVariant">@color/beige_2</item>
+        <item name="colorOnPrimary">@color/beige_1</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.Buttons" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/brown_1</item>
+        <item name="colorPrimaryVariant">@color/beige_2</item>
+        <item name="colorOnPrimary">@color/beige_1</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <!-- Night mode.
+    <style name="Theme.Night_ZoomIntoBooks" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/grey</item>
+        <item name="colorPrimaryVariant">@color/dark_grey</item>
+        <item name="colorOnPrimary">@color/beige_2</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+
+    <style name="Theme.Night_Buttons" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/beige_2</item>
+        <item name="colorPrimaryVariant">@color/beige_2</item>
+        <item name="colorOnPrimary">@color/brown_1</item>
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+    </style>
+    -->
+</resources>
