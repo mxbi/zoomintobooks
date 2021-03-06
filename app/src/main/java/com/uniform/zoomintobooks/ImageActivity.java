@@ -67,7 +67,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         dstBtn = (Button) findViewById(R.id.pickImageButton);
-        srcBtn = (Button) findViewById(R.id.pickSrcButton);
         cameraBtn = (Button) findViewById(R.id.cameraBtn);
 
         dstBtn.setOnClickListener(this);
