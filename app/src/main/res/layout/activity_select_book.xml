@@ -55,23 +55,24 @@
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="60dp"
             android:layout_height="200dp"
+            android:layout_below="@+id/SearchForBookView"
+            android:theme="@style/Theme.Buttons"
+            android:layout_marginHorizontal="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/SearchForBookView"
-            android:layout_below="@+id/SearchForBookView" />
+            app:layout_constraintTop_toBottomOf="@+id/SearchForBookView" />
 
 
         <SearchView
             android:id="@+id/SearchForBookView"
+            style="@style/Widget.AppCompat.ListView.DropDown"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
             android:background="@drawable/serchborder"
             android:iconifiedByDefault="false"
             android:queryHint="Search Here"
-            android:textColor="@color/brown_1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
