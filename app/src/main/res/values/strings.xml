@@ -18,4 +18,19 @@
     <string name="error_scanning">Error Scanning</string>
     <string name="book_not_in_database">Book not in database</string>
     <string name="not_your_book">Not your book?</string>
+    <!-- Settings Activity Title -->
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="data_usage_header">Data usage</string>
+    <string name="theme_header">Theme</string>
+
+    <!-- Data Usage Preferences -->
+    <string name="auto_download_title">Automatically download media</string>
+    <string name="auto_download_summary">Save images to your device</string>
+
+    <string name="quality_title">Image quality</string>
+
+    <!-- Theme Preferences -->
+    <string name="theme_title">Use dark mode</string>
 </resources>
