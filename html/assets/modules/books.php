@@ -96,9 +96,9 @@ if (!$edit) { ?>
      <input type="number" name="edition" id="edition-input" value="<?php echo $values["edition"]; ?>" min="1" step="1" />
     </div>
     <div class="input-container">
-     <label for="book">Book upload</label>
-     <input type="file" name="book" id="book-input" <?php echo $edit ? "" : "required=\"required\""; ?> />
-     <?php if ($edit) echo "<p><small>File already uploaded. You may upload a new one if you wish. If you leave this blank, the existing file will not be changed.</small></p>\n"; ?>
+     <label for="book" class="help" title="You may upload a PDF of your book to make use of text-based triggers">Book upload</label>
+     <input type="file" name="book" id="book-input" />
+     <?php if ($isbn !== NULL && get_book_type($isbn) !== NULL) echo "<p><small>File already uploaded. You may upload a new one if you wish. If you leave this blank, the existing file will not be changed.</small></p>\n"; ?>
     </div>
     <input id="manage-book-btn" type="button" onclick="manageBook()" value="<?php echo $edit ? "Edit book" : "Add book" ; ?>" />
    </form>
@@ -128,7 +128,7 @@ function manage_book($values, $file, $edit) {
 
     $file_present = !empty($file) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
-    if (!$edit && !$file_present) add_error("No file uploaded");
+    //if (!$edit && !$file_present) add_error("No file uploaded");
     if (!$edit && !($isbn = is_valid_isbn($isbn))) add_error("ISBN is invalid");
     if ($new_isbn !== NULL && !($new_isbn = is_valid_isbn($new_isbn))) add_error("New ISBN is invalid");
     if (is_blank($title)) add_error("Title is blank");
@@ -140,13 +140,16 @@ function manage_book($values, $file, $edit) {
 
     // Perform updates to database and file system
 
-    $type = NULL;
+    $type = $file_present ? get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES) : NULL;
 
     if (!$edit) {
-        $type = get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES);
-        if ($type) {
             mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
-            $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
+            $q = "";
+            if ($file_present) {
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
+            } else {
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher) VALUES ('$isbn', '$title', '$author', $edition, '$publisher')";
+            }
             $r = mysqli_query($dbc, $q);
 
             if (!$r) {
@@ -156,11 +159,7 @@ function manage_book($values, $file, $edit) {
                 $r2 = mysqli_query($dbc, $q2);
                 if (!$r2) add_error(mysqli_error($dbc));
             }
-        } else {
-            add_error("Failed to determine type for uploaded file");
-        }
     } else {
-        $type = db_select("SELECT book_type FROM book WHERE isbn = '$isbn'", true)["book_type"];
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "UPDATE book SET isbn='$new_isbn', title='$title', author='$author', edition=$edition, publisher='$publisher'" . ($file_present ? ", book_type='$type'" : "") . " WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
@@ -169,33 +168,48 @@ function manage_book($values, $file, $edit) {
 
     $tmps = array();
     if (!errors_occurred()) {
-        if (!$edit && $file_present) {
-            $input = $file['tmp_name'];
-            $output = book_cover_path_no_ext($isbn);
-            $cover_cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to 128";
-            $cover_op = array("type" => "cmd", "cmd" => $cover_cmd, "error" => "Failed to generate cover", "path" => book_cover_path($isbn), "file" => $file);
-
-            $upload_op = array("type" => "mv upload", "file" => $file, "path" => book_upload_path($isbn, $type));
-
+        if (!$edit) {
             $img_dir = book_images_path($isbn);
             $make_img_dir_op = array("type" => "mkdir", "path" => $img_dir, "permission" => 0744);
 
-            $ops = array($cover_op, $upload_op, $make_img_dir_op);
+            $ops = array($make_img_dir_op);
 
             $tmps = file_ops($ops);
         } else if ($edit && $new_isbn !== $isbn) { // Editing ISBN without changing file
-            $cp_cover_op = array("type" => "cp", "src" => book_cover_path($isbn), "path" => book_cover_path($new_isbn));
-            $rm_cover_op = array("type" => "rm", "path" => book_cover_path($isbn));
-            $cp_upload_op = array("type" => "cp", "src" => book_upload_path($isbn, $type), "path" => book_upload_path($new_isbn, $type));
-            $rm_upload_op = array("type" => "rm", "path" => book_upload_path($isbn, $type));
+            $ops = array();
+            if ($type !== NULL) {
+                $cp_cover_op = array("type" => "cp", "src" => book_cover_path($isbn), "path" => book_cover_path($new_isbn));
+                $rm_cover_op = array("type" => "rm", "path" => book_cover_path($isbn));
+                $cp_upload_op = array("type" => "cp", "src" => book_upload_path($isbn, $type), "path" => book_upload_path($new_isbn, $type));
+                $rm_upload_op = array("type" => "rm", "path" => book_upload_path($isbn, $type));
+                $ops[] = $cp_cover_op;
+                $ops[] = $rm_cover_op;
+                $ops[] = $cp_upload_op;
+                $ops[] = $rm_upload_op;
+            }
             $cp_ar_op = array("type" => "cp", "src" => ar_blob_output_path($isbn), "path" => ar_blob_output_path($new_isbn));
             $rm_ar_op = array("type" => "rm", "path" => ar_blob_output_path($isbn));
             $cp_imgs_op = array("type" => "cp", "src" => book_images_path($isbn), "path" => book_images_path($new_isbn));
             $rm_imgs_op = array("type" => "rm", "path" => book_images_path($isbn));
 
-            $ops = array($cp_cover_op, $rm_cover_op, $cp_upload_op, $rm_upload_op, $cp_ar_op, $rm_ar_op, $cp_imgs_op, $rm_imgs_op);
+            $ops[] = $cp_ar_op;
+            $ops[] = $rm_ar_op;
+            $ops[] = $cp_imgs_op;
+            $ops[] = $rm_imgs_op;
             $tmps = file_ops($ops);
         }
+        if ($file_present) {
+            $upload_isbn = $edit ? $new_isbn : $isbn;
+            $input = $file['tmp_name'];
+            $output = book_cover_path_no_ext($upload_isbn);
+            $cover_cmd = "/usr/bin/pdftoppm $input $output -png -f 1 -singlefile -scale-to 128";
+            $cover_op = array("type" => "cmd", "cmd" => $cover_cmd, "error" => "Failed to generate cover", "path" => book_cover_path($upload_isbn), "file" => $file);
+
+            $upload_op = array("type" => "mv upload", "file" => $file, "path" => book_upload_path($upload_isbn, $type));
+            $ops = array($cover_op, $upload_op);
+            $tmps = array_merge($tmps, file_ops($ops));
+        }
+
     }
 
     if (errors_occurred()) {
@@ -258,8 +272,16 @@ function generate_ar_blob($isbn) {
 
     unlink($imglist);
 
+    if (!file_exists($out_path)) {
+        add_error("Failed to generate image triggers: make sure your images are detailed enough");
+    }
+
     if (!errors_occurred()) {
         $f = fopen($out_path, "r");
+        if (!$f) {
+            add_error("Failed to generate image triggers");
+            return;
+        }
         $ar_blob = mysqli_real_escape_string($dbc, fread($f, filesize($out_path)));
         fclose($f);
         $q = "UPDATE book SET ar_blob='$ar_blob' WHERE isbn='$isbn'";

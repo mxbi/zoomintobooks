@@ -132,8 +132,6 @@ function manage_resource($file, $values, $edit) {
 
     if (errors_occurred()) return false;
 
-    // TODO: produce preview of resource
-
     if (!$edit) {
         mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
         $q = "INSERT INTO resource(name, url, display, downloadable) VALUES ('$name', 'ERROR: URL NOT SET', '$display', $downloadable)";
@@ -166,6 +164,10 @@ function manage_resource($file, $values, $edit) {
     $q = "UPDATE resource SET url='$url'" . ($type ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
+
+    /*if (!errors_occurred()) {
+        generate_thumb($rid, $url);
+    }*/
 
     if (errors_occurred()) {
         rollback($dbc, $tmps);
@@ -235,27 +237,31 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     }
 
     if (!errors_occurred()) {
-        foreach ($resources as $rid) {
-            $rid = sanitise($rid);
-            foreach ($pages as $page) {
-                if (empty($page)) continue;
-                $q = "INSERT IGNORE INTO ocr_resource_link (isbn, rid, page) VALUES ('$isbn', $rid, $page)";
+        if (get_book_type($isbn) === NULL && !empty($pages)) {
+            add_error("Cannot use page as trigger without PDF upload");
+        } else {
+            foreach ($resources as $rid) {
+                $rid = sanitise($rid);
+                foreach ($pages as $page) {
+                    if (empty($page)) continue;
+                    $q = "INSERT IGNORE INTO ocr_resource_link (isbn, rid, page) VALUES ('$isbn', $rid, $page)";
+                    $r = mysqli_query($dbc, $q);
+                    if (!$r) {
+                        add_error(mysqli_error($dbc));
+                        break;
+                    } else if (mysqli_affected_rows($dbc) === 0) {
+                        add_notice("Ignoring duplicate trigger page $page");
+                    } else {
+                        $linked = true;
+                    }
+                }
+                $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
                 $r = mysqli_query($dbc, $q);
                 if (!$r) {
                     add_error(mysqli_error($dbc));
-                    break;
-                } else if (mysqli_affected_rows($dbc) === 0) {
-                    add_notice("Ignoring duplicate trigger page $page");
-                } else {
-                    $linked = true;
                 }
+                if (errors_occurred()) break;
             }
-            $q = "INSERT IGNORE INTO resource_instance (isbn, rid) VALUES ('$isbn', $rid)";
-            $r = mysqli_query($dbc, $q);
-            if (!$r) {
-                add_error(mysqli_error($dbc));
-            }
-            if (errors_occurred()) break;
         }
     }
 
@@ -306,3 +312,52 @@ function unlink_resource($isbn, $rid) {
         set_success("Successfully unlinked $name from $title");
     }
 }
+
+/*function generate_thumb($rid, $url, $display, $type) {
+    $type = pathinfo($file, PATHINFO_EXTENSION);
+    if ($display == "image" || $display == "overlay") {
+        $size = getimagesize($file);
+        $width = $size[0];
+        $height = $size[1];
+        $w = ($height > 200) ? ($width * 200 / $height) : $width;
+        $h = ($height > 200) ? 200 : $height;
+        $src = false;
+
+        if ($type == "png") {
+            $src = imagecreatefrompng($file);
+        } else if ($type == "jpeg") {
+            $src = imagecreatefromjpeg($file);
+        } else if ($type == "gif") {
+            $src = imagecreatefromgif($file);
+        }
+
+        if (!$src) {
+            add_error("Thumbnail generation failed");
+            return array();
+        } else {
+            $dst = imagecreatetruecolor($w, $h);
+            imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $width, $height);
+            imagepng($dst, $thumb);
+            return array();
+        }
+    } else if ($display == "video") {
+        $file = escapeshellarg($file);
+        $thumb = escapeshellarg($thumb);
+        $cmd = "ffmpeg -i $file -vframes 1 $thumb";
+        exec($cmd, $output, $status); // Create screenshot
+        if ($status) {
+            return;
+        } else {
+            return create_thumb($thumb, $thumb); // Shrink screenshot to thumbnail size
+        }
+    } else if ($display == "audio") {
+        return array();
+    } else if ($display == "webpage") {
+        return array();
+    } else {
+        add_error("Unknown display mode");
+        return array();
+    }
+}
+
+*/

@@ -200,6 +200,10 @@ h2 {
     background-color: #4E7696;
 }
 
+.card-list-add-item:hover {
+    box-shadow: 0 0 3px #666;
+}
+
 .card-list-add-item img {
     height: 50px;
     vertical-align: middle;
@@ -261,4 +265,8 @@ h2 {
     position: fixed;
     left: 0;
     top: 0;
+}
+.help {
+    text-decoration: dotted underline;
+    cursor: help;
 }
