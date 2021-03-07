@@ -119,7 +119,7 @@ function manage_resource($file, $values, $edit) {
     $username = sanitise($_SESSION["username"]);
     $rid = empty($values["rid"]) ? -1 : sanitise($values["rid"]);
     $name = sanitise($values["name"]);
-    $url = sanitise($values["url"]);
+    $url = empty($values["url"]) ? NULL : sanitise($values["url"]);
     $display = sanitise($values["display"]);
     $downloadable = !empty($values["downloadable"]) && $values["downloadable"] === "downloadable";
     $downloadable = $downloadable ? 1 : 0;
@@ -127,7 +127,7 @@ function manage_resource($file, $values, $edit) {
     if (!$edit && !authorised("add resource")) return false;
     if ($edit && !authorised("edit resource", array("rid" => $rid))) return false;
 
-    $file_present = file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
+    $file_present = !empty($file) && file_exists($file['tmp_name']) && is_uploaded_file($file['tmp_name']);
 
     if (!$file_present && !is_valid_url($url)) add_error("URL is invalid");
     if ($edit && !is_pos_int($rid)) add_error("rid is invalid");
@@ -165,7 +165,7 @@ function manage_resource($file, $values, $edit) {
         }
     }
 
-    $q = "UPDATE resource SET url='$url'" . ($type ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
+    $q = "UPDATE resource SET url='$url', resource_type=" . ($type ? "'$type'" : "NULL") . " WHERE rid='$rid'";
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
 

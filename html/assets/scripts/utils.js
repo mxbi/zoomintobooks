@@ -1,6 +1,7 @@
 var selectedResources = new Set();
 var selectedImages = new Set();
 var triggerImgCount = 0;
+var resourceLinkType = "url";
 
 function isPositiveInteger(n) {
     return n >>> 0 === parseFloat(n);
@@ -193,10 +194,13 @@ function manageResource() {
     var downloadableInput = document.getElementById("downloadable-input");
 
     var data = new FormData();
-    data.append("resource", resourceInput.files[0]);
     data.append("rid", ridInput.value);
     data.append("name", nameInput.value);
-    data.append("url", urlInput.value);
+    if (resourceLinkType == "url") {
+        data.append("url", urlInput.value);
+    } else {
+        data.append("resource", resourceInput.files[0]);
+    }
     data.append("display", displayInput.value);
     data.append("downloadable", downloadableInput.value);
     request("manage-resource-btn", "action.php", data);
@@ -244,19 +248,27 @@ function showUrlInputContainer() {
     var urlInputContainer = document.getElementById("url-input-container");
     var resourceInputTab = document.getElementById("resource-input-tab");
     var resourceInputContainer = document.getElementById("resource-input-container");
+    resourceLinkType = "url";
     urlInputTab.classList.add("active-tab")
     resourceInputTab.classList.remove("active-tab")
     urlInputContainer.style.display = "block";
     resourceInputContainer.style.display = "none";
+    urlInput.required = true;
+    resourceInput.required = false;
 }
 
 function showResourceInputContainer() {
     var urlInputTab = document.getElementById("url-input-tab");
     var urlInputContainer = document.getElementById("url-input-container");
+    var urlInput = document.getElementById("url-input");
     var resourceInputTab = document.getElementById("resource-input-tab");
     var resourceInputContainer = document.getElementById("resource-input-container");
+    var resourceInput = document.getElementById("resource-input");
+    resourceLinkType = "upload";
     urlInputTab.classList.remove("active-tab")
     resourceInputTab.classList.add("active-tab")
     urlInputContainer.style.display = "none";
     resourceInputContainer.style.display = "block";
+    urlInput.required = false;
+    resourceInput.required = true;
 }

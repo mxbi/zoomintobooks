@@ -5,7 +5,8 @@ $authorised = authorised("add resource");
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     add_error("Request method must be POST");
 } else if ($authorised) {
-    manage_resource($_FILES["resource"], $_POST, false);
+    $file = empty($_FILES["resource"]) ? NULL : $_FILES["resource"];
+    manage_resource($file, $_POST, false);
 }
 
 json_status();
