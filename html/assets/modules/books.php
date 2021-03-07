@@ -235,27 +235,40 @@ function update_blobs($isbn) {
         return;
     }
 
-    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q = "UPDATE book SET ar_blob = NULL, ocr_blob = NULL WHERE isbn = '$isbn'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+        return;
+    }
 
-    $tmps = generate_ar_blob($isbn);
+    $ops = array(array("type" => "rm", "path" => ar_blob_output_path($isbn)), array("type" => "rm", "path" => book_images_path($isbn) . "/imglist"));
+    $tmps = file_ops($ops);
+    $tmps = array_merge($tmps, generate_ar_blob($isbn));
     if (!errors_occurred()) generate_ocr_blob($isbn);
 
-    if (errors_occurred()) {
+/*    if (errors_occurred()) {
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
         set_success("Generated blobs");
-    }
+    }*/
+    return $tmps;
 }
 
 function generate_image_list($isbn) {
+    global $dbc;
+    $imgs = db_select("SELECT ar_id, trigger_type FROM ar_resource_link WHERE isbn='$isbn'");
+    if (count($imgs) === 0) return "";
     $dir = book_images_path($isbn);
     $imglist = "$dir/imglist";
     $f = fopen($imglist, "w");
     $i = 0;
-    foreach (scandir("$dir") as $img) {
-        if ($img != "." && $img != ".." && $img != "imglist") {
-            fwrite($f, "$i|$dir/$img|0.1\n");
-        }
+    foreach ($imgs as $img) {
+        $ar_id = $img["ar_id"];
+        $ext = get_subtype($img["trigger_type"]);
+        $img = "$ar_id.$ext";
+        fwrite($f, "$i|$dir/$img|0.1\n");
+        $i++;
     }
     fclose($f);
     return $imglist;
@@ -264,27 +277,31 @@ function generate_image_list($isbn) {
 function generate_ar_blob($isbn) {
     global $dbc;
     $imglist = generate_image_list($isbn);
-    $out_path = ar_blob_output_path($isbn);
-    $cmd = "/usr/bin/arcoreimg build-db --input_image_list_path=$imglist --output_db_path=$out_path";
-    $arcoreimg_op = array("type" => "cmd", "cmd" => $cmd, "path" => $out_path, "error" => "Failed to generate AR blob");
-    $ops = array($arcoreimg_op);
-    $tmps = file_ops($ops);
+    $tmps = array();
+    $ar_blob = "NULL";
+    if ($imglist !== "") {
+        $out_path = ar_blob_output_path($isbn);
+        $cmd = "/usr/bin/arcoreimg build-db --input_image_list_path=$imglist --output_db_path=$out_path";
+        $arcoreimg_op = array("type" => "cmd", "cmd" => $cmd, "path" => $out_path, "error" => "Failed to generate AR blob");
+        $ops = array($arcoreimg_op);
+        $tmps = file_ops($ops);
 
-    unlink($imglist);
-
-    if (!file_exists($out_path)) {
-        add_error("Failed to generate image triggers: make sure your images are detailed enough");
-    }
-
-    if (!errors_occurred()) {
-        $f = fopen($out_path, "r");
-        if (!$f) {
-            add_error("Failed to generate image triggers");
-            return;
+        if (!file_exists($out_path)) {
+            add_error("Failed to generate image triggers: make sure your images are detailed enough");
         }
-        $ar_blob = mysqli_real_escape_string($dbc, fread($f, filesize($out_path)));
-        fclose($f);
-        $q = "UPDATE book SET ar_blob='$ar_blob' WHERE isbn='$isbn'";
+
+        if (!errors_occurred()) {
+            $f = fopen($out_path, "r");
+            if (!$f) {
+                add_error("Failed to generate image triggers");
+                return;
+            }
+            $ar_blob = "'" . mysqli_real_escape_string($dbc, fread($f, filesize($out_path))) . "'";
+            fclose($f);
+        }
+    }
+    if (!errors_occurred()) {
+        $q = "UPDATE book SET ar_blob=$ar_blob WHERE isbn='$isbn'";
         $r = mysqli_query($dbc, $q);
         if (!$r) {
             add_error(mysqli_error($dbc));

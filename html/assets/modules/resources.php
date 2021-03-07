@@ -216,16 +216,16 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
     if (!errors_occurred()) {
         $ar_id = empty($max["max_ar_id"]) ? 0 : $max["max_ar_id"];
         foreach ($trigger_images as $img) {
-            $ar_id++;
             $ext = get_subtype($types[$img["tmp_name"]]);
-            $cp_upload_op = array("type" => "cp upload", "file" => $img, "path" => "/var/www/zib/books/images/$isbn/$ar_id.$ext");
-            $this_tmp = file_ops(array($cp_upload_op));
-            if (!$this_tmp) break;
-            foreach ($this_tmp as $tmp => $path) {
-                $tmps[$tmp] = $path;
-            }
 
             foreach ($resources as $rid) {
+                $ar_id++;
+                $cp_upload_op = array("type" => "cp upload", "file" => $img, "path" => "/var/www/zib/books/images/$isbn/$ar_id.$ext");
+                $this_tmp = file_ops(array($cp_upload_op));
+                if (!$this_tmp) break;
+                foreach ($this_tmp as $tmp => $path) {
+                    $tmps[$tmp] = $path;
+                }
                 $rid = sanitise($rid);
                 $q = "INSERT IGNORE INTO ar_resource_link (isbn, rid, ar_id, trigger_type) VALUES ('$isbn', $rid, $ar_id, '$type')";
                 $r = mysqli_query($dbc, $q);
@@ -271,6 +271,8 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
         }
     }
 
+    $tmps = array_merge($tmps, update_blobs($isbn));
+
     unset($_SESSION["redirect"]);
     if (errors_occurred()) {
         rollback($dbc, $tmps);
@@ -310,9 +312,15 @@ function unlink_resource($isbn, $rid) {
         }
     }
 
+    $tmps = update_blobs($isbn);
+
+    foreach ($tmps as $tmp => $path) {
+        add_notice("$tmp => $path");
+    }
+
     if (errors_occurred()) {
-        rollback($dbc, array());
-    } else if (commit($dbc, array())) {
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
         $name = fetch_resource($rid)["name"];
         $title = fetch_book($isbn)["title"];
         set_success("Successfully unlinked $name from $title");
