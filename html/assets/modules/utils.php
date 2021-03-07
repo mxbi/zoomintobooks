@@ -198,21 +198,25 @@ function authorised($action, $params=array(), $errors=true) {
 
         case "edit book":
         case "view book":
+        case "delete book":
             $authorised = book_exists($params["isbn"]) && can_edit_book($params["isbn"]);
             break;
 
         case "edit resource":
         case "view resource":
+        case "delete resource":
             $authorised = resource_exists($params["rid"]) && can_edit_resource($params["rid"]);
             break;
 
         case "view user":
         case "edit user":
+        case "delete user":
             $authorised = user_exists($params["username"]) && can_edit_user($params["username"]);
             break;
 
         case "view publisher":
         case "edit publisher":
+        case "delete publisher":
             $authorised = publisher_exists($params["publisher"]) && can_edit_publisher($params["publisher"]);
             break;
 
@@ -317,6 +321,8 @@ function file_rollback($tmps) {
         if ((file_exists($path) && !rrm($path)) || (file_exists($tmp) && !rcp($tmp, $path))) {
             add_error("Failed to rollback file operation");
             return false;
+        } else {
+            add_notice(file_exists($path));
         }
     }
     return true;
@@ -390,7 +396,7 @@ function file_ops($ops) {
 }
 
 function rollback($dbc, $tmps) {
-    if (!mysqli_rollback($dbc) && file_rollback($tmps)) {
+    if (!(mysqli_rollback($dbc) && file_rollback($tmps))) {
         add_error("Rollback failed");
         return false;
     }

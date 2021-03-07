@@ -272,3 +272,10 @@ function showResourceInputContainer() {
     urlInput.required = false;
     resourceInput.required = true;
 }
+
+function deleteResource(args) {
+    var rid = args["rid"];
+    var data = new FormData();
+    data.append("rid", rid);
+    request("resource-delete-btn", "delete.php", data);
+}

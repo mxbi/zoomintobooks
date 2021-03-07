@@ -76,6 +76,13 @@ h3 {
     display: inline-block;
 }
 
+hr {
+    background-color: #213D54;
+    height: 1px;
+    border: 0;
+    margin: 40px 0 10px 0;
+}
+
 a {
     color: #213D54;
 }
@@ -273,7 +280,7 @@ a:hover {
     background-color: #52974E;
 }
 
-.card-list-delete-btn, .no-btn {
+.delete-btn, .no-btn {
     background-color: #97574E;
 }
 
@@ -282,7 +289,7 @@ a:hover {
     box-shadow: 0 0 3px #666;
 }
 
-.card-list-delete-btn:hover, .no-btn:hover {
+.delete-btn:hover, .no-btn:hover {
     background-color: #AD6960;
     box-shadow: 0 0 3px #666;    
 }

@@ -127,7 +127,7 @@ if (!$edit) { ?>
     <div class="input-container">
      <label for="password">Password</label>
      <input type="password" name="password" id="password-input" placeholder="Password" required="required" />
-     <?php echo "<small>If left blank, the password will not be changed.</small>"; ?>
+     <?php echo "<p><small>If left blank, the password will not be changed.</small></p>"; ?>
     </div>
     <div class="input-container">
      <label for="password2">Repeat password</label>

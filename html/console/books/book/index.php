@@ -18,6 +18,7 @@ if ($authorised) {
         echo "<div class=\"preview-container\"><a href=\"upload?isbn=$isbn\"><span>Preview</span><img class=\"preview\" src=\"cover?isbn=$isbn\" alt=\"\" /></a></div>\n";
     }
     show_book_form(true, $isbn);
+    echo "    <hr />\n";
     echo "    <h3>Resources linked to this book</h3>\n";
 ?>
    <a class="card-list-item card-list-add-item" href="resource/new?isbn=<?php echo $isbn;?>">
@@ -50,7 +51,7 @@ if ($authorised) {
 
             echo "   <div class=\"card-list-item\" id=\"resource-container-$rid\">\n";
             echo "    <img src=\"/console/resources/resource/preview?rid=$rid\" class=\"preview\" alt=\"Preview of $name\" height=\"128\" />\n";
-            echo "    <button class=\"card-list-btn card-list-delete-btn\" id=\"unlink-resource-btn-$rid\" onclick=\"askUser('Are you sure you want to unlink this resource?', 'unlinkResource', {'isbn': '$isbn', 'rid': $rid})\">Unlink</button>";
+            echo "    <button class=\"card-list-btn delete-btn\" id=\"unlink-resource-btn-$rid\" onclick=\"askUser('Are you sure you want to unlink this resource?', 'unlinkResource', {'isbn': '$isbn', 'rid': $rid})\">Unlink</button>";
             echo "    <a class=\"button card-list-btn\" href=\"/console/resources/resource?rid=$rid\">Edit</a>";
             echo "    <h4>$name</h4>\n";
             echo "    <a href=\"$url\">$url</a>\n";
@@ -58,6 +59,11 @@ if ($authorised) {
             echo "    <p>Triggered by $trigger</p>\n";
             echo "   </div>\n";
         }
+    }
+    if (authorised("delete book", array("isbn" => $isbn), false)) {
+        echo "   <hr />\n";
+        echo "   <h3>Delete book</h3>\n<br />";
+        echo "   <button type=\"button\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this book?', 'deleteBook', {'isbn': '$isbn'})\">Delete book</button>\n";
     }
 }
 echo "   </main>\n";

@@ -189,6 +189,29 @@ function manage_resource($file, $values, $edit) {
     }
 }
 
+function delete_resource($rid) {
+    global $dbc;
+    if (!authorised("delete resource", array("rid" => $rid))) return;
+    $resource = fetch_resource($rid);
+    $rm_resource_op = array("type" => "rm", "path" => resource_upload_path($rid, $resource["resource_type"]));
+    $rm_preview_op = array("type" => "rm", "path" => resource_preview_path($rid));
+    $ops = array($rm_resource_op, $rm_preview_op);
+    $tmps = file_ops($ops);
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q = "DELETE FROM resource WHERE rid=$rid";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+    }
+    if (errors_occurred()) {
+        add_notice("Here");
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        set_success("Deleted " . $resource["name"]);
+        $_SESSION["redirect"] = "/console/resources/";
+    }
+}
+
 function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit) {
     global $dbc;
     if (!authorised("edit book", array("isbn" => $isbn))) return;

@@ -332,6 +332,8 @@ function generate_ocr_blob($isbn) {
         if (!$r) {
             add_error(mysqli_error($dbc));
         }
+    } else if ($ret == 1) {
+        add_error("Page does not exist");
     } else {
         add_error("Failed to generate OCR blob (error: $ret)\n$out_str");
     }
