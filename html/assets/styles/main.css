@@ -230,6 +230,10 @@ a:hover {
     color: #FFF;
 }
 
+.selected-card-list-item a {
+    color: #FFF;
+}
+
 .selected-card-list-item .card-list-btn {
     background-color: #DDD;
     color: #213D54;
