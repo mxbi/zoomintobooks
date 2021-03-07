@@ -180,7 +180,7 @@ function manageBook() {
     if (newIsbnInput) data.append("new_isbn", newIsbnInput.value);
     data.append("title", titleInput.value);
     data.append("author", authorInput.value);
-    data.append("publisher", publisherInput.value);
+    if (publisherInput) data.append("publisher", publisherInput.value);
     data.append("edition", editionInput.value);
     request("manage-book-btn", "action.php", data);
 }

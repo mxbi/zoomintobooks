@@ -110,3 +110,20 @@ function fetch_publisher($publisher) {
     return db_select("SELECT * FROM publisher WHERE publisher='$publisher'", true);
 }
 
+function delete_publisher($publisher) {
+    global $dbc;
+    if (!authorised("delete publisher", array("publisher" => $publisher))) return;
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q = "DELETE FROM publisher WHERE publisher='$publisher'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+    }
+    if (errors_occurred()) {
+        rollback($dbc, array());
+    } else if (commit($dbc, array())) {
+        set_success("Deleted " . $publisher);
+        $_SESSION["redirect"] = "/console/publishers/";
+    }
+}
+

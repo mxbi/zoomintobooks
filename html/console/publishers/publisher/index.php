@@ -16,7 +16,7 @@ if ($authorised) {
     if (authorised("delete publisher", array("publisher" => $publisher), false)) {
         echo "   <hr />\n";
         echo "   <h3>Delete publisher</h3>\n<br />";
-        echo "   <button type=\"button\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this publisher?', 'deletePublisher', {'publisher': '$publisher'})\">Delete publisher</button>\n";
+        echo "   <button type=\"button\" id=\"publisher-delete-btn\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this publisher?', 'deletePublisher', {'publisher': '$publisher'})\">Delete publisher</button>\n";
     }
 }
 ?>
