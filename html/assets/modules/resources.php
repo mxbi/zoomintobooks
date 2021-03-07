@@ -79,16 +79,20 @@ function show_resource_form($edit, $rid=NULL) {
      <label for="name">Name</label>
      <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo $values["name"]; ?>" />
     </div>
-    <div class="input-container">
+    <div class="tabs-container">
+     <button type="button" onclick="showUrlInputContainer()" class="tab active-tab" id="url-input-tab">URL</button>
+     <button type="button" onclick="showResourceInputContainer()" class="tab" id="resource-input-tab">Upload</button>
+    </div>
+    <div class="input-container tabbed-container" id="url-input-container">
      <label for="url">URL</label>
      <input type="text" name="url" id="url-input" placeholder="URL" value="<?php echo $values["url"]; ?>" />
-<?php if ($uploaded) { echo "     <span>This resource was uploaded to this server</span>\n"; } ?>
+<?php if ($uploaded) { echo "     <p><small>This resource was uploaded to this server</small></p>\n"; } ?>
     </div>
-    <div class="input-container">
+    <div class="input-container tabbed-container" id="resource-input-container" style="display: none">
      <label for="resource">Resource upload</label>
      <input type="file" name="resource" id="resource-input" />
-     <span>Uploading a file will make it publicly accessible on our server.</span>
-<?php if ($uploaded) { echo "     <span>Uploading another resource will overwrite the old one.</span>\n"; } ?>
+     <p><small>Uploading a file will make it publicly accessible on our server.</small></p>
+<?php if ($uploaded) { echo "     <p><small>Uploading another resource will overwrite the old one.</small></p>\n"; } ?>
     </div>
     <div class="input-container">
      <label for="display">Display mode</label>

@@ -238,3 +238,25 @@ function unlinkResource(args) {
     data.append("rid", rid);
     request("unlink-resource-btn-" + rid, "unlink.php", data, "removeUnlinkedResource", {"rid": rid});
 }
+
+function showUrlInputContainer() {
+    var urlInputTab = document.getElementById("url-input-tab");
+    var urlInputContainer = document.getElementById("url-input-container");
+    var resourceInputTab = document.getElementById("resource-input-tab");
+    var resourceInputContainer = document.getElementById("resource-input-container");
+    urlInputTab.classList.add("active-tab")
+    resourceInputTab.classList.remove("active-tab")
+    urlInputContainer.style.display = "block";
+    resourceInputContainer.style.display = "none";
+}
+
+function showResourceInputContainer() {
+    var urlInputTab = document.getElementById("url-input-tab");
+    var urlInputContainer = document.getElementById("url-input-container");
+    var resourceInputTab = document.getElementById("resource-input-tab");
+    var resourceInputContainer = document.getElementById("resource-input-container");
+    urlInputTab.classList.remove("active-tab")
+    resourceInputTab.classList.add("active-tab")
+    urlInputContainer.style.display = "none";
+    resourceInputContainer.style.display = "block";
+}

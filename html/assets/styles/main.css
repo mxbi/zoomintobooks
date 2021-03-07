@@ -270,3 +270,28 @@ h2 {
     text-decoration: dotted underline;
     cursor: help;
 }
+
+.tabs-container {
+    margin-left: 10px
+}
+
+.tabbed-container {
+    border: 1px solid #213D54;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #EEE;
+}
+
+.tab {
+    background-color: #999;
+    border-radius: 5px 5px 0 0;
+    padding: 3px 10px;
+}
+
+.tab:focus {
+    outline: none;
+}
+
+.active-tab {
+    background-color: #213D54;
+}
