@@ -4,6 +4,7 @@ make_header("Add publisher", "", "");
 ?>
 
   <h2>Add publisher</h2>
+  <a class="back" href="/console/publishers/">&laquo; Publishers</a>
   <main>
 <?php
 $authorised = authorised("add publisher");

@@ -13,6 +13,7 @@ if (strpos($_SERVER["HTTP_REFERER"], "/console/books/book/resource/new") !== fal
 make_header($title, "", "");
 
 echo "   <h2>$title</h2>\n";
+echo "   <a class=\"back\" href=\"/console/resources/\">&laquo; Resources</a>\n";
 echo "   <main>\n";
 
 $authorised = authorised("edit resource", array("rid" => $rid));

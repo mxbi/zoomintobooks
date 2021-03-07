@@ -4,6 +4,7 @@ make_header("Add user", "", "");
 ?>
 
   <h2>Add user</h2>
+  <a class="back" href="/console/users/">&laquo; Users</a>
   <main>
 <?php
 $authorised = authorised("add user");

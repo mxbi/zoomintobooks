@@ -4,6 +4,7 @@ make_header("Add book", "", "");
 ?>
 
   <h2>Add book</h2>
+  <a class="back" href="/console/books/">&laquo; Books</a>
   <main>
 <?php
 $authorised = authorised("add book");

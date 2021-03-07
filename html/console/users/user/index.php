@@ -6,6 +6,7 @@ make_header($title, "", "");
 ?>
 
   <h2><?php echo $title; ?></h2>
+  <a class="back" href="/console/users/">&laquo; Users</a>
   <main>
 <?php
 $authorised = authorised("edit user", array("username" => $username));

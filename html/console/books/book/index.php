@@ -7,6 +7,7 @@ $title = ($book === NULL) ? "Unknown book" : $book["title"];
 
 make_header($title, "", "");
 echo "   <h2>$title</h2>\n";
+echo "   <a class=\"back\" href=\"/console/books/\">&laquo; Books</a>\n";
 echo "   <main>\n";
 
 $authorised = authorised("edit book", array("isbn" => $isbn));

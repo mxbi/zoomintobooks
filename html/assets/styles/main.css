@@ -57,6 +57,10 @@ h1 {
  * Body
  */
 
+.heading {
+    margin: 20px 100px;
+}
+
 main {
     margin: auto 100px;
     background-color: #FFF;
@@ -288,4 +292,9 @@ a:hover {
     border: 1px solid #213D54;
     overflow-y: auto;
     box-shadow: 0 0 3px #666 inset;
+}
+
+.back {
+    display: block;
+    margin: -44px auto 20px 140px;
 }

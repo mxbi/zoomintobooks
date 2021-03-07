@@ -9,6 +9,7 @@ if (strpos($_SERVER["HTTP_REFERER"], "/console/books/book/resource/new") !== fal
 ?>
 
   <h2>Add resource</h2>
+  <a class="back" href="/console/resources/">&laquo; Resources</a>
   <main>
 <?php
 $authorised = authorised("add resource");

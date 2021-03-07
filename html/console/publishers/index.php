@@ -4,6 +4,7 @@ make_header("Manage publishers", "The Zoom Into Books management console", "");
 ?>
 
   <h2>Manage publishers</h2>
+  <a class="back" href="/console">&laquo; Console</a>
   <main>
 <?php
 $authorised = authorised("list publishers");

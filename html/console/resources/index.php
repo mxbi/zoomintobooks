@@ -4,6 +4,7 @@ make_header("Your resources", "The Zoom Into Books management console", "");
 ?>
 
   <h2>Your resources</h2>
+  <a class="back" href="/console">&laquo; Console</a>
   <main>
 <?php
 $authorised = authorised("list resources");

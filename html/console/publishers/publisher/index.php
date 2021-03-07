@@ -6,6 +6,7 @@ make_header($title, "", "");
 ?>
 
   <h2><?php echo $title; ?></h2>
+  <a class="back" href="/console/publishers/">&laquo; Publishers</a>
   <main>
 <?php
 $authorised = authorised("edit publisher", array("publisher" => $publisher));
