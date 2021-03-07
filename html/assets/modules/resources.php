@@ -79,6 +79,7 @@ function show_resource_form($edit, $rid=NULL) {
      <label for="name">Name</label>
      <input type="text" name="name" id="name-input" placeholder="Name" required="required" value="<?php echo $values["name"]; ?>" />
     </div>
+    <div>
     <div class="tabs-container">
      <button type="button" onclick="showUrlInputContainer()" class="tab active-tab" id="url-input-tab">URL</button>
      <button type="button" onclick="showResourceInputContainer()" class="tab" id="resource-input-tab">Upload</button>
@@ -93,6 +94,7 @@ function show_resource_form($edit, $rid=NULL) {
      <input type="file" name="resource" id="resource-input" />
      <p><small>Uploading a file will make it publicly accessible on our server.</small></p>
 <?php if ($uploaded) { echo "     <p><small>Uploading another resource will overwrite the old one.</small></p>\n"; } ?>
+    </div>
     </div>
     <div class="input-container">
      <label for="display">Display mode</label>

@@ -40,6 +40,7 @@ input[type="button"], input[type="submit"], button, .button {
 input[type="button"]:hover, input[type="submit"]:hover, button:hover, .button:hover {
     background-color: #4E7696;
     box-shadow: 0 0 3px #666;
+    color: #FFF;
 }
 
 input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="email"] {
@@ -106,6 +107,7 @@ input[type="text"][disabled]:hover {
     padding: 20px;
     border-radius: 5px;
     background-color: #EEE;
+    display: inline-block;
 }
 
 .tab {
