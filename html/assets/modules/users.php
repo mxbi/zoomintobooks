@@ -143,3 +143,21 @@ if (!$edit) { ?>
    </form>
 <?php
 }
+
+function delete_user($username) {
+    global $dbc;
+    if (!authorised("delete user", array("username" => $username))) return;
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q = "DELETE FROM user WHERE username='$username'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+    }
+    if (errors_occurred()) {
+        rollback($dbc, array());
+    } else if (commit($dbc, array())) {
+        set_success("Deleted " . $username);
+        $_SESSION["redirect"] = "/console/users/";
+    }
+}
+

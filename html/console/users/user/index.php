@@ -16,7 +16,7 @@ if ($authorised) {
     if (authorised("delete user", array("username" => $username), false)) {
         echo "   <hr />\n";
         echo "   <h3>Delete user</h3>\n<br />";
-        echo "   <button type=\"button\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this user?', 'deleteUser', {'username': '$username'})\">Delete user</button>\n";
+        echo "   <button type=\"button\" id=\"user-delete-btn\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this user?', 'deleteUser', {'username': '$username'})\">Delete user</button>\n";
     }
 }
 ?>
