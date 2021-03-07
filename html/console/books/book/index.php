@@ -63,7 +63,7 @@ if ($authorised) {
     if (authorised("delete book", array("isbn" => $isbn), false)) {
         echo "   <hr />\n";
         echo "   <h3>Delete book</h3>\n<br />";
-        echo "   <button type=\"button\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this book?', 'deleteBook', {'isbn': '$isbn'})\">Delete book</button>\n";
+        echo "   <button type=\"button\" id=\"book-delete-btn\" class=\"delete-btn\" onclick=\"askUser('Are you sure you want to delete this book?', 'deleteBook', {'isbn': '$isbn'})\">Delete book</button>\n";
     }
 }
 echo "   </main>\n";

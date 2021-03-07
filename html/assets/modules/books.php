@@ -225,6 +225,31 @@ function manage_book($values, $file, $edit) {
     }
 }
 
+function delete_book($isbn) {
+    global $dbc;
+    if (!authorised("delete book", array("isbn" => $isbn))) return;
+    $book = fetch_book($isbn);
+    $rm_book_op = array("type" => "rm", "path" => book_upload_path($isbn, $book["book_type"]));
+    $rm_cover_op = array("type" => "rm", "path" => book_cover_path($isbn));
+    $rm_images_op = array("type" => "rm", "path" => book_images_path($isbn));
+    $rm_ar_blob_op = array("type" => "rm", "path" => ar_blob_output_path($isbn));
+    $rm_img_list_op = array("type" => "rm", "path" => ar_blob_output_path($isbn) . "-imglist.txt");
+    $ops = array($rm_book_op, $rm_cover_op, $rm_images_op, $rm_ar_blob_op, $rm_img_list_op);
+    $tmps = file_ops($ops);
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
+    $q = "DELETE FROM book WHERE isbn='$isbn'";
+    $r = mysqli_query($dbc, $q);
+    if (!$r) {
+        add_error(mysqli_error($dbc));
+    }
+    if (errors_occurred()) {
+        rollback($dbc, $tmps);
+    } else if (commit($dbc, $tmps)) {
+        set_success("Deleted " . $book["title"]);
+        $_SESSION["redirect"] = "/console/books/";
+    }
+}
+
 function update_blobs($isbn) {
     global $dbc;
     if (!authorised("edit book", array("isbn" => $isbn))) return;

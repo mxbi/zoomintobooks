@@ -279,3 +279,24 @@ function deleteResource(args) {
     data.append("rid", rid);
     request("resource-delete-btn", "delete.php", data);
 }
+
+function deleteBook(args) {
+    var isbn = args["isbn"];
+    var data = new FormData();
+    data.append("isbn", isbn);
+    request("book-delete-btn", "delete.php", data);
+}
+
+function deleteUser(args) {
+    var username = args["username"];
+    var data = new FormData();
+    data.append("username", username);
+    request("user-delete-btn", "delete.php", data);
+}
+
+function deletePublisher(args) {
+    var publisher = args["publisher"];
+    var data = new FormData();
+    data.append("publisher", publisher);
+    request("publisher-delete-btn", "delete.php", data);
+}

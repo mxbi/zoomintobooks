@@ -204,7 +204,6 @@ function delete_resource($rid) {
         add_error(mysqli_error($dbc));
     }
     if (errors_occurred()) {
-        add_notice("Here");
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
         set_success("Deleted " . $resource["name"]);
