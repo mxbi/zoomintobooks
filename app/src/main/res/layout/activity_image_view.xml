@@ -9,7 +9,7 @@
 
 
     <ImageView
-        android:id="@+id/postImage"
+        android:id="@+id/scalableImage"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_marginStart="0dp"
@@ -19,21 +19,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/pickImageButton"
+        android:id="@+id/exportButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="32dp"
-        android:text="Gallery"
+        android:text="Export"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf = "@+id/postImage" />
+        app:layout_constraintTop_toBottomOf = "@+id/scalableImage" />
 
-    <Button
-        android:text="Camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" android:id="@+id/cameraBtn"
-        app:layout_constraintTop_toBottomOf="@+id/postImage" android:layout_marginTop="32dp"
-        app:layout_constraintHorizontal_bias="0.498"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
