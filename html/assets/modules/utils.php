@@ -394,6 +394,10 @@ function file_ops($ops) {
             if (file_exists($path) && !rrm($path)) {
                 add_error("Failed to remove file");
             }
+        } else if ($type === "mkpng") {
+            if (!imagepng($op["img"], $path)) {
+                add_error("Failed to generate PNG");
+            }
         } else {
             add_error("Unknown file operation: $type");
         }

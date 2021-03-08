@@ -175,7 +175,7 @@ function manage_resource($file, $values, $edit) {
     if (!$r) add_error(mysqli_error($dbc));
 
     if (!errors_occurred()) {
-        generate_preview($rid, $file_present ? $path : $url, $type);
+        $tmps = array_merge($tmps, generate_preview($rid, $file_present ? $path : $url, $type));
     }
 
     if (errors_occurred()) {
@@ -374,19 +374,13 @@ function generate_preview($rid, $url, $type) {
         } else {
             $dst = imagecreatetruecolor($w, $h);
             imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $width, $height);
-            imagepng($dst, $preview_path);
-            return array();
+            $op = array("type" => "mkpng", "img" => $dst, "path" => $preview_path);
+            return file_ops(array($op));
         }
     } else if ($typeclass == "video") {
-        $url = escapeshellarg($url);
-        $preview_path = escapeshellarg($preview_path);
-        $cmd = "ffmpeg -i $url -vframes 1 $preview_path";
-        exec($cmd, $output, $status); // Create screenshot
-        if ($status) {
-            return array();
-        } else {
-            return generate_preview($preview_path, $preview_path); // Shrink screenshot to thumbnail size
-        }
+        $op = array("type" => "cmd", "cmd" => "ffmpeg -i $url -vframes 1 $preview_path", "path" -> $preview_path);
+        $tmps = file_ops(array($op));
+        return array_merge($tmps, generate_preview($preview_path, $preview_path)); // Shrink screenshot to thumbnail size
     } else if ($typeclass == "audio") {
         $ops = array(array("type" => "cp", "src" => $_SERVER["DOCUMENT_ROOT"] . "/assets/images/icons/headphones-128.png", "path" => $preview_path));
         return file_ops($ops);
