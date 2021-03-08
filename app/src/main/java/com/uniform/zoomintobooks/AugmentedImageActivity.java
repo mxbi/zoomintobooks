@@ -544,11 +544,16 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private boolean setupAugmentedImageDatabase(Config config) {
     AugmentedImageDatabase augmentedImageDatabase;
 
-    try (InputStream is = ZoomUtils.parse(encodedDB)) {
-      augmentedImageDatabase = AugmentedImageDatabase.deserialize(session, is);
-    } catch (IOException e) {
-      Log.e(TAG, "IO exception loading augmented image database.", e);
-      return false;
+    if (encodedDB == null || encodedDB.length() == 0) {
+      augmentedImageDatabase = new AugmentedImageDatabase(session);
+      Log.w(TAG, "Not loading any AR database!");
+    } else {
+      try (InputStream is = ZoomUtils.parse(encodedDB)) {
+        augmentedImageDatabase = AugmentedImageDatabase.deserialize(session, is);
+      } catch (IOException e) {
+        Log.e(TAG, "IO exception loading augmented image database.", e);
+        return false;
+      }
     }
 
     config.setAugmentedImageDatabase(augmentedImageDatabase);
