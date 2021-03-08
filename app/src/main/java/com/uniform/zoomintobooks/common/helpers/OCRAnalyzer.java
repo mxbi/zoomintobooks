@@ -15,6 +15,7 @@ import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.uniform.zoomintobooks.AugmentedImageActivity;
 
 import android.net.Uri;
 import android.os.Build;
@@ -37,11 +38,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
@@ -55,13 +58,21 @@ public class OCRAnalyzer {
     private LinkedHashMap<Integer, String> textDatabase;
     private Context context;
     private Toast lastToast;
+
     private final String MATCHING_MODE = "full";
+    private final int scoreThreshold = 75;
+
+    private HashMap<String, BookResource> resourceMap = new HashMap<>();
 
     public boolean isBlocked() {
         return blocked;
     }
 
-    public OCRAnalyzer(String ocrBlob, Context context) {
+    public OCRAnalyzer(String ocrBlob, Context context, List<BookResource> ocrResources) {
+        for (BookResource resource : ocrResources) {
+            // no null check, NullPointerException here means server did not provide a page number, or the page number did not reach us for some reason
+            resourceMap.put(resource.getOcrPageNumber(), resource);
+        }
 
         Type type = new TypeToken<LinkedHashMap<Integer, String>>() {}.getType() ; // wtf
 
@@ -74,8 +85,10 @@ public class OCRAnalyzer {
 
     }
 
-    public void matchText(Text text) {
+    @Nullable()
+    public String matchText(Text text) {
         String t = text.getText();
+        // Optional partial matching mode, we don't use this in practice
         if (t.length() > 100 && MATCHING_MODE.equals("partial")) {
             t = t.substring(t.length() / 2 - 50, t.length() / 2 + 50);
         }
@@ -91,14 +104,19 @@ public class OCRAnalyzer {
 
         Log.i("[OCRAnalyzer]", "Best match: page " + bestMatch.toString() + " score " + bestScore.toString());
         Log.d("[OCRAnalyzer]", scores.toString());
-        if (bestScore > 75) {
+        if (bestScore > this.scoreThreshold) {
             if (lastToast != null) {
                 lastToast.cancel();
             }
             lastToast = Toast.makeText(
                     context.getApplicationContext(), "MATCHED page " + bestMatch.toString() + " score " + bestScore.toString(), Toast.LENGTH_SHORT);
             lastToast.show();
+
+            // Return match ID
+            return bestMatch.toString();
         }
+
+        return null;
     }
 
     public void analyze(Frame frame) {
@@ -137,8 +155,13 @@ public class OCRAnalyzer {
 
                         if (text.getText().length() > 100) {
                             long t = System.currentTimeMillis();
-                            matchText(text);
+                            String match = matchText(text);
                             Log.v("[OCRAnalyzer]", "Search took " + Long.toString(System.currentTimeMillis() - t));
+
+                            if (match != null) {
+                                BookResource detectedResource = resourceMap.get(match);
+                                ((AugmentedImageActivity) context).displayResource(detectedResource);
+                            }
                         }
 
                         blocked = false;

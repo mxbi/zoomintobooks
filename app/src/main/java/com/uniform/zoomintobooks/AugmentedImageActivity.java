@@ -51,6 +51,7 @@ import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -93,6 +94,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
   private OCRAnalyzer ocrAnalyzer;
   private boolean ocrEnabled;
+  private final List<BookResource> OCRResources = new ArrayList<>();
   private int height = 0;
   private int width = 0;
 
@@ -103,6 +105,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     // Setup AR
     encodedDB = (String) getIntent().getExtras().get("book_ARBlob");
     ARResources.addAll((ArrayList<BookResource>) getIntent().getExtras().get("book_ARResourceList"));
+    OCRResources.addAll((ArrayList<BookResource>) getIntent().getExtras().get("book_OCRResourceList"));
     //TODO: get values needed for OCR and AR from the main activity
     String isbn = (String) getIntent().getExtras().get("book_isbn"); // this method gives you the isbn of the book you want.
 
@@ -110,9 +113,10 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     String ocrBlob = (String) getIntent().getExtras().get("book_OCRBlob");
     // TODO: OCR resources
     if (ocrBlob != null) {
-      ocrAnalyzer = new OCRAnalyzer(ocrBlob, this);
+      ocrAnalyzer = new OCRAnalyzer(ocrBlob, this, OCRResources);
       ocrEnabled = true;
     } else {
+      Log.w(TAG, "OCR resources disabled!");
       ocrEnabled = false;
     }
 
@@ -493,7 +497,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
         case STOPPED:
           // Currently never called, because image remains always tracked
-          deregisterButton();
+          if (currentResourceID == augmentedImage.getIndex()) {
+            deregisterButton();
+          }
           augmentedImageMap.remove(augmentedImage.getIndex());
           break;
         default:

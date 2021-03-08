@@ -75,13 +75,13 @@ public class ZoomUtils {
         book.setPublisher(publisherInfo.getAsJsonPrimitive("publisher").getAsString());
         book.setEmail(publisherInfo.getAsJsonPrimitive("email").getAsString());
 
-        book.setARResourceList(parseResources(details, "ar_resources"));
-        book.setOCRResourceList(parseResources(details, "ocr_resources"));
+        book.setARResourceList(parseResources(details, "ar_resources", false));
+        book.setOCRResourceList(parseResources(details, "ocr_resources", true));
         return book;
 
     }
 
-    public static List<BookResource> parseResources(JsonObject details, String memberName) {
+    public static List<BookResource> parseResources(JsonObject details, String memberName, boolean isOCRResource) {
         JsonArray resources = details.getAsJsonArray(memberName);
         List<BookResource> bookResources = new ArrayList<>();
 
@@ -91,7 +91,14 @@ public class ZoomUtils {
             String url = resource.getAsJsonPrimitive("url").getAsString();
             boolean downloadable = resource.getAsJsonPrimitive("downloadable").getAsBoolean();
             String display = resource.getAsJsonPrimitive("display").getAsString();
-            bookResources.add(new BookResource(rid, url, downloadable, display));
+
+            if (isOCRResource) {
+                String pageNumber = resource.getAsJsonPrimitive("page").getAsString();
+                bookResources.add(new BookResource(rid, url, downloadable, display));
+            } else {
+                bookResources.add(new BookResource(rid, url, downloadable, display));
+            }
+
         }
 
         return bookResources;
