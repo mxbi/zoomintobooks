@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -36,6 +37,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
+
+        requestPermissions();
 
         imageView = findViewById(R.id.scalableImage);
 
@@ -73,6 +76,9 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private boolean requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                1);
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
@@ -80,7 +86,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void saveImage(){
-        boolean permissionGranted = requestPermissions();
         String uri = this.uri.toString();
         String filename = uri.substring(uri.lastIndexOf("/"));
         export(uri, GALLERY_DIRECTORY.concat(filename));
