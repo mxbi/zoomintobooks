@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.File;
@@ -25,45 +24,72 @@ import java.io.IOException;
 
 
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
-    private ScaleGestureDetector mScaleGestureDetector;
-    private float mScaleFactor = 1.0f;
-
+    private ScaleGestureDetector sgd;
     private ImageView imageView;
     private Button exportBtn;
-
     private Uri uri;
+
+    private float scale = 1.0f;
+
+    private enum State{
+        PAN,ZOOM;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
-        requestPermissions();
-
         imageView = findViewById(R.id.scalableImage);
 
         uri = (Uri) getIntent().getExtras().get("uri");
         imageView.setImageURI(uri);
 
-        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
+        sgd = new ScaleGestureDetector(this, new ScaleListener());
 
         exportBtn = findViewById(R.id.exportButton);
 
         exportBtn.setOnClickListener(this);
     }
 
+    private State state = State.PAN;
+    private float currentX =0;
+    private float currentY =0;
+    private float lastX =0;
+    private float lastY =0;
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mScaleGestureDetector.onTouchEvent(event);
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                lastX = event.getX();
+                lastY = event.getY();
+                state = State.PAN;
+                break;
+            case MotionEvent.ACTION_MOVE:
+                float dx = event.getX() - lastX;
+                float dy = event.getY() - lastY;
+                currentX += dx;
+                currentY += dy;
+                lastX = event.getX();
+                lastY = event.getY();
+                imageView.setX(currentX);
+                imageView.setY(currentY);
+                break;
+            case MotionEvent.ACTION_POINTER_UP:
+        }
+        event.getX();
+        return sgd.onTouchEvent(event);
     }
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         @Override
         public boolean onScale(ScaleGestureDetector scaleGestureDetector){
-            mScaleFactor *= scaleGestureDetector.getScaleFactor();
-            imageView.setScaleX(mScaleFactor);
-            imageView.setScaleY(mScaleFactor);
+            scale *= scaleGestureDetector.getScaleFactor();
+            imageView.setScaleX(scale);
+            imageView.setScaleY(scale);
             return true;
         }
     }
@@ -76,9 +102,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private boolean requestPermissions() {
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                1);
         return PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
@@ -86,6 +109,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void saveImage(){
+        boolean permissionGranted = requestPermissions();
         String uri = this.uri.toString();
         String filename = uri.substring(uri.lastIndexOf("/"));
         export(uri, GALLERY_DIRECTORY.concat(filename));
