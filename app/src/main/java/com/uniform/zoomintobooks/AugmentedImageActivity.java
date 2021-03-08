@@ -259,7 +259,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   public void onWindowFocusChanged(boolean hasFocus) {
     super.onWindowFocusChanged(hasFocus);
-    FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
+//    FullScreenHelper.setFullScreenOnWindowFocusChanged(this, hasFocus);
   }
 
   @Override
