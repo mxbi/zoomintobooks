@@ -66,6 +66,7 @@ class OCRResources():
 	def __init__(self, input_resource, page):
 		self.rid = input_resource.rid
 		self.url = input_resource.url
+		self.name = input_resource.name
 		self.display = input_resource.display
 		self.downloadable = input_resource.downloadable
 		self.resource_type = input_resource.resource_type
@@ -92,6 +93,7 @@ resource_fields = {
 	'rid' : fields.Integer,
 	'url' : fields.String,
 	'display' : fields.String,
+	'name' : fields.String,
 	'downloadable' : fields.Boolean
 }
 
@@ -99,7 +101,7 @@ ocr_resource_fields = {
 	'rid' : fields.Integer,
 	'url' : fields.String,
 	'downloadable' : fields.Boolean,
-	# 'resource_type' : fields.String,
+	'name' : fields.String,
 	'display': fields.String,
 	'page' : fields.Integer
 }
