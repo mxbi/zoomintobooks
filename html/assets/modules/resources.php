@@ -182,6 +182,7 @@ function manage_resource($file, $values, $edit) {
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
         if ($edit) {
+            $_SESSION["path"] = $url;
             set_success("Updated $name");
         } else {
             set_success("Added $name");

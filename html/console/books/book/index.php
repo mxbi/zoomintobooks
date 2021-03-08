@@ -15,7 +15,7 @@ display_status();
 if ($authorised) {
     echo "    <h3>Edit book properties</h3>\n";
     if (get_book_type($isbn) !== NULL) {
-        echo "<div class=\"preview-container\"><a href=\"upload?isbn=$isbn\"><span>Preview</span><img class=\"preview\" src=\"cover?isbn=$isbn\" alt=\"\" /></a></div>\n";
+        echo "<div class=\"preview-container\"><a href=\"upload?isbn=$isbn\"><span>View</span><img class=\"preview\" id=\"book-preview-img\" src=\"cover?isbn=$isbn\" alt=\"\" /></a></div>\n";
     }
     show_book_form(true, $isbn);
     echo "    <hr />\n";

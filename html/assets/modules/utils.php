@@ -139,6 +139,11 @@ function json_status() {
         $status["redirect"] = $_SESSION["redirect"];
         unset($_SESSION["redirect"]);
     }
+
+    if (!empty($_SESSION["path"])) {
+        $status["path"] = $_SESSION["path"];
+        unset($_SESSION["path"]);
+    }
     header("Content-Type: application/json");
     echo json_encode($status);
 }

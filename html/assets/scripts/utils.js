@@ -74,9 +74,11 @@ function clearStatus() {
     while (success[0]) success[0].parentNode.removeChild(success[0]);
 }
 
-function removeUnlinkedResource(response, args) {
-    var unlinkedResource = document.getElementById("resource-container-" + args["rid"]);
-    unlinkedResource.parentNode.removeChild(unlinkedResource);
+function removeUnlinkedResource(status, args) {
+    if (status["errors"] == []) {
+        var unlinkedResource = document.getElementById("resource-container-" + args["rid"]);
+        unlinkedResource.parentNode.removeChild(unlinkedResource);
+    }
 }
 
 function request(triggerId, action, data, callback="", args={}) {
@@ -92,7 +94,7 @@ function request(triggerId, action, data, callback="", args={}) {
                 window.location.href = status.redirect;
             } else {
                 if (callback != "") {
-                    window[callback](this.response, args);
+                    window[callback](status, args);
                 }
                 displayStatus(JSON.parse(this.response));
             }
@@ -182,7 +184,7 @@ function manageBook() {
     data.append("author", authorInput.value);
     if (publisherInput) data.append("publisher", publisherInput.value);
     data.append("edition", editionInput.value);
-    request("manage-book-btn", "action.php", data);
+    request("manage-book-btn", "action.php", data, "refreshPreview", {"id": "book-preview-img"});
 }
 
 function manageResource() {
@@ -203,7 +205,7 @@ function manageResource() {
     }
     data.append("display", displayInput.value);
     data.append("downloadable", downloadableInput.value);
-    request("manage-resource-btn", "action.php", data);
+    request("manage-resource-btn", "action.php", data, "refreshPreview", {"id": "resource-preview-img"});
 }
 
 function manageUser() {
@@ -301,4 +303,13 @@ function deletePublisher(args) {
     var data = new FormData();
     data.append("publisher", publisher);
     request("publisher-delete-btn", "delete.php", data);
+}
+
+function refreshPreview(status, args) {
+    var id = args["id"];
+    var path = status["path"];
+    var img = document.getElementById(id);
+    if (img) {
+        img.src = path + "&t=" + (new Date().getTime());
+    }
 }
