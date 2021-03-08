@@ -17,7 +17,7 @@ local.properties
 db_conn.php
 todo
 admin.php
-books
-resources
+/books
+/resources
 tmp
 *.swp
