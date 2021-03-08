@@ -25,7 +25,7 @@
         <activity android:name=".AugmentedImageActivity" />
         <activity android:name=".VideoActivity" />
         <activity android:name=".ImageActivity" />
-        <activity android:name=".ResourceHandlerActivity" />
+        <activity android:name=".ResourceHandlerActivity" android:noHistory="true"/>
         <activity android:name=".WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
