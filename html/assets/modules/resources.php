@@ -175,7 +175,7 @@ function manage_resource($file, $values, $edit) {
     if (!$r) add_error(mysqli_error($dbc));
 
     if (!errors_occurred()) {
-        generate_thumb($rid, $file_present ? $path : $url, $type);
+        generate_preview($rid, $file_present ? $path : $url, $type);
     }
 
     if (errors_occurred()) {
@@ -348,10 +348,10 @@ function unlink_resource($isbn, $rid) {
     }
 }
 
-function generate_thumb($rid, $url, $type) {
+function generate_preview($rid, $url, $type) {
     $typeclass = get_typeclass($type);
     $subtype = get_subtype($type);
-    $thumb = resource_preview_path($rid);
+    $preview_path = resource_preview_path($rid);
     if ($typeclass == "image") {
         $size = getimagesize($url);
         $width = $size[0];
@@ -374,25 +374,27 @@ function generate_thumb($rid, $url, $type) {
         } else {
             $dst = imagecreatetruecolor($w, $h);
             imagecopyresampled($dst, $src, 0, 0, 0, 0, $w, $h, $width, $height);
-            imagepng($dst, $thumb);
+            imagepng($dst, $preview_path);
             return array();
         }
     } else if ($typeclass == "video") {
-        $file = escapeshellarg($file);
-        $thumb = escapeshellarg($thumb);
-        $cmd = "ffmpeg -i $file -vframes 1 $thumb";
+        $url = escapeshellarg($url);
+        $preview_path = escapeshellarg($preview_path);
+        $cmd = "ffmpeg -i $url -vframes 1 $preview_path";
         exec($cmd, $output, $status); // Create screenshot
         if ($status) {
             return array();
         } else {
-            return create_thumb($thumb, $thumb); // Shrink screenshot to thumbnail size
+            return generate_preview($preview_path, $preview_path); // Shrink screenshot to thumbnail size
         }
     } else if ($typeclass == "audio") {
-        return array();
-    } else if ($typeclass == "webpage") {
-        return array();
+        $ops = array(array("type" => "cp", "src" => $_SERVER["DOCUMENT_ROOT"] . "/assets/images/icons/headphones-128.png", "path" => $preview_path));
+        return file_ops($ops);
+    } else if ($type == "text/html") {
+        $ops = array(array("type" => "cp", "src" => $_SERVER["DOCUMENT_ROOT"] . "/assets/images/icons/web-128.png", "path" => $preview_path));
+        return file_ops($ops);
     } else {
-        add_error("Unknown type '$type' '$typeclass'");
+        add_error("Unknown type '$type' when generating preview");
         return array();
     }
 }
