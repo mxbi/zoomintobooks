@@ -143,6 +143,12 @@ function json_status() {
     echo json_encode($status);
 }
 
+function get_remote_type($url) {
+    $buffer = file_get_contents($url);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    return finfo_buffer($finfo, $buffer);
+}
+
 function get_type($file, $max_size, $legal_subtypes) {
     $path = escapeshellarg($file["tmp_name"]);
     $file_info = exec("/usr/bin/file -i $path", $output, $status);
@@ -160,7 +166,7 @@ function get_type($file, $max_size, $legal_subtypes) {
             add_error("Invalid parameters");
         }
         if (!errors_occurred()) {
-            return $type;
+            return trim($type);
         }
     }
     return false;
@@ -168,6 +174,10 @@ function get_type($file, $max_size, $legal_subtypes) {
 
 function get_subtype($type) {
     return explode("/", $type)[1];
+}
+
+function get_typeclass($type) {
+    return explode("/", $type)[0];
 }
 
 function authorised($action, $params=array(), $errors=true) {

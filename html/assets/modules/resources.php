@@ -158,22 +158,25 @@ function manage_resource($file, $values, $edit) {
     }
 
     $tmps = array();
-    $type = $file_present ? get_type($file, MAX_RESOURCE_FILE_SIZE, RESOURCE_TYPES) : NULL;
-    if (!errors_occurred() && $type) {
-        $path = resource_upload_path($rid, $type);
+    $type = $file_present ? get_type($file, MAX_RESOURCE_FILE_SIZE, RESOURCE_TYPES) : get_remote_type($url);
+    if (!$type) {
+        add_error("Failed to determine resource type");
+    }
+    $path = resource_upload_path($rid, $type);
+    if (!errors_occurred() && $file_present) {
         $tmps = file_ops(array(array("type" => "mv upload", "file" => $file, "path" => $path)));
         if ($tmps) {
             $url = "https://uniform.ml/console/resources/resource/upload?rid=$rid";
         }
     }
 
-    $q = "UPDATE resource SET url='$url'" . ($type ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
+    $q = "UPDATE resource SET url='$url'" . ($file_present ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
 
-    /*if (!errors_occurred()) {
-        generate_thumb($rid, $url);
-    }*/
+    if (!errors_occurred()) {
+        generate_thumb($rid, $file_present ? $path : $url, $type);
+    }
 
     if (errors_occurred()) {
         rollback($dbc, $tmps);
@@ -345,22 +348,24 @@ function unlink_resource($isbn, $rid) {
     }
 }
 
-/*function generate_thumb($rid, $url, $display, $type) {
-    $type = pathinfo($file, PATHINFO_EXTENSION);
-    if ($display == "image" || $display == "overlay") {
-        $size = getimagesize($file);
+function generate_thumb($rid, $url, $type) {
+    $typeclass = get_typeclass($type);
+    $subtype = get_subtype($type);
+    $thumb = resource_preview_path($rid);
+    if ($typeclass == "image") {
+        $size = getimagesize($url);
         $width = $size[0];
         $height = $size[1];
         $w = ($height > 200) ? ($width * 200 / $height) : $width;
         $h = ($height > 200) ? 200 : $height;
         $src = false;
 
-        if ($type == "png") {
-            $src = imagecreatefrompng($file);
-        } else if ($type == "jpeg") {
-            $src = imagecreatefromjpeg($file);
-        } else if ($type == "gif") {
-            $src = imagecreatefromgif($file);
+        if ($subtype == "png") {
+            $src = imagecreatefrompng($url);
+        } else if ($subtype == "jpeg") {
+            $src = imagecreatefromjpeg($url);
+        } else if ($subtype == "gif") {
+            $src = imagecreatefromgif($url);
         }
 
         if (!$src) {
@@ -372,24 +377,22 @@ function unlink_resource($isbn, $rid) {
             imagepng($dst, $thumb);
             return array();
         }
-    } else if ($display == "video") {
+    } else if ($typeclass == "video") {
         $file = escapeshellarg($file);
         $thumb = escapeshellarg($thumb);
         $cmd = "ffmpeg -i $file -vframes 1 $thumb";
         exec($cmd, $output, $status); // Create screenshot
         if ($status) {
-            return;
+            return array();
         } else {
             return create_thumb($thumb, $thumb); // Shrink screenshot to thumbnail size
         }
-    } else if ($display == "audio") {
+    } else if ($typeclass == "audio") {
         return array();
-    } else if ($display == "webpage") {
+    } else if ($typeclass == "webpage") {
         return array();
     } else {
-        add_error("Unknown display mode");
+        add_error("Unknown type '$type' '$typeclass'");
         return array();
     }
 }
-
-*/
