@@ -58,11 +58,11 @@ h1 {
  */
 
 .heading {
-    margin: 20px 100px;
+    margin: auto 100px 20px 100px;
 }
 
 main {
-    margin: auto 100px;
+    margin: 20px 100px auto 100px;
     background-color: #FFF;
     padding: 20px;
     box-shadow: 0 0 5px #666;
@@ -306,5 +306,4 @@ a:hover {
 .back {
     display: inline-block;
     margin-left: 110px;
-    margin-bottom: 5px;
 }
