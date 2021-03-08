@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'open-sans';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/assets/fonts/open_sans/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'proza-libre';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/assets/fonts/proza_libre/ProzaLibre-Regular.ttf');
+}

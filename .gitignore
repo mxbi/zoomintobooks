@@ -13,3 +13,11 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+db_conn.php
+todo
+admin.php
+/books
+/resources
+tmp
+*.swp
