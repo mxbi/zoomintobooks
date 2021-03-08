@@ -145,8 +145,16 @@ public class OCRAnalyzer {
         analyze(inputImage);
     }
 
-    public void analyze(InputImage inputImage) {
+    public void block() {
         blocked = true;
+    }
+
+    public void unblock() {
+        blocked = false;
+    }
+
+    public void analyze(InputImage inputImage) {
+        block();
 
         Task<Text> result = recognizer.process(inputImage)
                 .addOnSuccessListener(new OnSuccessListener<Text>() {
@@ -167,7 +175,7 @@ public class OCRAnalyzer {
                             }
                         }
 
-                        blocked = false;
+                        unblock();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -175,7 +183,7 @@ public class OCRAnalyzer {
                     public void onFailure(@NonNull Exception e) {
                         Log.e("[OCRAnalyzer]", "Failed: " + e.toString());
 //                        image.close();
-                        blocked = false;
+                        unblock();
                     }
                 });
     }

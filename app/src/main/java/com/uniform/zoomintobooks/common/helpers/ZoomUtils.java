@@ -91,12 +91,13 @@ public class ZoomUtils {
             String url = resource.getAsJsonPrimitive("url").getAsString();
             boolean downloadable = resource.getAsJsonPrimitive("downloadable").getAsBoolean();
             String display = resource.getAsJsonPrimitive("display").getAsString();
+            String title = resource.getAsJsonPrimitive("name").getAsString();
 
             if (isOCRResource) {
                 String pageNumber = resource.getAsJsonPrimitive("page").getAsString();
-                bookResources.add(new BookResource(rid, url, downloadable, display, pageNumber));
+                bookResources.add(new BookResource(rid, url, downloadable, display, title, pageNumber));
             } else {
-                bookResources.add(new BookResource(rid, url, downloadable, display));
+                bookResources.add(new BookResource(rid, url, downloadable, display, title));
             }
 
         }
