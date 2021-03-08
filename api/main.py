@@ -61,6 +61,15 @@ class ResourceInstanceModel(db.Model):
 
 	isbn = db.Column(db.String, db.ForeignKey("book.isbn"), primary_key=True)
 	rid = db.Column(db.Integer, db.ForeignKey("resource.rid"), primary_key=True)
+    
+class OCRResources():
+	def __init__(self, input_resource, page):
+		self.rid = input_resource.rid
+		self.url = input_resource.url
+		self.display = input_resource.display
+		self.downloadable = input_resource.downloadable
+		self.resource_type = input_resource.resource_type
+		self.page = page  
 
 
 class BlobFormat(fields.Raw):
@@ -84,6 +93,15 @@ resource_fields = {
 	'url' : fields.String,
 	'display' : fields.String,
 	'downloadable' : fields.Boolean
+}
+
+ocr_resource_fields = {
+	'rid' : fields.Integer,
+	'url' : fields.String,
+	'downloadable' : fields.Boolean,
+	# 'resource_type' : fields.String,
+	'display': fields.String,
+	'page' : fields.Integer
 }
 
 publisher_fields = {
@@ -112,7 +130,7 @@ search_result_list_fields = {
 all_fields = {
 	'basic_info' : fields.Nested(book_fields),
 	'ar_resources' : fields.List(fields.Nested(resource_fields), attribute="ar_items"),
-	'ocr_resources' : fields.List(fields.Nested(resource_fields), attribute="ocr_items"),
+	'ocr_resources' : fields.List(fields.Nested(ocr_resource_fields), attribute="ocr_items"),
 	'publisher_info' : fields.Nested(publisher_fields)
 }
 
@@ -128,8 +146,11 @@ class Book(Resource):
 			abort_if_invalid("ISBN")
 		publisher_info = db.session.query(PublisherModel).join(BookModel, BookModel.publisher == PublisherModel.publisher).filter(BookModel.isbn == isbn).first()
 		ar_result = db.session.query(ResourceModel).join(ARResourceModel, ARResourceModel.rid == ResourceModel.rid).filter(ARResourceModel.isbn == isbn).order_by(ARResourceModel.ar_id).all()
-		ocr_result = db.session.query(ResourceModel).join(OCRResourceModel, OCRResourceModel.rid == ResourceModel.rid).filter(OCRResourceModel.isbn == isbn).order_by(OCRResourceModel.page).all()
-		return { 'basic_info' : basic_result, 'ar_items' : ar_result, 'ocr_items' : ocr_result, 'publisher_info' : publisher_info}, 201
+		ocr_result = db.session.query(ResourceModel, OCRResourceModel.page).join(OCRResourceModel, OCRResourceModel.rid == ResourceModel.rid).filter(OCRResourceModel.isbn == isbn).order_by(OCRResourceModel.page).all()
+		new_result = []
+		for res in ocr_result:
+			new_result.append(OCRResources(res[0], res[1]))
+		return { 'basic_info' : basic_result, 'ar_items' : ar_result, 'ocr_items' : new_result, 'publisher_info' : publisher_info}, 201
 
 
 class TitleMatch(Resource):
