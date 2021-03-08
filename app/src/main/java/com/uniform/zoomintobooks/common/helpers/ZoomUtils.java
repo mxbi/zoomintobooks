@@ -91,7 +91,7 @@ public class ZoomUtils {
             String url = resource.getAsJsonPrimitive("url").getAsString();
             boolean downloadable = resource.getAsJsonPrimitive("downloadable").getAsBoolean();
             String display = resource.getAsJsonPrimitive("display").getAsString();
-            String title = resource.getAsJsonPrimitive("title").getAsString();
+            String title = resource.getAsJsonPrimitive("name").getAsString();
 
             if (isOCRResource) {
                 String pageNumber = resource.getAsJsonPrimitive("page").getAsString();
