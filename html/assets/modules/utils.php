@@ -5,6 +5,7 @@ $is_admin = false;
 function init() {
     global $is_logged_in;
     global $is_admin;
+    global $dbc;
 
     session_start();
     if (!isset($_SESSION["errors"])) {
@@ -255,7 +256,6 @@ function authorised($action, $params=array(), $errors=true) {
 
 function db_select($q, $one=false) {
     global $dbc;
-    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_ONLY);
     $result = array();
     $r = mysqli_query($dbc, $q);
     if (!$r) {
@@ -273,7 +273,6 @@ function db_select($q, $one=false) {
         }
         mysqli_free_result($r);
     }
-    mysqli_commit($dbc);
     return $result;
 }
 
@@ -413,11 +412,13 @@ function file_ops($ops) {
     return $tmps;
 }
 
-function rollback($dbc, $tmps) {
+function rollback($dbc2, $tmps) {
+    global $dbc;
     if (!(mysqli_rollback($dbc) && file_rollback($tmps))) {
         add_error("Rollback failed");
         return false;
     }
+    add_notice("Rollback succeeded");
     return true;
 }
 

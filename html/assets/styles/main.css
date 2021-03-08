@@ -70,6 +70,7 @@ main {
 
 h2 {
     text-align: center;
+    margin-bottom: 0;
 }
 
 h3 {
@@ -303,6 +304,7 @@ a:hover {
 }
 
 .back {
-    display: block;
-    margin: -44px auto 20px 140px;
+    display: inline-block;
+    margin-left: 110px;
+    margin-bottom: 5px;
 }

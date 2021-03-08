@@ -272,11 +272,6 @@ function update_blobs($isbn) {
     $tmps = array_merge($tmps, generate_ar_blob($isbn));
     if (!errors_occurred()) generate_ocr_blob($isbn);
 
-/*    if (errors_occurred()) {
-        rollback($dbc, $tmps);
-    } else if (commit($dbc, $tmps)) {
-        set_success("Generated blobs");
-    }*/
     return $tmps;
 }
 
@@ -319,7 +314,7 @@ function generate_ar_blob($isbn) {
             $f = fopen($out_path, "r");
             if (!$f) {
                 add_error("Failed to generate image triggers");
-                return;
+                return array();
             }
             $ar_blob = "'" . mysqli_real_escape_string($dbc, fread($f, filesize($out_path))) . "'";
             fclose($f);

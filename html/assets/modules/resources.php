@@ -226,7 +226,6 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
 
     if (errors_occurred()) return;
 
-    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
     $max = db_select("SELECT MAX(ar_id) AS max_ar_id FROM ar_resource_link WHERE isbn='$isbn'", true);
     $types = array();
 
@@ -238,6 +237,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
             $types[$img["tmp_name"]] = $type;
         }
     }
+    mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
 
     $tmps = array();
     if (!errors_occurred()) {
@@ -268,6 +268,7 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
             if (errors_occurred()) break;
         }
     }
+
 
     if (!errors_occurred()) {
         if (get_book_type($isbn) === NULL && !empty($pages)) {
@@ -300,7 +301,6 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
 
     $tmps = array_merge($tmps, update_blobs($isbn));
 
-    unset($_SESSION["redirect"]);
     if (errors_occurred()) {
         rollback($dbc, $tmps);
     } else if (commit($dbc, $tmps)) {
