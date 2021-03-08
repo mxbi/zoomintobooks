@@ -146,9 +146,9 @@ function manage_book($values, $file, $edit) {
             mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
             $q = "";
             if ($file_present) {
-                $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type, next_apriltag) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type', 0)";
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
             } else {
-                $q = "INSERT INTO book(isbn, title, author, edition, publisher, next_apriltag) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', 0)";
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher) VALUES ('$isbn', '$title', '$author', $edition, '$publisher')";
             }
             $r = mysqli_query($dbc, $q);
 

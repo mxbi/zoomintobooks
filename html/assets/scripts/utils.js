@@ -75,7 +75,7 @@ function clearStatus() {
 }
 
 function removeUnlinkedResource(status, args) {
-    if (status["errors"] == []) {
+    if (status["errors"].length == 0) {
         var unlinkedResource = document.getElementById("resource-container-" + args["rid"]);
         unlinkedResource.parentNode.removeChild(unlinkedResource);
     }

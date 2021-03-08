@@ -239,7 +239,6 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
         }
     }
 
-
     $tmps = array();
     if (!errors_occurred()) {
         $ar_id = empty($max["max_ar_id"]) ? 0 : $max["max_ar_id"];
