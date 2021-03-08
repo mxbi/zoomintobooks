@@ -1,10 +1,10 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
-$_SESSION["redirect"] = "/console/books/new/";
 make_header("Add book", "", "");
 ?>
 
   <h2>Add book</h2>
+  <a class="back" href="/console/books/">&laquo; Books</a>
   <main>
 <?php
 $authorised = authorised("add book");

@@ -1,10 +1,10 @@
 <?php
 require $_SERVER["DOCUMENT_ROOT"] . "/assets/modules/includes.php";
 make_header("Manage publishers", "The Zoom Into Books management console", "");
-$_SESSION["redirect"] = "/console/publishers/";
 ?>
 
   <h2>Manage publishers</h2>
+  <a class="back" href="/console">&laquo; Console</a>
   <main>
 <?php
 $authorised = authorised("list publishers");
@@ -23,9 +23,12 @@ if ($authorised) {
     foreach ($publishers as $publisher) {
         // TODO: show preview of users and books associated with publisher
         $name = $publisher["publisher"];
-        echo "   <a class=\"card-list-item\" href=\"publisher?publisher=$name\">\n";
-        echo "    <p>$name</p>\n";
-        echo "   </a>\n";
+        $email = $publisher["email"];
+        echo "   <div class=\"card-list-item\">\n";
+        echo "    <a class=\"button card-list-btn\" href=\"publisher?publisher=$name\">Edit</a>\n";
+        echo "    <h4>$name</h4>\n";
+        echo "    <a href=\"mailto:$email\">$email</a>\n";
+        echo "   </div>\n";
     }
 } ?>
   </main>

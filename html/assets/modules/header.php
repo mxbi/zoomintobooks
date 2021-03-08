@@ -5,7 +5,7 @@ function make_header($title, $description, $keywords) {
     ob_start();
 
     $nav_pages = array();
-    if (isset($_SESSION["username"])) {
+    if ($is_logged_in) {
         $nav_pages["Console"] = "/console/";
         $nav_pages["Help"] = "/help/";
         $nav_pages["Logout"] = "/logout/";
@@ -33,7 +33,8 @@ function make_header($title, $description, $keywords) {
         }
     }
 ?>
-  <link rel="favicon" href="/assets/images/icons/favicon.png" />
+  <link rel="icon" href="/assets/images/icons/header.png" />
+  <script src="/assets/scripts/utils.js"></script>
  </head>
  <body>
   <header>

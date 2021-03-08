@@ -2,10 +2,6 @@
  * General
  */
 
-i {
-    font-style: italic;
-}
-
 body {
     font-family: open-sans, sans;
     margin: 0 0 20px 0;
@@ -24,10 +20,16 @@ header {
     box-shadow: 0 0 5px #666;
 }
 
-header * {
+header a, header a:hover {
     /* font-family: proza-libre, sans; */
     color: #FFF;
     text-decoration: none;
+}
+
+header img {
+    height: 50px;
+    margin-right: 10px;
+    vertical-align: middle;
 }
 
 h1 {
@@ -55,6 +57,10 @@ h1 {
  * Body
  */
 
+.heading {
+    margin: 20px 100px;
+}
+
 main {
     margin: auto 100px;
     background-color: #FFF;
@@ -65,6 +71,29 @@ main {
 h2 {
     text-align: center;
 }
+
+h3 {
+    display: inline-block;
+}
+
+hr {
+    background-color: #213D54;
+    height: 1px;
+    border: 0;
+    margin: 40px 0 10px 0;
+}
+
+a {
+    color: #213D54;
+}
+
+a:hover {
+    color: #4E7696;
+}
+
+/*
+ * Cards
+ */
 
 .card-container {
     display: flex;
@@ -89,6 +118,7 @@ h2 {
 .card:hover {
     background-color: #4E7696;
     box-shadow: 0 0 3px #666;
+    color: #FFF;
 }
 
 .card img {
@@ -108,6 +138,10 @@ h2 {
 .errors {
     background-color: #97574E;
     box-shadow: 0 0 3px #97574E;
+}
+
+.errors a {
+    color: #FFF;
 }
 
 .notices {
@@ -135,20 +169,46 @@ h2 {
     padding: 20px;
     display: block;
     overflow: hidden;
-}
-
-.card-list-item:hover {
     background-color: #EEE;
-    border: 1px solid #4E7696;
-    box-shadow: 0 0 3px #666;
 }
 
-.card-list-item img.preview {
-    float: left;
-    margin-right: 10px;
+.preview-container {
+    float: right;
+    margin-top: 22px;
+}
+
+.preview-container span {
+    text-align: center;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.preview-container img {
+    display: none;
+}
+
+.preview-container:hover img {
+    display: block;
+    position: absolute;
+    border: 1px solid #213D54;
+    padding: 10px
+    box-shadow: 0 0 3px #666;
+    right: 120px;
+}
+
+.preview {
     border: 1px solid #213D54;
     max-width: 100%;
     max-height: 256px;
+}
+
+.preview:hover {
+    box-shadow: 0 0 3px #666;
+}
+
+.card-list-item .preview {
+    float: left;
+    margin-right: 10px;
 }
 
 .card-list-item h4 {
@@ -164,13 +224,46 @@ h2 {
     cursor: pointer;
 }
 
+.selectable-card-list-item {
+    cursor: pointer;
+}
+
+.selectable-card-list-item:hover {
+    background-color: #FFF;
+}
+
+.selectable-card-list-item.selected-card-list-item:hover {
+    background-color: #4E7696;
+    color: #FFF;
+}
+
 .card-list-add-item, .selected-card-list-item {
     background-color: #213D54;
     color: #FFF;
 }
 
+.selected-card-list-item a {
+    color: #FFF;
+}
+
+.selected-card-list-item .card-list-btn {
+    background-color: #DDD;
+    color: #213D54;
+}
+
+.selected-card-list-item .card-list-btn:hover {
+    background-color: #FFF;
+    box-shadow: 0 0 3px #FFF;
+}
+
 .card-list-add-item:hover, .selected-card-list-item:hover {
     background-color: #4E7696;
+    color: #FFF;
+}
+
+.card-list-add-item:hover {
+    box-shadow: 0 0 3px #666;
+    color: #FFF;
 }
 
 .card-list-add-item img {
@@ -179,9 +272,37 @@ h2 {
     margin-right: 15px;
 }
 
+.card-list-btn {
+    float: right;
+    margin-left: 10px;
+}
+
+.yes-btn {
+    background-color: #52974E;
+}
+
+.delete-btn, .no-btn {
+    background-color: #97574E;
+}
+
+.yes-btn:hover {
+    background-color: #64AD60;
+    box-shadow: 0 0 3px #666;
+}
+
+.delete-btn:hover, .no-btn:hover {
+    background-color: #AD6960;
+    box-shadow: 0 0 3px #666;    
+}
+
 .limited-height-scrollable {
     max-height: 500px;
     border: 1px solid #213D54;
     overflow-y: auto;
     box-shadow: 0 0 3px #666 inset;
+}
+
+.back {
+    display: block;
+    margin: -44px auto 20px 140px;
 }
