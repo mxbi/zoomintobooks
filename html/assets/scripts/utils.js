@@ -246,12 +246,14 @@ function unlinkResource(args) {
 function showUrlInputContainer() {
     var urlInputTab = document.getElementById("url-input-tab");
     var urlInputContainer = document.getElementById("url-input-container");
+    var urlInput = document.getElementById("url-input");
     var resourceInputTab = document.getElementById("resource-input-tab");
     var resourceInputContainer = document.getElementById("resource-input-container");
+    var resourceInput = document.getElementById("resource-input");
     resourceLinkType = "url";
     urlInputTab.classList.add("active-tab")
     resourceInputTab.classList.remove("active-tab")
-    urlInputContainer.style.display = "block";
+    urlInputContainer.style.display = "inline-block";
     resourceInputContainer.style.display = "none";
     urlInput.required = true;
     resourceInput.required = false;
@@ -268,7 +270,7 @@ function showResourceInputContainer() {
     urlInputTab.classList.remove("active-tab")
     resourceInputTab.classList.add("active-tab")
     urlInputContainer.style.display = "none";
-    resourceInputContainer.style.display = "block";
+    resourceInputContainer.style.display = "inline-block";
     urlInput.required = false;
     resourceInput.required = true;
 }

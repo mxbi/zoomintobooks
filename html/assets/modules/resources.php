@@ -87,13 +87,13 @@ function show_resource_form($edit, $rid=NULL) {
     <div class="input-container tabbed-container" id="url-input-container">
      <label for="url">URL</label>
      <input type="text" name="url" id="url-input" placeholder="URL" value="<?php echo $values["url"]; ?>" />
-<?php if ($uploaded) { echo "     <p><small>This resource was uploaded to this server</small></p>\n"; } ?>
+<?php if ($uploaded) { echo "     <p><small>This resource is hosted by us.</small></p>\n"; } ?>
     </div>
     <div class="input-container tabbed-container" id="resource-input-container" style="display: none">
      <label for="resource">Resource upload</label>
      <input type="file" name="resource" id="resource-input" />
-     <p><small>Uploading a file will make it publicly accessible on our server.</small></p>
-<?php if ($uploaded) { echo "     <p><small>Uploading another resource will overwrite the old one.</small></p>\n"; } ?>
+     <p><small>Uploading a file will make it publicly accessible on our server.
+<?php if ($uploaded) { echo " Uploading another resource will overwrite the old one."; } ?></small></p>
     </div>
     </div>
     <div class="input-container">
