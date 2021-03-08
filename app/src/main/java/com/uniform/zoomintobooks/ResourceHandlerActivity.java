@@ -44,7 +44,10 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         Intent i = getIntent();
         String url = i.getStringExtra("url");
         String uri = i.getStringExtra("uri");
-        Bitmap bitmap = (Bitmap) i.getExtras().get("bitmap");
+        String title = "";
+        if(i.hasExtra("title")){
+            title = i.getStringExtra("title");
+        }
         String type = i.getStringExtra("type");
         String action = i.getStringExtra("action");
 
@@ -55,9 +58,15 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(trueUri),OpenResourceMode.ACTIVITY);
                 }else if (type.equals("image")) {
-                    OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
+                    Intent o = new Intent(this, ImageActivity.class);
+                    o.putExtra("uri",Uri.parse(trueUri));
+                    o.putExtra("title", title);
+                    startActivity(o);
                 }else if (type.equals("overlay")) {
-                    OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
+                    Intent o = new Intent(this, ImageActivity.class);
+                    o.putExtra("uri",Uri.parse(trueUri));
+                    o.putExtra("title", title);
+                    startActivity(o);
                 }else{
                     throw new UnsupportedOperationException("Displaying other resources not natively supported");
                 }

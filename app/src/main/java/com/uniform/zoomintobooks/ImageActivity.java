@@ -31,16 +31,17 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
     private float scale = 1.0f;
 
-    private enum State{
-        PAN,ZOOM;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_view);
 
         imageView = findViewById(R.id.scalableImage);
+
+        if(getIntent().hasExtra("title")){
+            String s = getIntent().getStringExtra("title");
+            this.setTitle(s);
+        }
 
         uri = (Uri) getIntent().getExtras().get("uri");
         imageView.setImageURI(uri);
