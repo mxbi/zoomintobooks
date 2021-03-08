@@ -337,8 +337,6 @@ function file_rollback($tmps) {
         if ((file_exists($path) && !rrm($path)) || (file_exists($tmp) && !rcp($tmp, $path))) {
             add_error("Failed to rollback file operation");
             return false;
-        } else {
-            add_notice(file_exists($path));
         }
     }
     return true;

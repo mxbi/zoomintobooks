@@ -140,15 +140,15 @@ function manage_book($values, $file, $edit) {
 
     // Perform updates to database and file system
 
-    $type = $file_present ? get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES) : NULL;
+    $type = $file_present ? get_type($file, MAX_BOOK_FILE_SIZE, BOOK_TYPES) : get_book_type($isbn);
 
     if (!$edit) {
             mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
             $q = "";
             if ($file_present) {
-                $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type')";
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher, book_type, next_apriltag) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', '$type', 0)";
             } else {
-                $q = "INSERT INTO book(isbn, title, author, edition, publisher) VALUES ('$isbn', '$title', '$author', $edition, '$publisher')";
+                $q = "INSERT INTO book(isbn, title, author, edition, publisher, next_apriltag) VALUES ('$isbn', '$title', '$author', $edition, '$publisher', 0)";
             }
             $r = mysqli_query($dbc, $q);
 
@@ -177,7 +177,7 @@ function manage_book($values, $file, $edit) {
             $tmps = file_ops($ops);
         } else if ($edit && $new_isbn !== $isbn) { // Editing ISBN without changing file
             $ops = array();
-            if ($type !== NULL) {
+            if ($file_present !== NULL) {
                 $cp_cover_op = array("type" => "cp", "src" => book_cover_path($isbn), "path" => book_cover_path($new_isbn));
                 $rm_cover_op = array("type" => "rm", "path" => book_cover_path($isbn));
                 $cp_upload_op = array("type" => "cp", "src" => book_upload_path($isbn, $type), "path" => book_upload_path($new_isbn, $type));
