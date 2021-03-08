@@ -161,8 +161,8 @@ class TitleMatch(Resource):
 		results = match(title.lower(), titles_list)
 		query_results = []
 		for res in results:
-			q = BookModel.query.get(res[1])
-			query_results.append([q.title, res[1]])
+			q = BookModel.query.get(res)
+			query_results.append([q.title, res])
 		return {'results' : query_results}, 201
 
 class AllResources(Resource):
