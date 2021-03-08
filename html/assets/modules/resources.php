@@ -167,7 +167,7 @@ function manage_resource($file, $values, $edit) {
         }
     }
 
-    $q = "UPDATE resource SET url='$url', resource_type=" . ($type ? "'$type'" : "NULL") . " WHERE rid='$rid'";
+    $q = "UPDATE resource SET url='$url'" . ($type ? ", resource_type='$type'" : "") . " WHERE rid='$rid'";
     $r = mysqli_query($dbc, $q);
     if (!$r) add_error(mysqli_error($dbc));
 
@@ -335,10 +335,6 @@ function unlink_resource($isbn, $rid) {
     }
 
     $tmps = update_blobs($isbn);
-
-    foreach ($tmps as $tmp => $path) {
-        add_notice("$tmp => $path");
-    }
 
     if (errors_occurred()) {
         rollback($dbc, $tmps);
