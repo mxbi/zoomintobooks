@@ -418,7 +418,6 @@ function rollback($dbc2, $tmps) {
         add_error("Rollback failed");
         return false;
     }
-    add_notice("Rollback succeeded");
     return true;
 }
 

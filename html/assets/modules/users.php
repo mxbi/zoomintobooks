@@ -49,12 +49,10 @@ function manage_user($values, $edit) {
     if ($edit && !authorised("edit user", array("username" => $username))) return;
     if (!$edit && !authorised("add user")) return;
 
-    $user = fetch_user($username);
-
     if (is_blank($username)) add_error("Username cannot be blank");
     if ($edit && is_blank($new_username)) add_error("New username cannot be blank");
     if ($password !== $password2) add_error("Passwords do not match");
-    if ((!$edit || ($edit && $user["user_type"] === "standard")) && !publisher_exists($publisher)) add_error("Publisher does not exist");
+    if ((!$edit || ($edit && fetch_user($username)["user_type"] === "standard")) && !publisher_exists($publisher)) add_error("Publisher does not exist");
 
     if (errors_occurred()) return;
 
