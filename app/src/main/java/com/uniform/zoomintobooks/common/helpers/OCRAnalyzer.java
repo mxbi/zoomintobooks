@@ -6,6 +6,7 @@ import android.media.Image;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.ar.core.AugmentedImageDatabase;
 import com.google.ar.core.Frame;
 import com.google.ar.core.exceptions.NotYetAvailableException;
 import com.google.gson.Gson;
@@ -56,7 +57,7 @@ public class OCRAnalyzer {
     // Only do one image at a time
     private boolean blocked = false;
     private LinkedHashMap<Integer, String> textDatabase;
-    private Context context;
+    private AugmentedImageActivity context;
     private Toast lastToast;
 
     private final String MATCHING_MODE = "full";
@@ -68,7 +69,7 @@ public class OCRAnalyzer {
         return blocked;
     }
 
-    public OCRAnalyzer(String ocrBlob, Context context, List<BookResource> ocrResources) {
+    public OCRAnalyzer(String ocrBlob, AugmentedImageActivity context, List<BookResource> ocrResources) {
         for (BookResource resource : ocrResources) {
             // no null check, NullPointerException here means server did not provide a page number, or the page number did not reach us for some reason
             resourceMap.put(resource.getOcrPageNumber(), resource);
@@ -158,7 +159,9 @@ public class OCRAnalyzer {
                             String match = matchText(text);
                             Log.v("[OCRAnalyzer]", "Search took " + Long.toString(System.currentTimeMillis() - t));
 
-                            if (match != null) {
+                            // We only want to open the resource if our activity is in the foreground
+                            // i.e. the previous call hasn't opened a resource too
+                            if (match != null && context.isForeground) {
                                 BookResource detectedResource = resourceMap.get(match);
                                 ((AugmentedImageActivity) context).displayResource(detectedResource);
                             }

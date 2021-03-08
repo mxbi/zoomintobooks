@@ -94,7 +94,7 @@ public class ZoomUtils {
 
             if (isOCRResource) {
                 String pageNumber = resource.getAsJsonPrimitive("page").getAsString();
-                bookResources.add(new BookResource(rid, url, downloadable, display));
+                bookResources.add(new BookResource(rid, url, downloadable, display, pageNumber));
             } else {
                 bookResources.add(new BookResource(rid, url, downloadable, display));
             }

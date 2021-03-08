@@ -98,6 +98,9 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   private int height = 0;
   private int width = 0;
 
+  // Activity state
+  public boolean isForeground = false;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -164,6 +167,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   protected void onResume() {
     super.onResume();
+    this.isForeground = true;
 
     if (session == null) {
       Exception exception = null;
@@ -229,6 +233,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   @Override
   public void onPause() {
     super.onPause();
+    this.isForeground = false;
     if (session != null) {
       displayRotationHelper.onPause();
       surfaceView.onPause();
