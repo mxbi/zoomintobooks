@@ -15,7 +15,12 @@ public class WebViewActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         String url = i.getStringExtra("url");
+        String title = i.getStringExtra("title");
 //        url = "https://uniform.ml/console/resources/resource/upload/?rid=25";
+
+        if (title != null) {
+            this.setTitle(title);
+        }
 
         WebView myWebView = new WebView(this.getApplicationContext());
         setContentView(myWebView);

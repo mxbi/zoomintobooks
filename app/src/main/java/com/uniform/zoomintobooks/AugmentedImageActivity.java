@@ -392,24 +392,19 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
   public void displayResource(BookResource resource) {
-    if (resource.getType().equals("image")) {
+    if (resource.getType().equals("image") || resource.getType().equals("overlay")) {
       Intent i = new Intent(this, ResourceHandlerActivity.class);
       i.putExtra("type", "image");
       i.putExtra("action", "downloadAndDisplay");
       i.putExtra("url", resource.getURL());
+      i.putExtra("title", resource.getTitle());
 
-      startActivity(i);
-
-    } else if(resource.getType().equals("overlay")){
-      Intent i = new Intent(this, ResourceHandlerActivity.class);
-      i.putExtra("type", "overlay");
-      i.putExtra("action", "downloadAndDisplay");
-      i.putExtra("url", resource.getURL());
       startActivity(i);
 
     } else{
       Intent i = new Intent(this, WebViewActivity.class);
       i.putExtra("url", resource.getURL());
+      i.putExtra("title", resource.getURL());
 
       startActivity(i);
     }
@@ -421,9 +416,11 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     if (currentResourceID != augmentedImageIndex) { // button doesn't already exist
       FrameLayout fl = findViewById(R.id.myLayout);
 
+      currentResource = ARResources.get(augmentedImageIndex);
+
       Button btn = new Button(this);
       button = btn;
-      btn.setText("Click to view resource.&#10;" + currentResource.getTitle());
+      btn.setText("Click: " + currentResource.getTitle());
       FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
       fp.gravity = Gravity.BOTTOM | Gravity.CENTER;
       btn.setLayoutParams(fp);
@@ -432,7 +429,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
         displayResource(currentResource);
       });
 
-      currentResource = ARResources.get(augmentedImageIndex);
+
       this.runOnUiThread(new Runnable() {
         public void run() {
           fl.addView(btn);
