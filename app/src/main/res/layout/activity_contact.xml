@@ -28,7 +28,7 @@
             android:layout_height="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@color/beige_2"
+            android:background="@color/appBarBackground"
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
@@ -47,7 +47,7 @@
                     android:text="@string/contact"
                     android:textAlignment="center"
                     android:textAllCaps="false"
-                    android:textColor="@color/brown_1"
+                    android:textColor="@color/appBarText"
                     android:textStyle="bold|italic" />
             </LinearLayout>
 
