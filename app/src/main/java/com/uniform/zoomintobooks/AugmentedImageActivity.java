@@ -307,6 +307,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
       try {
         if (ocrEnabled && !ocrAnalyzer.isBlocked()) {
+          ocrAnalyzer.block();
           gpuDownloadFrameBufferIndex =
                   textureReader.submitFrame(backgroundRenderer.getTextureId(), 1920, 1080);
 
@@ -422,7 +423,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
       Button btn = new Button(this);
       button = btn;
-      btn.setText("Click to view resource.");
+      btn.setText("Click to view resource.&#10;" + currentResource.getTitle());
       FrameLayout.LayoutParams fp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
       fp.gravity = Gravity.BOTTOM | Gravity.CENTER;
       btn.setLayoutParams(fp);
@@ -578,13 +579,6 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     float Y_coord = event.getY();
 
     if (X_coord >= overlayCoords[0] && X_coord <= overlayCoords[1] && Y_coord >= overlayCoords[2] && Y_coord <= overlayCoords[3]) {
-      //TODO: open new activity.
-//      currentResource = ARResources.get(augmentedImage.getIndex());
-//              AsyncGetImageData asyncGetImageData = new AsyncGetImageData();
-//              asyncGetImageData.setImgLink(currentResource.getURL());
-//              asyncGetImageData.setAugmentedImageActivity(this);
-//              augmentedImageResourceDisplay = augmentedImage;
-//              asyncGetImageData.execute();
       System.out.println("Detected click.");
       // let's hope currentResource is correct
       displayResource(currentResource);
