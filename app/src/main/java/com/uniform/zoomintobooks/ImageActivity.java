@@ -52,7 +52,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         exportBtn.setOnClickListener(this);
     }
 
-    private State state = State.PAN;
     private float currentX =0;
     private float currentY =0;
     private float lastX =0;
@@ -65,13 +64,14 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
             case MotionEvent.ACTION_DOWN:
                 lastX = event.getX();
                 lastY = event.getY();
-                state = State.PAN;
                 break;
             case MotionEvent.ACTION_MOVE:
                 float dx = event.getX() - lastX;
                 float dy = event.getY() - lastY;
-                currentX += dx;
-                currentY += dy;
+                if(dx<100 && dy<100){
+                    currentX += dx;
+                    currentY += dy;
+                }
                 lastX = event.getX();
                 lastY = event.getY();
                 imageView.setX(currentX);
