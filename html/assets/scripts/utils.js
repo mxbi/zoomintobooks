@@ -310,6 +310,6 @@ function refreshPreview(status, args) {
     var path = status["path"];
     var img = document.getElementById(id);
     if (img) {
-        img.src = path + "&t=" + (new Date().getTime());
+        img.src = path + (path.includes("?") ? "&" : "?") + "t=" + (new Date().getTime());
     }
 }
