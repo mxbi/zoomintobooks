@@ -9,7 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 } else if ($authorised) {
     $resources = $_POST["resources"];
     $trigger_images = $_FILES;
-    $pages = explode(" ", trim(sanitise($_POST["pages"])));
+    $pages = explode(" ", str_replace(",", " ", trim(sanitise($_POST["pages"]))));
     if (empty($resources)) {
         add_error("No resources selected");
     }
