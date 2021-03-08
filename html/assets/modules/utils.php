@@ -327,6 +327,7 @@ function generate_random_string($length = 32) {
 
 function file_rollback($tmps) {
     if (!$tmps) return true;
+    $tmps = array_reverse($tmps);
     foreach ($tmps as $tmp => $path) {
         if ((file_exists($path) && !rrm($path)) || (file_exists($tmp) && !rcp($tmp, $path))) {
             add_error("Failed to rollback file operation");
