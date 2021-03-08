@@ -57,7 +57,7 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 }else if (type.equals("image")) {
                     OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
                 }else if (type.equals("overlay")) {
-                    OpenImage(Uri.parse(getFilesDir().toURI().getPath().concat(getUriFromUrlOverlay(url))), OpenResourceMode.ACTIVITY);
+                    OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
                 }else{
                     throw new UnsupportedOperationException("Displaying other resources not natively supported");
                 }
@@ -254,40 +254,6 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         return s;
     }
 
-    public String getUriFromUrlOverlay(String url) {
-        String uri = "";
-        if(urlToUri.containsKey(url)){
-            uri = get(url);
-            return uri;
-        }else{
-            InputStream is = getImageDataNetwork(url);
-
-            // save internet file to local file
-            FileOutputStream outputStream;
-            try {
-                String newUri = newUriFromExt(".png");
-                outputStream = openFileOutput(newUri, Context.MODE_PRIVATE);
-
-                Future<OutputStream> future = new AsyncDownload().download(is, outputStream);
-                while(!future.isDone()) {
-                    System.out.println("Downloading...");
-                    try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                outputStream.close();
-                put(url, newUri);
-                return newUri;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return uri;
-    }
-
     public String getUriFromUrl(String url) {
         String uri = "";
         if(urlToUri.containsKey(url)){
@@ -299,7 +265,7 @@ public class ResourceHandlerActivity extends AppCompatActivity {
             // save internet file to local file
             FileOutputStream outputStream;
             try {
-                String newUri = newUri(url);
+                String newUri = newUriFromExt(".png");
                 outputStream = openFileOutput(newUri, Context.MODE_PRIVATE);
 
                 Future<OutputStream> future = new AsyncDownload().download(is, outputStream);

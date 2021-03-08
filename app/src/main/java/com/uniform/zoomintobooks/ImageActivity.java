@@ -57,7 +57,6 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         requestCameraPermission();
 
         imageView = (ImageView) findViewById(R.id.postImage);
-        Intent intent = getIntent();
         Uri uri = (Uri) getIntent().getExtras().get("uri");
         imageView.setImageURI(uri);
 
