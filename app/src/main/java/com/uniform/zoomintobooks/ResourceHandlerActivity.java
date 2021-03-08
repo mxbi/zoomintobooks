@@ -5,13 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 
-import com.uniform.zoomintobooks.ImageActivity;
-import com.uniform.zoomintobooks.VideoActivity;
 import com.uniform.zoomintobooks.common.helpers.UrlToUri;
+import com.uniform.zoomintobooks.common.helpers.ZoomUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -43,6 +44,7 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         Intent i = getIntent();
         String url = i.getStringExtra("url");
         String uri = i.getStringExtra("uri");
+        Bitmap bitmap = (Bitmap) i.getExtras().get("bitmap");
         String type = i.getStringExtra("type");
         String action = i.getStringExtra("action");
 
@@ -52,8 +54,10 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 String trueUri = getFilesDir().toURI().getPath().concat(uri_l);
                 if(type.equals("video")){
                     OpenVideo(Uri.parse(trueUri),OpenResourceMode.ACTIVITY);
-                }else if (type.equals("image") || type.equals("overlay")) {
+                }else if (type.equals("image")) {
                     OpenImage(Uri.parse(trueUri), OpenResourceMode.ACTIVITY);
+                }else if (type.equals("overlay")) {
+                    OpenImage(Uri.parse(getFilesDir().toURI().getPath().concat(getUriFromUrlOverlay(url))), OpenResourceMode.ACTIVITY);
                 }else{
                     throw new UnsupportedOperationException("Displaying other resources not natively supported");
                 }
@@ -99,6 +103,16 @@ public class ResourceHandlerActivity extends AppCompatActivity {
 
     enum OpenResourceMode{
         DEFAULT, ACTIVITY, ANDROID;
+    }
+
+    private void OpenOverlay(String url){
+        AsyncGetBitmap asyncGetImageData = new AsyncGetBitmap();
+        Bitmap bmp = asyncGetImageData.AsyncGetImageDataOrWait(url);
+
+        Intent i = new Intent(this, ImageActivity.class);
+        i.putExtra("bitmap",bmp);
+
+        startActivity(i);
     }
 
     private void OpenResource(Uri uri, String type){
@@ -223,22 +237,55 @@ public class ResourceHandlerActivity extends AppCompatActivity {
         return t;
     }
 
-    public void deleteFileInStore(){
-        File f = new File(FILE_IN_STORE_DIRECTORY);
-        f.delete();
+    public String newUriFromExt(String ext){
+        readFileInStore();
+        String extension ="";
+        String s = this.urlToUri.newUri(ext);
+        saveFileInStore();
+        return s;
     }
 
     public String newUri(String url){
-        readFileInStore();
         String extension ="";
-
         if(url.contains(".")){
             extension = url.substring(url.lastIndexOf('.'));
         }
-
-        String s = this.urlToUri.newUri(extension);
-        saveFileInStore();
+        String s = newUriFromExt(extension);
         return s;
+    }
+
+    public String getUriFromUrlOverlay(String url) {
+        String uri = "";
+        if(urlToUri.containsKey(url)){
+            uri = get(url);
+            return uri;
+        }else{
+            InputStream is = getImageDataNetwork(url);
+
+            // save internet file to local file
+            FileOutputStream outputStream;
+            try {
+                String newUri = newUriFromExt(".png");
+                outputStream = openFileOutput(newUri, Context.MODE_PRIVATE);
+
+                Future<OutputStream> future = new AsyncDownload().download(is, outputStream);
+                while(!future.isDone()) {
+                    System.out.println("Downloading...");
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                outputStream.close();
+                put(url, newUri);
+                return newUri;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return uri;
     }
 
     public String getUriFromUrl(String url) {
@@ -313,6 +360,42 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 return os;
             });
         }
+    }
+
+    public class AsyncGetBitmap {
+
+        private ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        public Future<Bitmap> getBitmap(String urlString) {
+            return executor.submit(() -> {
+                InputStream is = ZoomUtils.getImageData("https://uniform.ml/console/resources/resource/upload/?rid=25");
+
+                return BitmapFactory.decodeStream(is);
+            });
+        }
+
+        public Bitmap AsyncGetImageDataOrWait(String url){
+            Future<Bitmap> future = getBitmap(url);
+            while(!future.isDone()) {
+                System.out.println("Getting image...");
+                try {
+                    Thread.sleep(300);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            Bitmap bmp = null;
+            try {
+                bmp = future.get();
+                return bmp;
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return bmp;
+        }
+
     }
 
     public InputStream getImageDataNetwork(String imgLink) {

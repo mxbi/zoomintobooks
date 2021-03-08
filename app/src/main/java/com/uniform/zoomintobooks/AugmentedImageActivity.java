@@ -2,7 +2,6 @@ package com.uniform.zoomintobooks;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
@@ -57,6 +56,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -381,17 +381,8 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     session.configure(config);
   }
 
-
   public void displayResource(BookResource resource) {
-//    AugmentedImageState augmentedImageState = new AugmentedImageState(augmentedImageResourceDisplay, true, is, this);
-//    Intent i = new Intent(this, ResourceHandlerActivity.class);
-//    i.putExtra("bitmap", BitmapFactory.decodeByteArray(currentResource.getImageData(), 0, currentResource.getImageData().length));
-//    i.putExtra("type", currentResource.getType());
-//    i.putExtra("action", "display");
-//    startActivity(i);
-
-//    Intent i = new Intent(Intent.ACTION_VIEW);
-    if (resource.getType().equals("image") || resource.getType().equals("overlay")) {
+    if (resource.getType().equals("image")) {
       Intent i = new Intent(this, ResourceHandlerActivity.class);
       i.putExtra("type", "image");
       i.putExtra("action", "downloadAndDisplay");
@@ -399,13 +390,19 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
 
       startActivity(i);
 
-    } else {
+    } else if(resource.getType().equals("overlay")){
+      Intent i = new Intent(this, ResourceHandlerActivity.class);
+      i.putExtra("type", "overlay");
+      i.putExtra("action", "downloadAndDisplay");
+      i.putExtra("url", resource.getURL());
+      startActivity(i);
+
+    } else{
       Intent i = new Intent(this, WebViewActivity.class);
       i.putExtra("url", resource.getURL());
 
       startActivity(i);
     }
-
   }
 
   private int currentResourceID = -1;
