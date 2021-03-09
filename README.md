@@ -46,7 +46,7 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 
 ## Web tour
 
-**@isaac**
+![zib_erd_2](https://user-images.githubusercontent.com/63247287/110464106-a1b9f580-80ca-11eb-8760-76979327d8ef.png)
 
 ### API tour
 
