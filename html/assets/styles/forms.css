@@ -62,9 +62,10 @@ input[type="button"][disabled], input[type="button"][disabled]:hover, button[dis
     cursor: wait;
 }
 
-input[type="text"][disabled]:hover {
+input[type="text"][disabled], input[type="text"][disabled]:hover {
     background-color: #999;
     box-shadow: none;
+    cursor: not-allowed;
 }
 
 .dialog {
