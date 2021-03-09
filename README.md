@@ -82,6 +82,8 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 
 Some source code from the ARCore Android SDK is included in our android app, licensed under [Apache 2.0](https://github.com/google-ar/arcore-android-sdk). Some snippets come from the Android Documentation, also licensed under Apache 2.0
 
+The Barcode Scanner in the app uses ZXing library, licensed under [Apache 2.0](https://github.com/journeyapps/zxing-android-embedded).
+
 `/html/assets/fonts` contains static files not written by us. Open Sans font licensed under Apache 2.0. Proza Libre licensed under SIL Open Font Licence 1.1. 
 
 `/html/assets/images/icons/` contains icons from [IconsDB](https://www.iconsdb.com/)
