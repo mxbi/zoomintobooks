@@ -271,7 +271,8 @@ function manage_resource_links($isbn, $resources, $trigger_images, $pages, $edit
 
 
     if (!errors_occurred()) {
-        if (get_book_type($isbn) === NULL && !empty($pages)) {
+        $no_pages = empty($pages) || (count($pages) == 1 && is_blank($pages[0]));
+        if (get_book_type($isbn) === NULL && !$no_pages) {
             add_error("Cannot use page as trigger without PDF upload");
         } else {
             foreach ($resources as $rid) {

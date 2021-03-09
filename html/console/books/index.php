@@ -33,7 +33,7 @@ if ($authorised) {
         echo "    <h4>$title<small> - edition $edition</small></h4>\n";
         echo "    <p>By <strong>$author</strong></p>\n";
         if ($is_admin) echo "<p>Published by <strong>$publisher</strong></p>\n";
-        echo "    <p>$resource_count resources</p>\n";
+        echo "    <p>$resource_count " . (($resource_count == 1) ? "resource" : "resources") . "</p>\n";
         echo "   </div>\n";
     }
 } ?>
