@@ -50,7 +50,37 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 
 ## Web tour
 
+There are two account types: standard and administrator. Standard users can interact with the books and resources which they have created themselves, and administrators can interact with all books and resources as well as creating and editing users and publishers. Each standard user is associated with a publisher (administrators have no publisher) and all books which they create are associated with that publisher.
+
+Most form interaction between the client and server is done asynchronously using JavaScript's XMLHTTPRequest, for sending, not XML, but POST query data to the server and receiving JSON back, indicating the status of the operation.
+
+On the server, all operations must be authorised by a central function before they can proceed, and all operations are carried out as transactions so that the system remains consistent. MySQL provides transactions but for filesystem operations a custom system is used.
+
 ### Pages (`/html/`)
+
+Many of the `index.php` pages take GET parameters, such as `isbn` for books or `rid` for resources. The `action.php` pages and other form handlers all require POST requests.
+
+- `/login/`: `index.php` is the login form and `action.php` is the login form handler
+- `/logout/`: `index.php` is the logout handler which automatically redirects to the homepage when run
+- `/console/books/`: `index.php` shows the list of books which the user is permitted to view and edit (for administrators this is all books)
+- `/console/books/book/`: `index.php` is the book editing page, `action.php` performs updates to a book's properties, `delete.php` deletes a book and `unlink.php` unlinks a resource from a book
+- `/console/books/book/cover/`: `index.php` shows the cover of a book as image/png
+- `/console/books/book/image/`: `index.php` shows a specific trigger image from a book
+- `/console/books/book/resource/new/`: `index.php` is the book-resource linking page and `action.php` performs the linking and AR/OCR blob generation
+- `/console/books/book/upload`/: `index.php` shows the PDF copy of a book
+- `/console/books/new/`: `index.php` is the book creation form page and `action.php` performs the actual book creation in the database and on the filesystem
+- `/console/publishers/`: `index.php` shows the list of all publishers (only accessible to administrators)
+- `/console/publishers/new/`: `index.php` is the publisher creation form and `action.php` performs the creation
+- `/console/publishers/publisher/`: `index.php` is the publisher editing page, `action.php` performs the updates and `delete.php` performs deletions
+- `/console/resources/`: `index.php` shows a list of all resources that the user can view and edit (for administrators this is all of them)
+- `/console/resources/new/`: `index.php` is the resource creation page and `action.php` actually creates the resource
+- `/console/resources/resource/`: `index.php` is the resource editing page, `action.php` performs the updates and `delete.php` performs deletions
+- `/console/resources/resource/preview/`: `index.php` shows a preview of the resource as image/png
+- `/console/resources/resource/upload/`: `index.php` shows the resource (if it is hosted on our server)
+- `/console/users/`: `index.php` shows the list of all users (only accessible to administrators)
+- `/console/users/new/`: `index.php` is the user creation form and `action.php` performs the creation
+- `/console/users/user/`: `index.php` is the user editing page and `action.php` performs the updates and `delete.php` performs deletions
+
 
 ### PHP 'modules' (`/html/assets/modules/`)
 
@@ -85,13 +115,27 @@ These modules contains all operations on the entities after which they are named
 - `generate_preview` generates and stores a preview of the resource being added
 
 `users.php`:
-- `authenticate`
+- `authenticate` will return `true` if the given username and password combination is valid and false otherwise
 
 `publishers.php`:
-- `fetch_user_publisher`
+- `fetch_user_publisher` will return the publisher to which a standard user belongs, or NULL if the user is an administrator
 
 #### `utils.php`
 This module contains several utility functions which are used throughout the code.
+
+- `init` is called at the top of every script and sets up things like the session
+- `is_blank`, `is_valid_url`, `is_valid_resource_display_mode`, `is_valid_isbn` and `is_pos_int` provide input validation
+- `sanitise` sanitises input data to prevent XSS and SQL injection attacks
+- `errors_occurred`, `add_error`, `clear_errors`, `add_notice`, `clear_notices` and `set_success` control the status (errors, notices and success message) to display to the user. `errors_occurred` returns `true` if there has been an error added
+- `display_status` and `json_status` present the current status to the user - the first prints the status directly to the page and the second formats it as JSON for asynchronous requests
+- `get_remote_type`, `get_type`, `get_subtype` and `get_typeclass` are used to determine MIME type of local and remote resources
+- `authorised` is the central authorisation function, which given an action, returns `true` if the current user is permitted to perform it and `false` otherwise
+- `db_select` is a handy function for reducing boilerplate code for `SELECT` queries
+- The `*path` functions simply return the path for a certain file based on the ISBN or resource ID
+- `generate_text_image` generates and outputs a PDF containing the given text
+- `generate_random_string` generates a random string of the specified length
+- `file_rollback`, `file_commit`, `file_ops`, `rrm` and `rcp` provide file transaction capabilities. `file_ops` is used to actuall perform the operations, `rrm` is for recursive removal and `rcp` is for recursive copy
+- `rollback` and `commit` perform both database and filesystem rollbacks and commits
 
 #### `includes.php`
 This module automatically includes all the other modules in this directory so that each page only need have one `include` statement, to include this file.
@@ -100,7 +144,7 @@ This module automatically includes all the other modules in this directory so th
 This module is for creating the page headers. The `make_header` function generates a header containing all the necessary stylesheets and scripts, and has customisable `<meta>` tags
 
 #### `footer.php`
-This module is for creating the page footers. 
+This module is for creating the page footers and contains one function, `make_footer`, to do so
 
 ### JavaScript (`/html/assets/scripts/`)
 
