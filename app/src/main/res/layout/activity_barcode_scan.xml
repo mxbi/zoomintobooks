@@ -91,24 +91,6 @@
             app:srcCompat="@drawable/ic_baseline_mail_24" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/BookButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@color/beige_2"
-            android:clickable="true"
-            android:contentDescription="@string/book"
-            android:focusable="true"
-            android:scaleX="0.8"
-            android:scaleY="0.8"
-            android:tint="@color/beige_1"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/ContactButton"
-            app:layout_constraintEnd_toEndOf="@+id/ContactButton"
-            app:rippleColor="@color/beige_1"
-            app:srcCompat="@drawable/ic_baseline_menu_book_24" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/SettingButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -121,8 +103,8 @@
             android:scaleY="0.8"
             android:tint="@color/beige_1"
             android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/BookButton"
-            app:layout_constraintEnd_toEndOf="@+id/BookButton"
+            app:layout_constraintBottom_toTopOf="@+id/ContactButton"
+            app:layout_constraintEnd_toEndOf="@+id/ContactButton"
             app:rippleColor="@color/beige_1"
             app:srcCompat="@drawable/ic_baseline_settings_24" />
 
