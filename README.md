@@ -178,9 +178,9 @@ The Barcode Scanner in the app uses ZXing library, licensed under [Apache 2.0](h
 
 `/html/assets/fonts` contains static files not written by us. Open Sans font licensed under Apache 2.0. Proza Libre licensed under SIL Open Font Licence 1.1. 
 
-`/html/assets/images/icons/` contains icons from [IconsDB](https://www.iconsdb.com/)
+`/html/assets/images/icons/` contains icons from [IconsDB](https://www.iconsdb.com/). See https://uniform.ml/credits.php for more information.
 
-`/html/assets/images/icons/plus-5-128.png`, `/html/assets/images/icons/briefcase-6-128.png` and `/html/assets/images/icons/headphones-4-128.png` are licensed under CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
-`/html/assets/images/icons/group-128.png`, `/html/assets/images/icons/book-stack-128.png`, `/html/assets/images/icons/web-128.png` and `/html/assets/images/icons/pages-1-128.png` are licensed under Creative Commons Attribution-NoDerivs 3.0
+- `/html/assets/images/icons/plus-5-128.png`, `/html/assets/images/icons/briefcase-6-128.png` and `/html/assets/images/icons/headphones-4-128.png` are licensed under CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+- `/html/assets/images/icons/group-128.png`, `/html/assets/images/icons/book-stack-128.png`, `/html/assets/images/icons/web-128.png` and `/html/assets/images/icons/pages-1-128.png` are licensed under Creative Commons Attribution-NoDerivs 3.0
 
 **@everyone please add to this if applicable**
