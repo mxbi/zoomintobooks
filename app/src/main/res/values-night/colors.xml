@@ -7,9 +7,10 @@
     <color name="brown_1">#523a1a</color>
     <color name="grey">#242424</color>
     <color name="dark_grey">#121212</color>
-    <color name="background">@color/dark_grey</color>
+    <color name="background">@color/dark_brown</color>
     <color name="appBarBackground">@color/brown_1</color>
     <color name="appBarText">@color/beige_2</color>
+    <color name="dark_brown">#241e16</color>
 
     <color name="teal_200">#523a1a</color>
 </resources>

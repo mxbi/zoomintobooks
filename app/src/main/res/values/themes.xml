@@ -7,6 +7,10 @@
         <item name="android:textColorHint">@android:color/darker_gray</item>
         <item name="colorPrimaryVariant">@color/beige_2</item>
         <item name="colorOnPrimary">@color/beige_1</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/brown_1</item>
+        <item name="colorSecondaryVariant">@color/brown_1</item>
+        <item name="colorOnSecondary">@color/brown_1</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

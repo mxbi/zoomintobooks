@@ -7,21 +7,23 @@ public class BookResource implements Serializable {
     private String url;
     private boolean downloadable;
     private String display;
-
+    private String title;
     private String ocrPageNumber;
 
-    public BookResource(int rid, String url, boolean downloadable, String display) {
+    public BookResource(int rid, String url, boolean downloadable, String display, String title) {
         this.rid = rid;
         this.url = url;
         this.downloadable = downloadable;
         this.display = display;
+        this.title = title;
     }
 
-    public BookResource(int rid, String url, boolean downloadable, String display, String ocrPageNumber) {
+    public BookResource(int rid, String url, boolean downloadable, String display, String title, String ocrPageNumber) {
         this.rid = rid;
         this.url = url;
         this.downloadable = downloadable;
         this.display = display;
+        this.title = title;
         this.ocrPageNumber = ocrPageNumber;
     }
 
@@ -30,6 +32,8 @@ public class BookResource implements Serializable {
         this.url = bookResource.url;
         this.downloadable = bookResource.downloadable;
         this.display = bookResource.display;
+        this.title = bookResource.title;
+        this.ocrPageNumber = bookResource.ocrPageNumber;
     }
 
     public String getURL() {
@@ -51,4 +55,6 @@ public class BookResource implements Serializable {
     public String getType(){
         return display;
     }
+
+    public String getTitle() { return title; }
 }
