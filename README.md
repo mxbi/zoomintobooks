@@ -53,20 +53,68 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 ### Pages (`/html/`)
 
 ### PHP 'modules' (`/html/assets/modules/`)
-- `/html/assets/modules/books.php`
-- `/html/assets/modules/resources.php`
-- `/html/assets/modules/users.php`
-- `/html/assets/modules/publishers.php`
-- `/html/assets/modules/utils.php`
-- `/html/assets/modules/includes.php`
-- `/html/assets/modules/header.php`
-- `/html/assets/modules/footer.php`
+
+#### `books.php`, `resources.php`, `users.php`, `publishers.php`
+These modules contains all operations on the entities after which they are named. The functions in each one tend to be pretty similarly named, hence why they're grouped together here. In the function list below, `*` stands for one of the entity types.
+
+##### Repeated functions
+
+- `show_*_form` shows the entity addition/editing form, selected using the `$edit` argument
+- `manage_*_publisher` handles entity addition and editing, again selected using the `$edit` argument
+- `delete_*` handles entity deletion
+- `can_edit_*` determines whether the current user is allowed to edit the entity
+- `*_exists` determines whether the entity in question exists in the database
+- `fetch_*` fetches a single entity, specified by its id (e.g. ISBN, username, etc.)
+- `fetch_*s` fetches a list of all of those entities which are available to the user (e.g. books which the user is allowed to view)
+
+##### Specific functions
+`books.php`:
+- `count_resources` returns the number of resources linked to this book
+- `get_book_type` returns the MIME type of the uploaded PDF and `NULL` if no PDF was uploaded
+- `update_blobs` calls `generate_ar_blob` and `generate_ocr_blob`. This is called whenever an operation updates the links between a book and its resources
+- `generate_image_list` generates a text file in the format required by `arcoreimg` for reading in the input image triggers
+- `generate_ar_blob` invokes Google's `arcoreimg` on the image triggers specified to create a blob used by the app to detect image-based triggers. It calls `generate_image_list` to create the input list for `arcoreimg`
+- `generate_ocr_blob` invokes `/ocr/extract_pdf.py` on the PDF uploaded with the book to create a JSON object which the app can use to detect text-based triggers
+
+`resources.php`:
+- `fetch_book_resources` returns a list of resources associated with the given book
+- `get_resource_mime_type` returns the MIME type of the resource if we host it, and `NULL` otherwise
+- `was_resource_uploaded` returns `true` if the resource is hosted on our server and `false` otherwise
+- `manage_resource_links` adds a link between some resources and a book, caused by the triggers specified. This calls `update_blobs` to re-generate the databases needed for OCR and AR detection
+- `unlink_resource` separates a resource from a book if they were linked together
+- `generate_preview` generates and stores a preview of the resource being added
+
+`users.php`:
+- `authenticate`
+
+`publishers.php`:
+- `fetch_user_publisher`
+
+#### `utils.php`
+This module contains several utility functions which are used throughout the code.
+
+#### `includes.php`
+This module automatically includes all the other modules in this directory so that each page only need have one `include` statement, to include this file.
+
+#### `header.php`
+This module is for creating the page headers. The `make_header` function generates a header containing all the necessary stylesheets and scripts, and has customisable `<meta>` tags
+
+#### `footer.php`
+This module is for creating the page footers. 
 
 ### JavaScript (`/html/assets/scripts/`)
 
+There is only one JavaScript file, `utils.js`. It is mainly taken up by functions for submitting forms asynchronously, all of which are fairly similar and rely on the `request` function for the actual XHR. `request` sends the `FormData` object given to it and disables the button used to submit it until a response is received. Once a response is received, any errors, notices and success messages are displayed, and the page is redirected if necessary. Additionally, a callback may be specified to do something with the response data.
+
+The other interesting function in `utils.js` is `ask_user`, which produces a custom dialog on the screen with two buttons. If the user presses "No", no action is taken, but if they press "Yes" then the callback given to the function will be called.
+
 ### CSS (`/html/assets/styles/`)
 
+There are three stylesheets: `fonts.css`, `forms.css` and `main.css`. `fonts.css` just defines some custom fonts to use in the interface, `forms.css` contains the several styles applied to HTML form elements and `main.css` contains rules for all other elements, including containers (cards, etc.), headings, text and links.
+
 ### Database
+
+The structure of the database is shown below. It runs using MySQL.
 
 ![zib_erd_2](https://user-images.githubusercontent.com/63247287/110464106-a1b9f580-80ca-11eb-8760-76979327d8ef.png)
 
