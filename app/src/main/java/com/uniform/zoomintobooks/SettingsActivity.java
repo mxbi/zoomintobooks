@@ -68,8 +68,6 @@ public class SettingsActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-        //necessary? setupSharedPreferences();
     }
 
     static void changeTheme(boolean night){
@@ -85,13 +83,10 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
-
-            //TODO this is what you need to keep track of the value. You cant get the state, but you can get a listener that will do sth when the value changes
             Preference theme = findPreference("theme");
             theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    //TODO: Do sth when it changed. You can keep a boolean value that changes with this method, and take the state from it.
                     final boolean v = (Boolean) newValue;
                     changeTheme(v);
                     //theme.setEnabled(v);
