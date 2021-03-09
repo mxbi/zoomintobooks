@@ -10,6 +10,7 @@
     <color name="background">@color/beige_1</color>
     <color name="appBarBackground">@color/beige_2</color>
     <color name="appBarText">@color/brown_1</color>
+    <color name="dark_brown">#292219</color>
     <!-- Just to avoid errors - teal is actually brown. -->
     <color name="teal_200">#523a1a</color>
 </resources>
