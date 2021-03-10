@@ -176,7 +176,14 @@ The structure of the database is shown below. It runs using MySQL.
 
 ### API tour
 
-**@victoria, probably can be short lol**
+The API for the app (`/api/main.py`) is written in Python; it uses Flask and SQLAlchemy to both model and query the MySQL database. The key five endpoints are as follows:
+- `/books/resources/<isbn>` returns all the resources for a particular book, specified by its ISBN.
+- `/books/title/<title>` performs the server-side match; given a query string, we return possible titles and corresponding ISBNs for books the user may be intending to identify.
+- `/books/resources/rid` returns a particular resource, as specified by its id.
+- `/books` returns a list of all the books in the database, and associated information.
+- `/books/<isbn>` is the main endpoint, which returns all information about a book (specified by ISBN), including its name, edition, ISBN, and the AR and OCR resources needed by the app.
+
+The algorithm used to return search results is given in `/api/levenshtein.py`, using the inbuilt Python library difflib. 
 
 ### OCR tour
 
