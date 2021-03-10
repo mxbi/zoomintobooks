@@ -54,7 +54,19 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 Beginning activity where the user chooses how they want to select the book.
 
 
-**See also** `\app\src\main\java\com\uniform\zoomintobooks\common\helpers`, which contains many helper classes used within the activities above.
+**See also** `\app\src\main\java\com\uniform\zoomintobooks\common\helpers`, which contains many helper classes used within the activities above. The main activities of interest are:
+
+- BookInfo.java and BookResource.java
+
+These define the structure of both a book and an individual resource, once JSON objects returned by the API have been decomposed.
+
+- AugmentedImageState.java
+
+For a given detected image, this class stores the renderer for the overlay image, the bitmap to be rendered and the augmented image itself.
+
+- ZoomUtils.java
+
+Utility functions that parse JSON output from the API, decode the base64 encoded string that represents the database of images to detect (for use in AugmentedImageActivity.java), and generate an input stream given an image URL.
 
 ## Web tour
 
