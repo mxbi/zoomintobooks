@@ -19,9 +19,8 @@ if ($authorised) {
    </a>
 <?php
     }
-    $publishers = fetch_publishers(); // Load all users by this user
+    $publishers = fetch_publishers();
     foreach ($publishers as $publisher) {
-        // TODO: show preview of users and books associated with publisher
         $name = $publisher["publisher"];
         $email = $publisher["email"];
         echo "   <div class=\"card-list-item\">\n";

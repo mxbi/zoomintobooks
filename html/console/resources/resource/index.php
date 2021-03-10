@@ -22,7 +22,6 @@ if ($authorised) {
     echo "    <h3>Edit resource properties</h3>\n";
     echo "<div class=\"preview-container\"><a href=\"$url\"><span>View</span><img class=\"preview\" id=\"resource-preview-img\" src=\"preview?rid=$rid\" alt=\"\" /></a></div>\n";
     show_resource_form(true, $rid);
-    // TODO: show books using this resource
     if (authorised("delete resource", array("rid" => $rid), false)) {
         echo "   <hr />\n";
         echo "   <h3>Delete resource</h3>\n<br />";

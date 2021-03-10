@@ -97,7 +97,6 @@ function show_user_form($edit, $username = NULL) {
     if ($edit && !authorised("edit user", array("username" => $username))) return;
     if (!$edit  && !authorised("add user")) return;
 
-    // TODO: selectable menu of available publishers
     $values = array("username" => "", "publisher" => "", "user_type" => "standard");
     if ($edit) {
         $values = fetch_user($username);

@@ -320,8 +320,6 @@ function unlink_resource($isbn, $rid) {
 
     if (errors_occurred()) return;
 
-    // TODO: delete ar trigger images if not used by other resource links
-
     mysqli_begin_transaction($dbc, MYSQLI_TRANS_START_READ_WRITE);
     $q1 = "DELETE FROM resource_instance WHERE isbn='$isbn' AND rid=$rid";
     $q2 = "DELETE FROM ar_resource_link WHERE isbn='$isbn' AND rid=$rid";
