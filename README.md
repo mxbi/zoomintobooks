@@ -203,9 +203,9 @@ Some source code from the ARCore Android SDK is included in our android app, lic
 
 The Barcode Scanner in the app uses ZXing library, licensed under [Apache 2.0](https://github.com/journeyapps/zxing-android-embedded).
 
-The JSON parsing in the app uses gson by Google, licenced under [Apache 2.0](https://github.com/google/gson).
+The JSON parsing in the app uses gson by Google, licensed under [Apache 2.0](https://github.com/google/gson).
 
-The AR functionality also makes use of a pin 3D model, created by Google, licenced under [CC-BY](https://poly.google.com/view/7jrB91eIj2t).
+The AR functionality also makes use of a pin 3D model, created by Google, licensed under [CC-BY](https://poly.google.com/view/7jrB91eIj2t).
 
 `/html/assets/fonts` contains static files not written by us. Open Sans font licensed under Apache 2.0.
 
