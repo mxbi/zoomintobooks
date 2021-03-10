@@ -9,8 +9,6 @@
 
 #### `\app\src\main\java\com\uniform\zoomintobooks`
 
-**@everyone please fill in, feel free to add more lines for e.g. helper classes as many of them are significant**
-
 - AugmentedImageActivity.java
 
 The main activity that performs AR and OCR image recognition.
@@ -46,8 +44,6 @@ This activity allows the user to select a book from the database by searching fo
 - SettingsActivity.java
 
 Allows the user to switch between Light and Dark Mode. Provides framework for 2 other settings, should they be implemented in the future.
-
-- VideoActivity.java
 
 - WebViewActivity.java
 
@@ -189,7 +185,7 @@ The algorithm used to return search results is given in `/api/levenshtein.py`, u
 
 `/ocr/extract_pdf.py` contains code that extracts text from designated pages of a PDF, returning a JSON blob that the webserver sends to the client device. The client device can then use this for text recognition and matching. This script is called by the webserver.
 
-### Acknowledgements
+## Acknowledgements
 
 Some source code from the ARCore Android SDK is included in our android app, licensed under [Apache 2.0](https://github.com/google-ar/arcore-android-sdk). Some snippets come from the Android Documentation, also licensed under Apache 2.0
 
@@ -202,4 +198,3 @@ The Barcode Scanner in the app uses ZXing library, licensed under [Apache 2.0](h
 - `/html/assets/images/icons/plus-5-128.png`, `/html/assets/images/icons/briefcase-6-128.png` and `/html/assets/images/icons/headphones-4-128.png` are licensed under CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
 - `/html/assets/images/icons/group-128.png`, `/html/assets/images/icons/book-stack-128.png`, `/html/assets/images/icons/web-128.png` and `/html/assets/images/icons/pages-1-128.png` are licensed under Creative Commons Attribution-NoDerivs 3.0
 
-**@everyone please add to this if applicable**
