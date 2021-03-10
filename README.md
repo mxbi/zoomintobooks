@@ -19,9 +19,9 @@ The main activity that performs AR and OCR image recognition.
 
 The activity that scans a barcode and returns its numerical decoding.
 
-- BookActivity.java
-
 - ContactActivity.java
+
+Empty activity to provide a way to contact us or the publisher in the future
 
 - ImageActivity.java
 
@@ -29,13 +29,19 @@ The activity which displays a gesture controlled image.
 
 - InfoActivity.java
 
-- ListViewActivity.java
+Empty activity to provide information about us in the future
+
+- ListViewAdapter.java
+
+An adapter to help SelectBookActivity manage the list of books
 
 - ResourceHandlerActivity.java
 
 The activity which handles the displaying, opening and storage of non ar resources.
 
 - SelectBookActivity.java
+
+This activity allows the user to select a book from the database by searching for it by title.
 
 - SettingsActivity.java
 
@@ -48,6 +54,8 @@ Allows the user to switch between Light and Dark Mode. Provides framework for 2 
 Allows for opening arbitrary linked resources by URL, and displaying them to the user.
 
 - WelcomeActivity.java
+
+Beginning activity where the user chooses how they want to select the book.
 
 
 **See also** `\app\src\main\java\com\uniform\zoomintobooks\common\helpers`, which contains many helper classes used within the activities above.
