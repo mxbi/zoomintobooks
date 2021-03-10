@@ -23,7 +23,6 @@
         <activity android:name=".SelectBookActivity" android:screenOrientation="portrait"/>
         <activity android:name=".BarcodeScanActivity" android:screenOrientation="portrait"/>
         <activity android:name=".AugmentedImageActivity" />
-        <activity android:name=".VideoActivity" />
         <activity android:name=".ImageActivity" />
         <activity android:name=".ResourceHandlerActivity" android:noHistory="true"/>
         <activity android:name=".WelcomeActivity" android:screenOrientation="portrait">

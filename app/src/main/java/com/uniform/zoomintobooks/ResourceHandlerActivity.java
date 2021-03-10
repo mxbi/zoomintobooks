@@ -153,9 +153,6 @@ public class ResourceHandlerActivity extends AppCompatActivity {
                 OpenResource(uri, "video/*");
                 break;
             case ACTIVITY:
-                Intent i = new Intent(this, VideoActivity.class);
-                i.putExtra("uri",uri);
-                startActivity(i);
         }
     }
 
