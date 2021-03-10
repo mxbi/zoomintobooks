@@ -25,11 +25,15 @@ The activity that scans a barcode and returns its numerical decoding.
 
 - ImageActivity.java
 
+The activity which displays a gesture controlled image.
+
 - InfoActivity.java
 
 - ListViewActivity.java
 
 - ResourceHandlerActivity.java
+
+The activity which handles the displaying, opening and storage of non ar resources.
 
 - SelectBookActivity.java
 
