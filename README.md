@@ -54,7 +54,7 @@ Allows for opening arbitrary linked resources by URL, and displaying them to the
 Beginning activity where the user chooses how they want to select the book.
 
 
-**See also** `\app\src\main\java\com\uniform\zoomintobooks\common\helpers`, which contains many helper classes used within the activities above. The main activities of interest are:
+**See also** `\app\src\main\java\com\uniform\zoomintobooks\common\helpers`, which contains many helper classes used within the activities above. The main classes of interest are:
 
 - BookInfo.java and BookResource.java
 
