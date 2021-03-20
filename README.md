@@ -228,4 +228,4 @@ The AR functionality also makes use of a pin 3D model, created by Google, licens
 - `/html/assets/images/icons/group-128.png`, `/html/assets/images/icons/book-stack-128.png`, `/html/assets/images/icons/web-128.png` and `/html/assets/images/icons/pages-1-128.png` are licensed under Creative Commons Attribution-NoDerivs 3.0
 
 
-
+**This project, with the exception of open-source components as listed above, is All Rights Reserved. If you wish to use some code from it, please get in touch for permission.**
