@@ -1,4 +1,17 @@
-# uniform
+# 📚 Zoom Into Books
+
+Zoom Into Books is a [University of Cambridge CST Group Project](https://www.cst.cam.ac.uk/teaching/part-ib/group-projects). Our project won the **2021 Most Professional Project prize** out of 21 projects.
+
+It is a fully featured app and web interface for augmenting books with online content such as high-resolution images, links and videos. The app lets you scan books and will auto-detect pages and images in the viewfinder, automatically delivering augmented content to the user (without the need for them to type in links or scan QR codes). The web interface allows a publisher to upload books and set triggers and content for delivery.
+
+**See the Youtube video for an explanation and demo:**
+
+[![Click for youtube video](http://img.youtube.com/vi/aE2AjQbZ1cI/0.jpg)](https://www.youtube.com/watch?v=aE2AjQbZ1cI "Zoom Into Books | Video Presentation")
+
+The original project brief:
+> Art and travel books often have beautiful images, but it’s frustrating that you can’t pinch to zoom as you would with a phone, to see arbitrarily high resolution details. The purpose of this project is to identify those times when a picture in a book or magazine corresponds to an existing high resolution image that is available online. Your Android app should work in augmented reality style, starting with a view of the book through the phone camera, but then seamlessly zooming by substituting high-resolution online data.
+
+## Code tour
 
 - `api`: Contains our back-end API code, written in Flask & Python
 - `html`: Contains our back-end web console code, written in PHP & HTML5
